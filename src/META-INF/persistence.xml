@@ -36,9 +36,9 @@
     <class>cl.starlabs.modelo.Habitad</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://NRGSERVER\SQLEXPRESS:1433;databaseName=syncpet"/>
-      <property name="javax.persistence.jdbc.user" value="syncpet_java"/>
+      <property name="javax.persistence.jdbc.user" value="syncpet"/>
       <property name="javax.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
-      <property name="javax.persistence.jdbc.password" value="prueba"/>
+      <property name="javax.persistence.jdbc.password" value="alfacentauro$$"/>
     </properties>
   </persistence-unit>
 </persistence>
