@@ -77,7 +77,6 @@ public class PrincipalMedico extends javax.swing.JFrame {
         menFicha = new javax.swing.JMenu();
         menFicha_anamnesis = new javax.swing.JMenuItem();
         menFicha_find = new javax.swing.JMenuItem();
-        menRep = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("SyncPet :: conectado como usuario@nombre_clínica (Sucursal)");
@@ -313,10 +312,6 @@ public class PrincipalMedico extends javax.swing.JFrame {
 
         jMenuBar1.add(menFicha);
 
-        menRep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/chart_curve.png"))); // NOI18N
-        menRep.setText("Reportes");
-        jMenuBar1.add(menRep);
-
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -443,7 +438,6 @@ public class PrincipalMedico extends javax.swing.JFrame {
     private javax.swing.JMenuItem menPropietarios_admin;
     private javax.swing.JMenuItem menPropietarios_find;
     private javax.swing.JMenuItem menPropietarios_paciente;
-    private javax.swing.JMenu menRep;
     private javax.swing.JPanel panelProximasAtenciones;
     private javax.swing.JMenuItem syncmen_lock;
     private javax.swing.JMenuItem syncmen_logout;
