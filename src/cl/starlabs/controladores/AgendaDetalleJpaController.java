@@ -22,7 +22,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class AgendaDetalleJpaController implements Serializable {
 
@@ -57,15 +57,15 @@ public class AgendaDetalleJpaController implements Serializable {
             }
             em.persist(agendaDetalle);
             if (eventoAgenda != null) {
-                eventoAgenda.getAgendaDetalleCollection().add(agendaDetalle);
+                eventoAgenda.getAgendaDetalleList().add(agendaDetalle);
                 eventoAgenda = em.merge(eventoAgenda);
             }
             if (mascota != null) {
-                mascota.getAgendaDetalleCollection().add(agendaDetalle);
+                mascota.getAgendaDetalleList().add(agendaDetalle);
                 mascota = em.merge(mascota);
             }
             if (veterinario != null) {
-                veterinario.getAgendaDetalleCollection().add(agendaDetalle);
+                veterinario.getAgendaDetalleList().add(agendaDetalle);
                 veterinario = em.merge(veterinario);
             }
             em.getTransaction().commit();
@@ -107,27 +107,27 @@ public class AgendaDetalleJpaController implements Serializable {
             }
             agendaDetalle = em.merge(agendaDetalle);
             if (eventoAgendaOld != null && !eventoAgendaOld.equals(eventoAgendaNew)) {
-                eventoAgendaOld.getAgendaDetalleCollection().remove(agendaDetalle);
+                eventoAgendaOld.getAgendaDetalleList().remove(agendaDetalle);
                 eventoAgendaOld = em.merge(eventoAgendaOld);
             }
             if (eventoAgendaNew != null && !eventoAgendaNew.equals(eventoAgendaOld)) {
-                eventoAgendaNew.getAgendaDetalleCollection().add(agendaDetalle);
+                eventoAgendaNew.getAgendaDetalleList().add(agendaDetalle);
                 eventoAgendaNew = em.merge(eventoAgendaNew);
             }
             if (mascotaOld != null && !mascotaOld.equals(mascotaNew)) {
-                mascotaOld.getAgendaDetalleCollection().remove(agendaDetalle);
+                mascotaOld.getAgendaDetalleList().remove(agendaDetalle);
                 mascotaOld = em.merge(mascotaOld);
             }
             if (mascotaNew != null && !mascotaNew.equals(mascotaOld)) {
-                mascotaNew.getAgendaDetalleCollection().add(agendaDetalle);
+                mascotaNew.getAgendaDetalleList().add(agendaDetalle);
                 mascotaNew = em.merge(mascotaNew);
             }
             if (veterinarioOld != null && !veterinarioOld.equals(veterinarioNew)) {
-                veterinarioOld.getAgendaDetalleCollection().remove(agendaDetalle);
+                veterinarioOld.getAgendaDetalleList().remove(agendaDetalle);
                 veterinarioOld = em.merge(veterinarioOld);
             }
             if (veterinarioNew != null && !veterinarioNew.equals(veterinarioOld)) {
-                veterinarioNew.getAgendaDetalleCollection().add(agendaDetalle);
+                veterinarioNew.getAgendaDetalleList().add(agendaDetalle);
                 veterinarioNew = em.merge(veterinarioNew);
             }
             em.getTransaction().commit();
@@ -161,17 +161,17 @@ public class AgendaDetalleJpaController implements Serializable {
             }
             Agenda eventoAgenda = agendaDetalle.getEventoAgenda();
             if (eventoAgenda != null) {
-                eventoAgenda.getAgendaDetalleCollection().remove(agendaDetalle);
+                eventoAgenda.getAgendaDetalleList().remove(agendaDetalle);
                 eventoAgenda = em.merge(eventoAgenda);
             }
             Mascota mascota = agendaDetalle.getMascota();
             if (mascota != null) {
-                mascota.getAgendaDetalleCollection().remove(agendaDetalle);
+                mascota.getAgendaDetalleList().remove(agendaDetalle);
                 mascota = em.merge(mascota);
             }
             Veterinario veterinario = agendaDetalle.getVeterinario();
             if (veterinario != null) {
-                veterinario.getAgendaDetalleCollection().remove(agendaDetalle);
+                veterinario.getAgendaDetalleList().remove(agendaDetalle);
                 veterinario = em.merge(veterinario);
             }
             em.remove(agendaDetalle);

@@ -6,7 +6,7 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,13 +24,13 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Propietario", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Propietario.findAll", query = "SELECT p FROM Propietario p"),
+    @NamedQuery(name = "Propietario.findAll", query = "SELECT p FROM Propietario p ORDER BY p.idPropietario DESC"),
     @NamedQuery(name = "Propietario.findByIdPropietario", query = "SELECT p FROM Propietario p WHERE p.idPropietario = :idPropietario"),
     @NamedQuery(name = "Propietario.findByNombres", query = "SELECT p FROM Propietario p WHERE p.nombres = :nombres"),
     @NamedQuery(name = "Propietario.findByApaterno", query = "SELECT p FROM Propietario p WHERE p.apaterno = :apaterno"),
@@ -41,39 +41,36 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Propietario.findByTelefono", query = "SELECT p FROM Propietario p WHERE p.telefono = :telefono"),
     @NamedQuery(name = "Propietario.findByCelular", query = "SELECT p FROM Propietario p WHERE p.celular = :celular")})
 public class Propietario implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_propietario", nullable = false)
     private Integer idPropietario;
     @Basic(optional = false)
-    @Column(name = "nombres", nullable = false, length = 75)
+    @Column(nullable = false, length = 75)
     private String nombres;
     @Basic(optional = false)
-    @Column(name = "apaterno", nullable = false, length = 75)
+    @Column(nullable = false, length = 75)
     private String apaterno;
     @Basic(optional = false)
-    @Column(name = "amaterno", nullable = false, length = 75)
+    @Column(nullable = false, length = 75)
     private String amaterno;
     @Basic(optional = false)
-    @Column(name = "rut", nullable = false)
+    @Column(nullable = false)
     private int rut;
     @Basic(optional = false)
-    @Column(name = "dv", nullable = false)
+    @Column(nullable = false)
     private Character dv;
     @Basic(optional = false)
-    @Column(name = "direccion", nullable = false, length = 250)
+    @Column(nullable = false, length = 250)
     private String direccion;
     @Lob
-    @Column(name = "email", length = 2147483647)
+    @Column(length = 2147483647)
     private String email;
-    @Column(name = "telefono")
     private Integer telefono;
-    @Column(name = "celular")
     private Integer celular;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "propietario")
-    private Collection<Mascota> mascotaCollection;
+    private List<Mascota> mascotaList;
     @JoinColumn(name = "comuna", referencedColumnName = "id_comuna", nullable = false)
     @ManyToOne(optional = false)
     private Comuna comuna;
@@ -179,12 +176,12 @@ public class Propietario implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Mascota> getMascotaCollection() {
-        return mascotaCollection;
+    public List<Mascota> getMascotaList() {
+        return mascotaList;
     }
 
-    public void setMascotaCollection(Collection<Mascota> mascotaCollection) {
-        this.mascotaCollection = mascotaCollection;
+    public void setMascotaList(List<Mascota> mascotaList) {
+        this.mascotaList = mascotaList;
     }
 
     public Comuna getComuna() {

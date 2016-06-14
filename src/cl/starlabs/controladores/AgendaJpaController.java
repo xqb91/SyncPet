@@ -17,14 +17,13 @@ import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Sucursal;
 import cl.starlabs.modelo.AgendaDetalle;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class AgendaJpaController implements Serializable {
 
@@ -38,8 +37,8 @@ public class AgendaJpaController implements Serializable {
     }
 
     public void create(Agenda agenda) throws PreexistingEntityException, Exception {
-        if (agenda.getAgendaDetalleCollection() == null) {
-            agenda.setAgendaDetalleCollection(new ArrayList<AgendaDetalle>());
+        if (agenda.getAgendaDetalleList() == null) {
+            agenda.setAgendaDetalleList(new ArrayList<AgendaDetalle>());
         }
         EntityManager em = null;
         try {
@@ -50,24 +49,24 @@ public class AgendaJpaController implements Serializable {
                 sucursal = em.getReference(sucursal.getClass(), sucursal.getIdSucursal());
                 agenda.setSucursal(sucursal);
             }
-            Collection<AgendaDetalle> attachedAgendaDetalleCollection = new ArrayList<AgendaDetalle>();
-            for (AgendaDetalle agendaDetalleCollectionAgendaDetalleToAttach : agenda.getAgendaDetalleCollection()) {
-                agendaDetalleCollectionAgendaDetalleToAttach = em.getReference(agendaDetalleCollectionAgendaDetalleToAttach.getClass(), agendaDetalleCollectionAgendaDetalleToAttach.getIdDetalle());
-                attachedAgendaDetalleCollection.add(agendaDetalleCollectionAgendaDetalleToAttach);
+            List<AgendaDetalle> attachedAgendaDetalleList = new ArrayList<AgendaDetalle>();
+            for (AgendaDetalle agendaDetalleListAgendaDetalleToAttach : agenda.getAgendaDetalleList()) {
+                agendaDetalleListAgendaDetalleToAttach = em.getReference(agendaDetalleListAgendaDetalleToAttach.getClass(), agendaDetalleListAgendaDetalleToAttach.getIdDetalle());
+                attachedAgendaDetalleList.add(agendaDetalleListAgendaDetalleToAttach);
             }
-            agenda.setAgendaDetalleCollection(attachedAgendaDetalleCollection);
+            agenda.setAgendaDetalleList(attachedAgendaDetalleList);
             em.persist(agenda);
             if (sucursal != null) {
-                sucursal.getAgendaCollection().add(agenda);
+                sucursal.getAgendaList().add(agenda);
                 sucursal = em.merge(sucursal);
             }
-            for (AgendaDetalle agendaDetalleCollectionAgendaDetalle : agenda.getAgendaDetalleCollection()) {
-                Agenda oldEventoAgendaOfAgendaDetalleCollectionAgendaDetalle = agendaDetalleCollectionAgendaDetalle.getEventoAgenda();
-                agendaDetalleCollectionAgendaDetalle.setEventoAgenda(agenda);
-                agendaDetalleCollectionAgendaDetalle = em.merge(agendaDetalleCollectionAgendaDetalle);
-                if (oldEventoAgendaOfAgendaDetalleCollectionAgendaDetalle != null) {
-                    oldEventoAgendaOfAgendaDetalleCollectionAgendaDetalle.getAgendaDetalleCollection().remove(agendaDetalleCollectionAgendaDetalle);
-                    oldEventoAgendaOfAgendaDetalleCollectionAgendaDetalle = em.merge(oldEventoAgendaOfAgendaDetalleCollectionAgendaDetalle);
+            for (AgendaDetalle agendaDetalleListAgendaDetalle : agenda.getAgendaDetalleList()) {
+                Agenda oldEventoAgendaOfAgendaDetalleListAgendaDetalle = agendaDetalleListAgendaDetalle.getEventoAgenda();
+                agendaDetalleListAgendaDetalle.setEventoAgenda(agenda);
+                agendaDetalleListAgendaDetalle = em.merge(agendaDetalleListAgendaDetalle);
+                if (oldEventoAgendaOfAgendaDetalleListAgendaDetalle != null) {
+                    oldEventoAgendaOfAgendaDetalleListAgendaDetalle.getAgendaDetalleList().remove(agendaDetalleListAgendaDetalle);
+                    oldEventoAgendaOfAgendaDetalleListAgendaDetalle = em.merge(oldEventoAgendaOfAgendaDetalleListAgendaDetalle);
                 }
             }
             em.getTransaction().commit();
@@ -91,15 +90,15 @@ public class AgendaJpaController implements Serializable {
             Agenda persistentAgenda = em.find(Agenda.class, agenda.getIdEvento());
             Sucursal sucursalOld = persistentAgenda.getSucursal();
             Sucursal sucursalNew = agenda.getSucursal();
-            Collection<AgendaDetalle> agendaDetalleCollectionOld = persistentAgenda.getAgendaDetalleCollection();
-            Collection<AgendaDetalle> agendaDetalleCollectionNew = agenda.getAgendaDetalleCollection();
+            List<AgendaDetalle> agendaDetalleListOld = persistentAgenda.getAgendaDetalleList();
+            List<AgendaDetalle> agendaDetalleListNew = agenda.getAgendaDetalleList();
             List<String> illegalOrphanMessages = null;
-            for (AgendaDetalle agendaDetalleCollectionOldAgendaDetalle : agendaDetalleCollectionOld) {
-                if (!agendaDetalleCollectionNew.contains(agendaDetalleCollectionOldAgendaDetalle)) {
+            for (AgendaDetalle agendaDetalleListOldAgendaDetalle : agendaDetalleListOld) {
+                if (!agendaDetalleListNew.contains(agendaDetalleListOldAgendaDetalle)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain AgendaDetalle " + agendaDetalleCollectionOldAgendaDetalle + " since its eventoAgenda field is not nullable.");
+                    illegalOrphanMessages.add("You must retain AgendaDetalle " + agendaDetalleListOldAgendaDetalle + " since its eventoAgenda field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -109,30 +108,30 @@ public class AgendaJpaController implements Serializable {
                 sucursalNew = em.getReference(sucursalNew.getClass(), sucursalNew.getIdSucursal());
                 agenda.setSucursal(sucursalNew);
             }
-            Collection<AgendaDetalle> attachedAgendaDetalleCollectionNew = new ArrayList<AgendaDetalle>();
-            for (AgendaDetalle agendaDetalleCollectionNewAgendaDetalleToAttach : agendaDetalleCollectionNew) {
-                agendaDetalleCollectionNewAgendaDetalleToAttach = em.getReference(agendaDetalleCollectionNewAgendaDetalleToAttach.getClass(), agendaDetalleCollectionNewAgendaDetalleToAttach.getIdDetalle());
-                attachedAgendaDetalleCollectionNew.add(agendaDetalleCollectionNewAgendaDetalleToAttach);
+            List<AgendaDetalle> attachedAgendaDetalleListNew = new ArrayList<AgendaDetalle>();
+            for (AgendaDetalle agendaDetalleListNewAgendaDetalleToAttach : agendaDetalleListNew) {
+                agendaDetalleListNewAgendaDetalleToAttach = em.getReference(agendaDetalleListNewAgendaDetalleToAttach.getClass(), agendaDetalleListNewAgendaDetalleToAttach.getIdDetalle());
+                attachedAgendaDetalleListNew.add(agendaDetalleListNewAgendaDetalleToAttach);
             }
-            agendaDetalleCollectionNew = attachedAgendaDetalleCollectionNew;
-            agenda.setAgendaDetalleCollection(agendaDetalleCollectionNew);
+            agendaDetalleListNew = attachedAgendaDetalleListNew;
+            agenda.setAgendaDetalleList(agendaDetalleListNew);
             agenda = em.merge(agenda);
             if (sucursalOld != null && !sucursalOld.equals(sucursalNew)) {
-                sucursalOld.getAgendaCollection().remove(agenda);
+                sucursalOld.getAgendaList().remove(agenda);
                 sucursalOld = em.merge(sucursalOld);
             }
             if (sucursalNew != null && !sucursalNew.equals(sucursalOld)) {
-                sucursalNew.getAgendaCollection().add(agenda);
+                sucursalNew.getAgendaList().add(agenda);
                 sucursalNew = em.merge(sucursalNew);
             }
-            for (AgendaDetalle agendaDetalleCollectionNewAgendaDetalle : agendaDetalleCollectionNew) {
-                if (!agendaDetalleCollectionOld.contains(agendaDetalleCollectionNewAgendaDetalle)) {
-                    Agenda oldEventoAgendaOfAgendaDetalleCollectionNewAgendaDetalle = agendaDetalleCollectionNewAgendaDetalle.getEventoAgenda();
-                    agendaDetalleCollectionNewAgendaDetalle.setEventoAgenda(agenda);
-                    agendaDetalleCollectionNewAgendaDetalle = em.merge(agendaDetalleCollectionNewAgendaDetalle);
-                    if (oldEventoAgendaOfAgendaDetalleCollectionNewAgendaDetalle != null && !oldEventoAgendaOfAgendaDetalleCollectionNewAgendaDetalle.equals(agenda)) {
-                        oldEventoAgendaOfAgendaDetalleCollectionNewAgendaDetalle.getAgendaDetalleCollection().remove(agendaDetalleCollectionNewAgendaDetalle);
-                        oldEventoAgendaOfAgendaDetalleCollectionNewAgendaDetalle = em.merge(oldEventoAgendaOfAgendaDetalleCollectionNewAgendaDetalle);
+            for (AgendaDetalle agendaDetalleListNewAgendaDetalle : agendaDetalleListNew) {
+                if (!agendaDetalleListOld.contains(agendaDetalleListNewAgendaDetalle)) {
+                    Agenda oldEventoAgendaOfAgendaDetalleListNewAgendaDetalle = agendaDetalleListNewAgendaDetalle.getEventoAgenda();
+                    agendaDetalleListNewAgendaDetalle.setEventoAgenda(agenda);
+                    agendaDetalleListNewAgendaDetalle = em.merge(agendaDetalleListNewAgendaDetalle);
+                    if (oldEventoAgendaOfAgendaDetalleListNewAgendaDetalle != null && !oldEventoAgendaOfAgendaDetalleListNewAgendaDetalle.equals(agenda)) {
+                        oldEventoAgendaOfAgendaDetalleListNewAgendaDetalle.getAgendaDetalleList().remove(agendaDetalleListNewAgendaDetalle);
+                        oldEventoAgendaOfAgendaDetalleListNewAgendaDetalle = em.merge(oldEventoAgendaOfAgendaDetalleListNewAgendaDetalle);
                     }
                 }
             }
@@ -166,19 +165,19 @@ public class AgendaJpaController implements Serializable {
                 throw new NonexistentEntityException("The agenda with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<AgendaDetalle> agendaDetalleCollectionOrphanCheck = agenda.getAgendaDetalleCollection();
-            for (AgendaDetalle agendaDetalleCollectionOrphanCheckAgendaDetalle : agendaDetalleCollectionOrphanCheck) {
+            List<AgendaDetalle> agendaDetalleListOrphanCheck = agenda.getAgendaDetalleList();
+            for (AgendaDetalle agendaDetalleListOrphanCheckAgendaDetalle : agendaDetalleListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Agenda (" + agenda + ") cannot be destroyed since the AgendaDetalle " + agendaDetalleCollectionOrphanCheckAgendaDetalle + " in its agendaDetalleCollection field has a non-nullable eventoAgenda field.");
+                illegalOrphanMessages.add("This Agenda (" + agenda + ") cannot be destroyed since the AgendaDetalle " + agendaDetalleListOrphanCheckAgendaDetalle + " in its agendaDetalleList field has a non-nullable eventoAgenda field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
             Sucursal sucursal = agenda.getSucursal();
             if (sucursal != null) {
-                sucursal.getAgendaCollection().remove(agenda);
+                sucursal.getAgendaList().remove(agenda);
                 sucursal = em.merge(sucursal);
             }
             em.remove(agenda);

@@ -23,7 +23,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class ContraindicacionesJpaController implements Serializable {
 
@@ -63,19 +63,19 @@ public class ContraindicacionesJpaController implements Serializable {
             }
             em.persist(contraindicaciones);
             if (hospitalizacion != null) {
-                hospitalizacion.getContraindicacionesCollection().add(contraindicaciones);
+                hospitalizacion.getContraindicacionesList().add(contraindicaciones);
                 hospitalizacion = em.merge(hospitalizacion);
             }
             if (mascota != null) {
-                mascota.getContraindicacionesCollection().add(contraindicaciones);
+                mascota.getContraindicacionesList().add(contraindicaciones);
                 mascota = em.merge(mascota);
             }
             if (tipoContraindicicacion != null) {
-                tipoContraindicicacion.getContraindicacionesCollection().add(contraindicaciones);
+                tipoContraindicicacion.getContraindicacionesList().add(contraindicaciones);
                 tipoContraindicicacion = em.merge(tipoContraindicicacion);
             }
             if (veterinario != null) {
-                veterinario.getContraindicacionesCollection().add(contraindicaciones);
+                veterinario.getContraindicacionesList().add(contraindicaciones);
                 veterinario = em.merge(veterinario);
             }
             em.getTransaction().commit();
@@ -123,35 +123,35 @@ public class ContraindicacionesJpaController implements Serializable {
             }
             contraindicaciones = em.merge(contraindicaciones);
             if (hospitalizacionOld != null && !hospitalizacionOld.equals(hospitalizacionNew)) {
-                hospitalizacionOld.getContraindicacionesCollection().remove(contraindicaciones);
+                hospitalizacionOld.getContraindicacionesList().remove(contraindicaciones);
                 hospitalizacionOld = em.merge(hospitalizacionOld);
             }
             if (hospitalizacionNew != null && !hospitalizacionNew.equals(hospitalizacionOld)) {
-                hospitalizacionNew.getContraindicacionesCollection().add(contraindicaciones);
+                hospitalizacionNew.getContraindicacionesList().add(contraindicaciones);
                 hospitalizacionNew = em.merge(hospitalizacionNew);
             }
             if (mascotaOld != null && !mascotaOld.equals(mascotaNew)) {
-                mascotaOld.getContraindicacionesCollection().remove(contraindicaciones);
+                mascotaOld.getContraindicacionesList().remove(contraindicaciones);
                 mascotaOld = em.merge(mascotaOld);
             }
             if (mascotaNew != null && !mascotaNew.equals(mascotaOld)) {
-                mascotaNew.getContraindicacionesCollection().add(contraindicaciones);
+                mascotaNew.getContraindicacionesList().add(contraindicaciones);
                 mascotaNew = em.merge(mascotaNew);
             }
             if (tipoContraindicicacionOld != null && !tipoContraindicicacionOld.equals(tipoContraindicicacionNew)) {
-                tipoContraindicicacionOld.getContraindicacionesCollection().remove(contraindicaciones);
+                tipoContraindicicacionOld.getContraindicacionesList().remove(contraindicaciones);
                 tipoContraindicicacionOld = em.merge(tipoContraindicicacionOld);
             }
             if (tipoContraindicicacionNew != null && !tipoContraindicicacionNew.equals(tipoContraindicicacionOld)) {
-                tipoContraindicicacionNew.getContraindicacionesCollection().add(contraindicaciones);
+                tipoContraindicicacionNew.getContraindicacionesList().add(contraindicaciones);
                 tipoContraindicicacionNew = em.merge(tipoContraindicicacionNew);
             }
             if (veterinarioOld != null && !veterinarioOld.equals(veterinarioNew)) {
-                veterinarioOld.getContraindicacionesCollection().remove(contraindicaciones);
+                veterinarioOld.getContraindicacionesList().remove(contraindicaciones);
                 veterinarioOld = em.merge(veterinarioOld);
             }
             if (veterinarioNew != null && !veterinarioNew.equals(veterinarioOld)) {
-                veterinarioNew.getContraindicacionesCollection().add(contraindicaciones);
+                veterinarioNew.getContraindicacionesList().add(contraindicaciones);
                 veterinarioNew = em.merge(veterinarioNew);
             }
             em.getTransaction().commit();
@@ -185,22 +185,22 @@ public class ContraindicacionesJpaController implements Serializable {
             }
             Hospitalizacion hospitalizacion = contraindicaciones.getHospitalizacion();
             if (hospitalizacion != null) {
-                hospitalizacion.getContraindicacionesCollection().remove(contraindicaciones);
+                hospitalizacion.getContraindicacionesList().remove(contraindicaciones);
                 hospitalizacion = em.merge(hospitalizacion);
             }
             Mascota mascota = contraindicaciones.getMascota();
             if (mascota != null) {
-                mascota.getContraindicacionesCollection().remove(contraindicaciones);
+                mascota.getContraindicacionesList().remove(contraindicaciones);
                 mascota = em.merge(mascota);
             }
             TipoContraindicacion tipoContraindicicacion = contraindicaciones.getTipoContraindicicacion();
             if (tipoContraindicicacion != null) {
-                tipoContraindicicacion.getContraindicacionesCollection().remove(contraindicaciones);
+                tipoContraindicicacion.getContraindicacionesList().remove(contraindicaciones);
                 tipoContraindicicacion = em.merge(tipoContraindicicacion);
             }
             Veterinario veterinario = contraindicaciones.getVeterinario();
             if (veterinario != null) {
-                veterinario.getContraindicacionesCollection().remove(contraindicaciones);
+                veterinario.getContraindicacionesList().remove(contraindicaciones);
                 veterinario = em.merge(veterinario);
             }
             em.remove(contraindicaciones);

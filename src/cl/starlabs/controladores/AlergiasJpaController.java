@@ -21,7 +21,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class AlergiasJpaController implements Serializable {
 
@@ -51,11 +51,11 @@ public class AlergiasJpaController implements Serializable {
             }
             em.persist(alergias);
             if (mascota != null) {
-                mascota.getAlergiasCollection().add(alergias);
+                mascota.getAlergiasList().add(alergias);
                 mascota = em.merge(mascota);
             }
             if (idTipoAlergia != null) {
-                idTipoAlergia.getAlergiasCollection().add(alergias);
+                idTipoAlergia.getAlergiasList().add(alergias);
                 idTipoAlergia = em.merge(idTipoAlergia);
             }
             em.getTransaction().commit();
@@ -91,19 +91,19 @@ public class AlergiasJpaController implements Serializable {
             }
             alergias = em.merge(alergias);
             if (mascotaOld != null && !mascotaOld.equals(mascotaNew)) {
-                mascotaOld.getAlergiasCollection().remove(alergias);
+                mascotaOld.getAlergiasList().remove(alergias);
                 mascotaOld = em.merge(mascotaOld);
             }
             if (mascotaNew != null && !mascotaNew.equals(mascotaOld)) {
-                mascotaNew.getAlergiasCollection().add(alergias);
+                mascotaNew.getAlergiasList().add(alergias);
                 mascotaNew = em.merge(mascotaNew);
             }
             if (idTipoAlergiaOld != null && !idTipoAlergiaOld.equals(idTipoAlergiaNew)) {
-                idTipoAlergiaOld.getAlergiasCollection().remove(alergias);
+                idTipoAlergiaOld.getAlergiasList().remove(alergias);
                 idTipoAlergiaOld = em.merge(idTipoAlergiaOld);
             }
             if (idTipoAlergiaNew != null && !idTipoAlergiaNew.equals(idTipoAlergiaOld)) {
-                idTipoAlergiaNew.getAlergiasCollection().add(alergias);
+                idTipoAlergiaNew.getAlergiasList().add(alergias);
                 idTipoAlergiaNew = em.merge(idTipoAlergiaNew);
             }
             em.getTransaction().commit();
@@ -137,12 +137,12 @@ public class AlergiasJpaController implements Serializable {
             }
             Mascota mascota = alergias.getMascota();
             if (mascota != null) {
-                mascota.getAlergiasCollection().remove(alergias);
+                mascota.getAlergiasList().remove(alergias);
                 mascota = em.merge(mascota);
             }
             TipoAlergia idTipoAlergia = alergias.getIdTipoAlergia();
             if (idTipoAlergia != null) {
-                idTipoAlergia.getAlergiasCollection().remove(alergias);
+                idTipoAlergia.getAlergiasList().remove(alergias);
                 idTipoAlergia = em.merge(idTipoAlergia);
             }
             em.remove(alergias);

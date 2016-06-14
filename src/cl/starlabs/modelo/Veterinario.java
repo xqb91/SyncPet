@@ -6,7 +6,7 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,10 +23,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Veterinario", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Veterinario.findAll", query = "SELECT v FROM Veterinario v"),
@@ -38,50 +38,49 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Veterinario.findByAmaterno", query = "SELECT v FROM Veterinario v WHERE v.amaterno = :amaterno"),
     @NamedQuery(name = "Veterinario.findByEspecialidad", query = "SELECT v FROM Veterinario v WHERE v.especialidad = :especialidad")})
 public class Veterinario implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_veterinario", nullable = false)
     private Integer idVeterinario;
     @Basic(optional = false)
-    @Column(name = "rut", nullable = false, length = 8)
+    @Column(nullable = false, length = 8)
     private String rut;
     @Basic(optional = false)
-    @Column(name = "dv", nullable = false)
+    @Column(nullable = false)
     private Character dv;
     @Basic(optional = false)
-    @Column(name = "nombres", nullable = false, length = 75)
+    @Column(nullable = false, length = 75)
     private String nombres;
     @Basic(optional = false)
-    @Column(name = "apaterno", nullable = false, length = 75)
+    @Column(nullable = false, length = 75)
     private String apaterno;
     @Basic(optional = false)
-    @Column(name = "amaterno", nullable = false, length = 75)
+    @Column(nullable = false, length = 75)
     private String amaterno;
     @Basic(optional = false)
-    @Column(name = "especialidad", nullable = false, length = 110)
+    @Column(nullable = false, length = 110)
     private String especialidad;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "veterinario")
-    private Collection<Examenes> examenesCollection;
+    private List<Examenes> examenesList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "veterinario")
-    private Collection<Historialvacunas> historialvacunasCollection;
+    private List<Historialvacunas> historialvacunasList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "veterinario")
-    private Collection<Contraindicaciones> contraindicacionesCollection;
+    private List<Contraindicaciones> contraindicacionesList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "especialista")
-    private Collection<Desparacitaciones> desparacitacionesCollection;
+    private List<Desparacitaciones> desparacitacionesList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "veterinario")
-    private Collection<Farmacos> farmacosCollection;
+    private List<Farmacos> farmacosList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "veterinario")
-    private Collection<Procedimientos> procedimientosCollection;
+    private List<Procedimientos> procedimientosList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "veterinario")
-    private Collection<Hospitalizacion> hospitalizacionCollection;
+    private List<Hospitalizacion> hospitalizacionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "veterinario")
-    private Collection<AgendaDetalle> agendaDetalleCollection;
+    private List<AgendaDetalle> agendaDetalleList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "veterinario")
-    private Collection<Anamnesis> anamnesisCollection;
+    private List<Anamnesis> anamnesisList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "veterinario")
-    private Collection<Patologias> patologiasCollection;
+    private List<Patologias> patologiasList;
     @JoinColumn(name = "sucursal", referencedColumnName = "id_sucursal", nullable = false)
     @ManyToOne(optional = false)
     private Sucursal sucursal;
@@ -160,93 +159,93 @@ public class Veterinario implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Examenes> getExamenesCollection() {
-        return examenesCollection;
+    public List<Examenes> getExamenesList() {
+        return examenesList;
     }
 
-    public void setExamenesCollection(Collection<Examenes> examenesCollection) {
-        this.examenesCollection = examenesCollection;
-    }
-
-    @XmlTransient
-    public Collection<Historialvacunas> getHistorialvacunasCollection() {
-        return historialvacunasCollection;
-    }
-
-    public void setHistorialvacunasCollection(Collection<Historialvacunas> historialvacunasCollection) {
-        this.historialvacunasCollection = historialvacunasCollection;
+    public void setExamenesList(List<Examenes> examenesList) {
+        this.examenesList = examenesList;
     }
 
     @XmlTransient
-    public Collection<Contraindicaciones> getContraindicacionesCollection() {
-        return contraindicacionesCollection;
+    public List<Historialvacunas> getHistorialvacunasList() {
+        return historialvacunasList;
     }
 
-    public void setContraindicacionesCollection(Collection<Contraindicaciones> contraindicacionesCollection) {
-        this.contraindicacionesCollection = contraindicacionesCollection;
-    }
-
-    @XmlTransient
-    public Collection<Desparacitaciones> getDesparacitacionesCollection() {
-        return desparacitacionesCollection;
-    }
-
-    public void setDesparacitacionesCollection(Collection<Desparacitaciones> desparacitacionesCollection) {
-        this.desparacitacionesCollection = desparacitacionesCollection;
+    public void setHistorialvacunasList(List<Historialvacunas> historialvacunasList) {
+        this.historialvacunasList = historialvacunasList;
     }
 
     @XmlTransient
-    public Collection<Farmacos> getFarmacosCollection() {
-        return farmacosCollection;
+    public List<Contraindicaciones> getContraindicacionesList() {
+        return contraindicacionesList;
     }
 
-    public void setFarmacosCollection(Collection<Farmacos> farmacosCollection) {
-        this.farmacosCollection = farmacosCollection;
-    }
-
-    @XmlTransient
-    public Collection<Procedimientos> getProcedimientosCollection() {
-        return procedimientosCollection;
-    }
-
-    public void setProcedimientosCollection(Collection<Procedimientos> procedimientosCollection) {
-        this.procedimientosCollection = procedimientosCollection;
+    public void setContraindicacionesList(List<Contraindicaciones> contraindicacionesList) {
+        this.contraindicacionesList = contraindicacionesList;
     }
 
     @XmlTransient
-    public Collection<Hospitalizacion> getHospitalizacionCollection() {
-        return hospitalizacionCollection;
+    public List<Desparacitaciones> getDesparacitacionesList() {
+        return desparacitacionesList;
     }
 
-    public void setHospitalizacionCollection(Collection<Hospitalizacion> hospitalizacionCollection) {
-        this.hospitalizacionCollection = hospitalizacionCollection;
-    }
-
-    @XmlTransient
-    public Collection<AgendaDetalle> getAgendaDetalleCollection() {
-        return agendaDetalleCollection;
-    }
-
-    public void setAgendaDetalleCollection(Collection<AgendaDetalle> agendaDetalleCollection) {
-        this.agendaDetalleCollection = agendaDetalleCollection;
+    public void setDesparacitacionesList(List<Desparacitaciones> desparacitacionesList) {
+        this.desparacitacionesList = desparacitacionesList;
     }
 
     @XmlTransient
-    public Collection<Anamnesis> getAnamnesisCollection() {
-        return anamnesisCollection;
+    public List<Farmacos> getFarmacosList() {
+        return farmacosList;
     }
 
-    public void setAnamnesisCollection(Collection<Anamnesis> anamnesisCollection) {
-        this.anamnesisCollection = anamnesisCollection;
+    public void setFarmacosList(List<Farmacos> farmacosList) {
+        this.farmacosList = farmacosList;
     }
 
     @XmlTransient
-    public Collection<Patologias> getPatologiasCollection() {
-        return patologiasCollection;
+    public List<Procedimientos> getProcedimientosList() {
+        return procedimientosList;
     }
 
-    public void setPatologiasCollection(Collection<Patologias> patologiasCollection) {
-        this.patologiasCollection = patologiasCollection;
+    public void setProcedimientosList(List<Procedimientos> procedimientosList) {
+        this.procedimientosList = procedimientosList;
+    }
+
+    @XmlTransient
+    public List<Hospitalizacion> getHospitalizacionList() {
+        return hospitalizacionList;
+    }
+
+    public void setHospitalizacionList(List<Hospitalizacion> hospitalizacionList) {
+        this.hospitalizacionList = hospitalizacionList;
+    }
+
+    @XmlTransient
+    public List<AgendaDetalle> getAgendaDetalleList() {
+        return agendaDetalleList;
+    }
+
+    public void setAgendaDetalleList(List<AgendaDetalle> agendaDetalleList) {
+        this.agendaDetalleList = agendaDetalleList;
+    }
+
+    @XmlTransient
+    public List<Anamnesis> getAnamnesisList() {
+        return anamnesisList;
+    }
+
+    public void setAnamnesisList(List<Anamnesis> anamnesisList) {
+        this.anamnesisList = anamnesisList;
+    }
+
+    @XmlTransient
+    public List<Patologias> getPatologiasList() {
+        return patologiasList;
+    }
+
+    public void setPatologiasList(List<Patologias> patologiasList) {
+        this.patologiasList = patologiasList;
     }
 
     public Sucursal getSucursal() {

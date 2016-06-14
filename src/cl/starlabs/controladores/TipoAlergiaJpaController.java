@@ -5,6 +5,7 @@
  */
 package cl.starlabs.controladores;
 
+import cl.starlabs.controladores.exceptions.IllegalOrphanException;
 import cl.starlabs.controladores.exceptions.NonexistentEntityException;
 import cl.starlabs.controladores.exceptions.PreexistingEntityException;
 import java.io.Serializable;
@@ -15,14 +16,13 @@ import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Alergias;
 import cl.starlabs.modelo.TipoAlergia;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class TipoAlergiaJpaController implements Serializable {
 
@@ -36,27 +36,27 @@ public class TipoAlergiaJpaController implements Serializable {
     }
 
     public void create(TipoAlergia tipoAlergia) throws PreexistingEntityException, Exception {
-        if (tipoAlergia.getAlergiasCollection() == null) {
-            tipoAlergia.setAlergiasCollection(new ArrayList<Alergias>());
+        if (tipoAlergia.getAlergiasList() == null) {
+            tipoAlergia.setAlergiasList(new ArrayList<Alergias>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Collection<Alergias> attachedAlergiasCollection = new ArrayList<Alergias>();
-            for (Alergias alergiasCollectionAlergiasToAttach : tipoAlergia.getAlergiasCollection()) {
-                alergiasCollectionAlergiasToAttach = em.getReference(alergiasCollectionAlergiasToAttach.getClass(), alergiasCollectionAlergiasToAttach.getIdAlergia());
-                attachedAlergiasCollection.add(alergiasCollectionAlergiasToAttach);
+            List<Alergias> attachedAlergiasList = new ArrayList<Alergias>();
+            for (Alergias alergiasListAlergiasToAttach : tipoAlergia.getAlergiasList()) {
+                alergiasListAlergiasToAttach = em.getReference(alergiasListAlergiasToAttach.getClass(), alergiasListAlergiasToAttach.getIdAlergia());
+                attachedAlergiasList.add(alergiasListAlergiasToAttach);
             }
-            tipoAlergia.setAlergiasCollection(attachedAlergiasCollection);
+            tipoAlergia.setAlergiasList(attachedAlergiasList);
             em.persist(tipoAlergia);
-            for (Alergias alergiasCollectionAlergias : tipoAlergia.getAlergiasCollection()) {
-                TipoAlergia oldIdTipoAlergiaOfAlergiasCollectionAlergias = alergiasCollectionAlergias.getIdTipoAlergia();
-                alergiasCollectionAlergias.setIdTipoAlergia(tipoAlergia);
-                alergiasCollectionAlergias = em.merge(alergiasCollectionAlergias);
-                if (oldIdTipoAlergiaOfAlergiasCollectionAlergias != null) {
-                    oldIdTipoAlergiaOfAlergiasCollectionAlergias.getAlergiasCollection().remove(alergiasCollectionAlergias);
-                    oldIdTipoAlergiaOfAlergiasCollectionAlergias = em.merge(oldIdTipoAlergiaOfAlergiasCollectionAlergias);
+            for (Alergias alergiasListAlergias : tipoAlergia.getAlergiasList()) {
+                TipoAlergia oldIdTipoAlergiaOfAlergiasListAlergias = alergiasListAlergias.getIdTipoAlergia();
+                alergiasListAlergias.setIdTipoAlergia(tipoAlergia);
+                alergiasListAlergias = em.merge(alergiasListAlergias);
+                if (oldIdTipoAlergiaOfAlergiasListAlergias != null) {
+                    oldIdTipoAlergiaOfAlergiasListAlergias.getAlergiasList().remove(alergiasListAlergias);
+                    oldIdTipoAlergiaOfAlergiasListAlergias = em.merge(oldIdTipoAlergiaOfAlergiasListAlergias);
                 }
             }
             em.getTransaction().commit();
@@ -72,36 +72,42 @@ public class TipoAlergiaJpaController implements Serializable {
         }
     }
 
-    public void edit(TipoAlergia tipoAlergia) throws NonexistentEntityException, Exception {
+    public void edit(TipoAlergia tipoAlergia) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             TipoAlergia persistentTipoAlergia = em.find(TipoAlergia.class, tipoAlergia.getIdTipoAlergia());
-            Collection<Alergias> alergiasCollectionOld = persistentTipoAlergia.getAlergiasCollection();
-            Collection<Alergias> alergiasCollectionNew = tipoAlergia.getAlergiasCollection();
-            Collection<Alergias> attachedAlergiasCollectionNew = new ArrayList<Alergias>();
-            for (Alergias alergiasCollectionNewAlergiasToAttach : alergiasCollectionNew) {
-                alergiasCollectionNewAlergiasToAttach = em.getReference(alergiasCollectionNewAlergiasToAttach.getClass(), alergiasCollectionNewAlergiasToAttach.getIdAlergia());
-                attachedAlergiasCollectionNew.add(alergiasCollectionNewAlergiasToAttach);
-            }
-            alergiasCollectionNew = attachedAlergiasCollectionNew;
-            tipoAlergia.setAlergiasCollection(alergiasCollectionNew);
-            tipoAlergia = em.merge(tipoAlergia);
-            for (Alergias alergiasCollectionOldAlergias : alergiasCollectionOld) {
-                if (!alergiasCollectionNew.contains(alergiasCollectionOldAlergias)) {
-                    alergiasCollectionOldAlergias.setIdTipoAlergia(null);
-                    alergiasCollectionOldAlergias = em.merge(alergiasCollectionOldAlergias);
+            List<Alergias> alergiasListOld = persistentTipoAlergia.getAlergiasList();
+            List<Alergias> alergiasListNew = tipoAlergia.getAlergiasList();
+            List<String> illegalOrphanMessages = null;
+            for (Alergias alergiasListOldAlergias : alergiasListOld) {
+                if (!alergiasListNew.contains(alergiasListOldAlergias)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Alergias " + alergiasListOldAlergias + " since its idTipoAlergia field is not nullable.");
                 }
             }
-            for (Alergias alergiasCollectionNewAlergias : alergiasCollectionNew) {
-                if (!alergiasCollectionOld.contains(alergiasCollectionNewAlergias)) {
-                    TipoAlergia oldIdTipoAlergiaOfAlergiasCollectionNewAlergias = alergiasCollectionNewAlergias.getIdTipoAlergia();
-                    alergiasCollectionNewAlergias.setIdTipoAlergia(tipoAlergia);
-                    alergiasCollectionNewAlergias = em.merge(alergiasCollectionNewAlergias);
-                    if (oldIdTipoAlergiaOfAlergiasCollectionNewAlergias != null && !oldIdTipoAlergiaOfAlergiasCollectionNewAlergias.equals(tipoAlergia)) {
-                        oldIdTipoAlergiaOfAlergiasCollectionNewAlergias.getAlergiasCollection().remove(alergiasCollectionNewAlergias);
-                        oldIdTipoAlergiaOfAlergiasCollectionNewAlergias = em.merge(oldIdTipoAlergiaOfAlergiasCollectionNewAlergias);
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            List<Alergias> attachedAlergiasListNew = new ArrayList<Alergias>();
+            for (Alergias alergiasListNewAlergiasToAttach : alergiasListNew) {
+                alergiasListNewAlergiasToAttach = em.getReference(alergiasListNewAlergiasToAttach.getClass(), alergiasListNewAlergiasToAttach.getIdAlergia());
+                attachedAlergiasListNew.add(alergiasListNewAlergiasToAttach);
+            }
+            alergiasListNew = attachedAlergiasListNew;
+            tipoAlergia.setAlergiasList(alergiasListNew);
+            tipoAlergia = em.merge(tipoAlergia);
+            for (Alergias alergiasListNewAlergias : alergiasListNew) {
+                if (!alergiasListOld.contains(alergiasListNewAlergias)) {
+                    TipoAlergia oldIdTipoAlergiaOfAlergiasListNewAlergias = alergiasListNewAlergias.getIdTipoAlergia();
+                    alergiasListNewAlergias.setIdTipoAlergia(tipoAlergia);
+                    alergiasListNewAlergias = em.merge(alergiasListNewAlergias);
+                    if (oldIdTipoAlergiaOfAlergiasListNewAlergias != null && !oldIdTipoAlergiaOfAlergiasListNewAlergias.equals(tipoAlergia)) {
+                        oldIdTipoAlergiaOfAlergiasListNewAlergias.getAlergiasList().remove(alergiasListNewAlergias);
+                        oldIdTipoAlergiaOfAlergiasListNewAlergias = em.merge(oldIdTipoAlergiaOfAlergiasListNewAlergias);
                     }
                 }
             }
@@ -122,7 +128,7 @@ public class TipoAlergiaJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws NonexistentEntityException {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -134,10 +140,16 @@ public class TipoAlergiaJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The tipoAlergia with id " + id + " no longer exists.", enfe);
             }
-            Collection<Alergias> alergiasCollection = tipoAlergia.getAlergiasCollection();
-            for (Alergias alergiasCollectionAlergias : alergiasCollection) {
-                alergiasCollectionAlergias.setIdTipoAlergia(null);
-                alergiasCollectionAlergias = em.merge(alergiasCollectionAlergias);
+            List<String> illegalOrphanMessages = null;
+            List<Alergias> alergiasListOrphanCheck = tipoAlergia.getAlergiasList();
+            for (Alergias alergiasListOrphanCheckAlergias : alergiasListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This TipoAlergia (" + tipoAlergia + ") cannot be destroyed since the Alergias " + alergiasListOrphanCheckAlergias + " in its alergiasList field has a non-nullable idTipoAlergia field.");
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
             }
             em.remove(tipoAlergia);
             em.getTransaction().commit();

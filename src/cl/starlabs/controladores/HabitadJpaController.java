@@ -16,14 +16,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Mascota;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class HabitadJpaController implements Serializable {
 
@@ -37,27 +36,27 @@ public class HabitadJpaController implements Serializable {
     }
 
     public void create(Habitad habitad) throws PreexistingEntityException, Exception {
-        if (habitad.getMascotaCollection() == null) {
-            habitad.setMascotaCollection(new ArrayList<Mascota>());
+        if (habitad.getMascotaList() == null) {
+            habitad.setMascotaList(new ArrayList<Mascota>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Collection<Mascota> attachedMascotaCollection = new ArrayList<Mascota>();
-            for (Mascota mascotaCollectionMascotaToAttach : habitad.getMascotaCollection()) {
-                mascotaCollectionMascotaToAttach = em.getReference(mascotaCollectionMascotaToAttach.getClass(), mascotaCollectionMascotaToAttach.getIdMascota());
-                attachedMascotaCollection.add(mascotaCollectionMascotaToAttach);
+            List<Mascota> attachedMascotaList = new ArrayList<Mascota>();
+            for (Mascota mascotaListMascotaToAttach : habitad.getMascotaList()) {
+                mascotaListMascotaToAttach = em.getReference(mascotaListMascotaToAttach.getClass(), mascotaListMascotaToAttach.getIdMascota());
+                attachedMascotaList.add(mascotaListMascotaToAttach);
             }
-            habitad.setMascotaCollection(attachedMascotaCollection);
+            habitad.setMascotaList(attachedMascotaList);
             em.persist(habitad);
-            for (Mascota mascotaCollectionMascota : habitad.getMascotaCollection()) {
-                Habitad oldHabitadOfMascotaCollectionMascota = mascotaCollectionMascota.getHabitad();
-                mascotaCollectionMascota.setHabitad(habitad);
-                mascotaCollectionMascota = em.merge(mascotaCollectionMascota);
-                if (oldHabitadOfMascotaCollectionMascota != null) {
-                    oldHabitadOfMascotaCollectionMascota.getMascotaCollection().remove(mascotaCollectionMascota);
-                    oldHabitadOfMascotaCollectionMascota = em.merge(oldHabitadOfMascotaCollectionMascota);
+            for (Mascota mascotaListMascota : habitad.getMascotaList()) {
+                Habitad oldHabitadOfMascotaListMascota = mascotaListMascota.getHabitad();
+                mascotaListMascota.setHabitad(habitad);
+                mascotaListMascota = em.merge(mascotaListMascota);
+                if (oldHabitadOfMascotaListMascota != null) {
+                    oldHabitadOfMascotaListMascota.getMascotaList().remove(mascotaListMascota);
+                    oldHabitadOfMascotaListMascota = em.merge(oldHabitadOfMascotaListMascota);
                 }
             }
             em.getTransaction().commit();
@@ -79,36 +78,36 @@ public class HabitadJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Habitad persistentHabitad = em.find(Habitad.class, habitad.getIdHabitad());
-            Collection<Mascota> mascotaCollectionOld = persistentHabitad.getMascotaCollection();
-            Collection<Mascota> mascotaCollectionNew = habitad.getMascotaCollection();
+            List<Mascota> mascotaListOld = persistentHabitad.getMascotaList();
+            List<Mascota> mascotaListNew = habitad.getMascotaList();
             List<String> illegalOrphanMessages = null;
-            for (Mascota mascotaCollectionOldMascota : mascotaCollectionOld) {
-                if (!mascotaCollectionNew.contains(mascotaCollectionOldMascota)) {
+            for (Mascota mascotaListOldMascota : mascotaListOld) {
+                if (!mascotaListNew.contains(mascotaListOldMascota)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Mascota " + mascotaCollectionOldMascota + " since its habitad field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Mascota " + mascotaListOldMascota + " since its habitad field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Collection<Mascota> attachedMascotaCollectionNew = new ArrayList<Mascota>();
-            for (Mascota mascotaCollectionNewMascotaToAttach : mascotaCollectionNew) {
-                mascotaCollectionNewMascotaToAttach = em.getReference(mascotaCollectionNewMascotaToAttach.getClass(), mascotaCollectionNewMascotaToAttach.getIdMascota());
-                attachedMascotaCollectionNew.add(mascotaCollectionNewMascotaToAttach);
+            List<Mascota> attachedMascotaListNew = new ArrayList<Mascota>();
+            for (Mascota mascotaListNewMascotaToAttach : mascotaListNew) {
+                mascotaListNewMascotaToAttach = em.getReference(mascotaListNewMascotaToAttach.getClass(), mascotaListNewMascotaToAttach.getIdMascota());
+                attachedMascotaListNew.add(mascotaListNewMascotaToAttach);
             }
-            mascotaCollectionNew = attachedMascotaCollectionNew;
-            habitad.setMascotaCollection(mascotaCollectionNew);
+            mascotaListNew = attachedMascotaListNew;
+            habitad.setMascotaList(mascotaListNew);
             habitad = em.merge(habitad);
-            for (Mascota mascotaCollectionNewMascota : mascotaCollectionNew) {
-                if (!mascotaCollectionOld.contains(mascotaCollectionNewMascota)) {
-                    Habitad oldHabitadOfMascotaCollectionNewMascota = mascotaCollectionNewMascota.getHabitad();
-                    mascotaCollectionNewMascota.setHabitad(habitad);
-                    mascotaCollectionNewMascota = em.merge(mascotaCollectionNewMascota);
-                    if (oldHabitadOfMascotaCollectionNewMascota != null && !oldHabitadOfMascotaCollectionNewMascota.equals(habitad)) {
-                        oldHabitadOfMascotaCollectionNewMascota.getMascotaCollection().remove(mascotaCollectionNewMascota);
-                        oldHabitadOfMascotaCollectionNewMascota = em.merge(oldHabitadOfMascotaCollectionNewMascota);
+            for (Mascota mascotaListNewMascota : mascotaListNew) {
+                if (!mascotaListOld.contains(mascotaListNewMascota)) {
+                    Habitad oldHabitadOfMascotaListNewMascota = mascotaListNewMascota.getHabitad();
+                    mascotaListNewMascota.setHabitad(habitad);
+                    mascotaListNewMascota = em.merge(mascotaListNewMascota);
+                    if (oldHabitadOfMascotaListNewMascota != null && !oldHabitadOfMascotaListNewMascota.equals(habitad)) {
+                        oldHabitadOfMascotaListNewMascota.getMascotaList().remove(mascotaListNewMascota);
+                        oldHabitadOfMascotaListNewMascota = em.merge(oldHabitadOfMascotaListNewMascota);
                     }
                 }
             }
@@ -142,12 +141,12 @@ public class HabitadJpaController implements Serializable {
                 throw new NonexistentEntityException("The habitad with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Mascota> mascotaCollectionOrphanCheck = habitad.getMascotaCollection();
-            for (Mascota mascotaCollectionOrphanCheckMascota : mascotaCollectionOrphanCheck) {
+            List<Mascota> mascotaListOrphanCheck = habitad.getMascotaList();
+            for (Mascota mascotaListOrphanCheckMascota : mascotaListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Habitad (" + habitad + ") cannot be destroyed since the Mascota " + mascotaCollectionOrphanCheckMascota + " in its mascotaCollection field has a non-nullable habitad field.");
+                illegalOrphanMessages.add("This Habitad (" + habitad + ") cannot be destroyed since the Mascota " + mascotaListOrphanCheckMascota + " in its mascotaList field has a non-nullable habitad field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

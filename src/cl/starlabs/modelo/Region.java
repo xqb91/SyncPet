@@ -6,7 +6,7 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,31 +23,26 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Region", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Region.findAll", query = "SELECT r FROM Region r"),
     @NamedQuery(name = "Region.findByIdRegion", query = "SELECT r FROM Region r WHERE r.idRegion = :idRegion"),
-    @NamedQuery(name = "Region.findByNombre", query = "SELECT r FROM Region r WHERE r.nombre = :nombre"),
-    @NamedQuery(name = "Region.findByCodTelef", query = "SELECT r FROM Region r WHERE r.codTelef = :codTelef")})
+    @NamedQuery(name = "Region.findByNombre", query = "SELECT r FROM Region r WHERE r.nombre = :nombre")})
 public class Region implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_region", nullable = false)
     private Integer idRegion;
     @Basic(optional = false)
-    @Column(name = "nombre", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String nombre;
-    @Basic(optional = false)
-    @Column(name = "cod_telef", nullable = false, length = 4)
-    private String codTelef;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "region")
-    private Collection<Provincia> provinciaCollection;
+    private List<Provincia> provinciaList;
     @JoinColumn(name = "pais", referencedColumnName = "id_pais", nullable = false)
     @ManyToOne(optional = false)
     private Pais pais;
@@ -59,10 +54,9 @@ public class Region implements Serializable {
         this.idRegion = idRegion;
     }
 
-    public Region(Integer idRegion, String nombre, String codTelef) {
+    public Region(Integer idRegion, String nombre) {
         this.idRegion = idRegion;
         this.nombre = nombre;
-        this.codTelef = codTelef;
     }
 
     public Integer getIdRegion() {
@@ -81,21 +75,13 @@ public class Region implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getCodTelef() {
-        return codTelef;
-    }
-
-    public void setCodTelef(String codTelef) {
-        this.codTelef = codTelef;
-    }
-
     @XmlTransient
-    public Collection<Provincia> getProvinciaCollection() {
-        return provinciaCollection;
+    public List<Provincia> getProvinciaList() {
+        return provinciaList;
     }
 
-    public void setProvinciaCollection(Collection<Provincia> provinciaCollection) {
-        this.provinciaCollection = provinciaCollection;
+    public void setProvinciaList(List<Provincia> provinciaList) {
+        this.provinciaList = provinciaList;
     }
 
     public Pais getPais() {

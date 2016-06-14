@@ -6,7 +6,7 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
 @Table(name = "Tipo_Procedimiento", catalog = "syncpet", schema = "dbo")
@@ -33,14 +33,13 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TipoProcedimiento.findByNombreProcedimiento", query = "SELECT t FROM TipoProcedimiento t WHERE t.nombreProcedimiento = :nombreProcedimiento"),
     @NamedQuery(name = "TipoProcedimiento.findByTipoProcedimiento", query = "SELECT t FROM TipoProcedimiento t WHERE t.tipoProcedimiento = :tipoProcedimiento")})
 public class TipoProcedimiento implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_tipo_procedimiento", nullable = false)
     private Integer idTipoProcedimiento;
     @Basic(optional = false)
-    @Column(name = "clasificacion", nullable = false)
+    @Column(nullable = false)
     private Character clasificacion;
     @Basic(optional = false)
     @Column(name = "nombre_procedimiento", nullable = false, length = 120)
@@ -49,7 +48,7 @@ public class TipoProcedimiento implements Serializable {
     @Column(name = "tipo_procedimiento", nullable = false, length = 75)
     private String tipoProcedimiento;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoProcedimiento")
-    private Collection<Procedimientos> procedimientosCollection;
+    private List<Procedimientos> procedimientosList;
 
     public TipoProcedimiento() {
     }
@@ -98,12 +97,12 @@ public class TipoProcedimiento implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Procedimientos> getProcedimientosCollection() {
-        return procedimientosCollection;
+    public List<Procedimientos> getProcedimientosList() {
+        return procedimientosList;
     }
 
-    public void setProcedimientosCollection(Collection<Procedimientos> procedimientosCollection) {
-        this.procedimientosCollection = procedimientosCollection;
+    public void setProcedimientosList(List<Procedimientos> procedimientosList) {
+        this.procedimientosList = procedimientosList;
     }
 
     @Override

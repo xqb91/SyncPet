@@ -17,14 +17,13 @@ import cl.starlabs.modelo.Pais;
 import cl.starlabs.modelo.Provincia;
 import cl.starlabs.modelo.Region;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class RegionJpaController implements Serializable {
 
@@ -38,8 +37,8 @@ public class RegionJpaController implements Serializable {
     }
 
     public void create(Region region) throws PreexistingEntityException, Exception {
-        if (region.getProvinciaCollection() == null) {
-            region.setProvinciaCollection(new ArrayList<Provincia>());
+        if (region.getProvinciaList() == null) {
+            region.setProvinciaList(new ArrayList<Provincia>());
         }
         EntityManager em = null;
         try {
@@ -50,24 +49,24 @@ public class RegionJpaController implements Serializable {
                 pais = em.getReference(pais.getClass(), pais.getIdPais());
                 region.setPais(pais);
             }
-            Collection<Provincia> attachedProvinciaCollection = new ArrayList<Provincia>();
-            for (Provincia provinciaCollectionProvinciaToAttach : region.getProvinciaCollection()) {
-                provinciaCollectionProvinciaToAttach = em.getReference(provinciaCollectionProvinciaToAttach.getClass(), provinciaCollectionProvinciaToAttach.getIdProvincia());
-                attachedProvinciaCollection.add(provinciaCollectionProvinciaToAttach);
+            List<Provincia> attachedProvinciaList = new ArrayList<Provincia>();
+            for (Provincia provinciaListProvinciaToAttach : region.getProvinciaList()) {
+                provinciaListProvinciaToAttach = em.getReference(provinciaListProvinciaToAttach.getClass(), provinciaListProvinciaToAttach.getIdProvincia());
+                attachedProvinciaList.add(provinciaListProvinciaToAttach);
             }
-            region.setProvinciaCollection(attachedProvinciaCollection);
+            region.setProvinciaList(attachedProvinciaList);
             em.persist(region);
             if (pais != null) {
-                pais.getRegionCollection().add(region);
+                pais.getRegionList().add(region);
                 pais = em.merge(pais);
             }
-            for (Provincia provinciaCollectionProvincia : region.getProvinciaCollection()) {
-                Region oldRegionOfProvinciaCollectionProvincia = provinciaCollectionProvincia.getRegion();
-                provinciaCollectionProvincia.setRegion(region);
-                provinciaCollectionProvincia = em.merge(provinciaCollectionProvincia);
-                if (oldRegionOfProvinciaCollectionProvincia != null) {
-                    oldRegionOfProvinciaCollectionProvincia.getProvinciaCollection().remove(provinciaCollectionProvincia);
-                    oldRegionOfProvinciaCollectionProvincia = em.merge(oldRegionOfProvinciaCollectionProvincia);
+            for (Provincia provinciaListProvincia : region.getProvinciaList()) {
+                Region oldRegionOfProvinciaListProvincia = provinciaListProvincia.getRegion();
+                provinciaListProvincia.setRegion(region);
+                provinciaListProvincia = em.merge(provinciaListProvincia);
+                if (oldRegionOfProvinciaListProvincia != null) {
+                    oldRegionOfProvinciaListProvincia.getProvinciaList().remove(provinciaListProvincia);
+                    oldRegionOfProvinciaListProvincia = em.merge(oldRegionOfProvinciaListProvincia);
                 }
             }
             em.getTransaction().commit();
@@ -91,15 +90,15 @@ public class RegionJpaController implements Serializable {
             Region persistentRegion = em.find(Region.class, region.getIdRegion());
             Pais paisOld = persistentRegion.getPais();
             Pais paisNew = region.getPais();
-            Collection<Provincia> provinciaCollectionOld = persistentRegion.getProvinciaCollection();
-            Collection<Provincia> provinciaCollectionNew = region.getProvinciaCollection();
+            List<Provincia> provinciaListOld = persistentRegion.getProvinciaList();
+            List<Provincia> provinciaListNew = region.getProvinciaList();
             List<String> illegalOrphanMessages = null;
-            for (Provincia provinciaCollectionOldProvincia : provinciaCollectionOld) {
-                if (!provinciaCollectionNew.contains(provinciaCollectionOldProvincia)) {
+            for (Provincia provinciaListOldProvincia : provinciaListOld) {
+                if (!provinciaListNew.contains(provinciaListOldProvincia)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Provincia " + provinciaCollectionOldProvincia + " since its region field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Provincia " + provinciaListOldProvincia + " since its region field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -109,30 +108,30 @@ public class RegionJpaController implements Serializable {
                 paisNew = em.getReference(paisNew.getClass(), paisNew.getIdPais());
                 region.setPais(paisNew);
             }
-            Collection<Provincia> attachedProvinciaCollectionNew = new ArrayList<Provincia>();
-            for (Provincia provinciaCollectionNewProvinciaToAttach : provinciaCollectionNew) {
-                provinciaCollectionNewProvinciaToAttach = em.getReference(provinciaCollectionNewProvinciaToAttach.getClass(), provinciaCollectionNewProvinciaToAttach.getIdProvincia());
-                attachedProvinciaCollectionNew.add(provinciaCollectionNewProvinciaToAttach);
+            List<Provincia> attachedProvinciaListNew = new ArrayList<Provincia>();
+            for (Provincia provinciaListNewProvinciaToAttach : provinciaListNew) {
+                provinciaListNewProvinciaToAttach = em.getReference(provinciaListNewProvinciaToAttach.getClass(), provinciaListNewProvinciaToAttach.getIdProvincia());
+                attachedProvinciaListNew.add(provinciaListNewProvinciaToAttach);
             }
-            provinciaCollectionNew = attachedProvinciaCollectionNew;
-            region.setProvinciaCollection(provinciaCollectionNew);
+            provinciaListNew = attachedProvinciaListNew;
+            region.setProvinciaList(provinciaListNew);
             region = em.merge(region);
             if (paisOld != null && !paisOld.equals(paisNew)) {
-                paisOld.getRegionCollection().remove(region);
+                paisOld.getRegionList().remove(region);
                 paisOld = em.merge(paisOld);
             }
             if (paisNew != null && !paisNew.equals(paisOld)) {
-                paisNew.getRegionCollection().add(region);
+                paisNew.getRegionList().add(region);
                 paisNew = em.merge(paisNew);
             }
-            for (Provincia provinciaCollectionNewProvincia : provinciaCollectionNew) {
-                if (!provinciaCollectionOld.contains(provinciaCollectionNewProvincia)) {
-                    Region oldRegionOfProvinciaCollectionNewProvincia = provinciaCollectionNewProvincia.getRegion();
-                    provinciaCollectionNewProvincia.setRegion(region);
-                    provinciaCollectionNewProvincia = em.merge(provinciaCollectionNewProvincia);
-                    if (oldRegionOfProvinciaCollectionNewProvincia != null && !oldRegionOfProvinciaCollectionNewProvincia.equals(region)) {
-                        oldRegionOfProvinciaCollectionNewProvincia.getProvinciaCollection().remove(provinciaCollectionNewProvincia);
-                        oldRegionOfProvinciaCollectionNewProvincia = em.merge(oldRegionOfProvinciaCollectionNewProvincia);
+            for (Provincia provinciaListNewProvincia : provinciaListNew) {
+                if (!provinciaListOld.contains(provinciaListNewProvincia)) {
+                    Region oldRegionOfProvinciaListNewProvincia = provinciaListNewProvincia.getRegion();
+                    provinciaListNewProvincia.setRegion(region);
+                    provinciaListNewProvincia = em.merge(provinciaListNewProvincia);
+                    if (oldRegionOfProvinciaListNewProvincia != null && !oldRegionOfProvinciaListNewProvincia.equals(region)) {
+                        oldRegionOfProvinciaListNewProvincia.getProvinciaList().remove(provinciaListNewProvincia);
+                        oldRegionOfProvinciaListNewProvincia = em.merge(oldRegionOfProvinciaListNewProvincia);
                     }
                 }
             }
@@ -166,19 +165,19 @@ public class RegionJpaController implements Serializable {
                 throw new NonexistentEntityException("The region with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Provincia> provinciaCollectionOrphanCheck = region.getProvinciaCollection();
-            for (Provincia provinciaCollectionOrphanCheckProvincia : provinciaCollectionOrphanCheck) {
+            List<Provincia> provinciaListOrphanCheck = region.getProvinciaList();
+            for (Provincia provinciaListOrphanCheckProvincia : provinciaListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Region (" + region + ") cannot be destroyed since the Provincia " + provinciaCollectionOrphanCheckProvincia + " in its provinciaCollection field has a non-nullable region field.");
+                illegalOrphanMessages.add("This Region (" + region + ") cannot be destroyed since the Provincia " + provinciaListOrphanCheckProvincia + " in its provinciaList field has a non-nullable region field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
             Pais pais = region.getPais();
             if (pais != null) {
-                pais.getRegionCollection().remove(region);
+                pais.getRegionList().remove(region);
                 pais = em.merge(pais);
             }
             em.remove(region);

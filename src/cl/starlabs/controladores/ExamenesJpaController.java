@@ -23,7 +23,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class ExamenesJpaController implements Serializable {
 
@@ -63,19 +63,19 @@ public class ExamenesJpaController implements Serializable {
             }
             em.persist(examenes);
             if (hospitalizacion != null) {
-                hospitalizacion.getExamenesCollection().add(examenes);
+                hospitalizacion.getExamenesList().add(examenes);
                 hospitalizacion = em.merge(hospitalizacion);
             }
             if (mascota != null) {
-                mascota.getExamenesCollection().add(examenes);
+                mascota.getExamenesList().add(examenes);
                 mascota = em.merge(mascota);
             }
             if (tipoExamen != null) {
-                tipoExamen.getExamenesCollection().add(examenes);
+                tipoExamen.getExamenesList().add(examenes);
                 tipoExamen = em.merge(tipoExamen);
             }
             if (veterinario != null) {
-                veterinario.getExamenesCollection().add(examenes);
+                veterinario.getExamenesList().add(examenes);
                 veterinario = em.merge(veterinario);
             }
             em.getTransaction().commit();
@@ -123,35 +123,35 @@ public class ExamenesJpaController implements Serializable {
             }
             examenes = em.merge(examenes);
             if (hospitalizacionOld != null && !hospitalizacionOld.equals(hospitalizacionNew)) {
-                hospitalizacionOld.getExamenesCollection().remove(examenes);
+                hospitalizacionOld.getExamenesList().remove(examenes);
                 hospitalizacionOld = em.merge(hospitalizacionOld);
             }
             if (hospitalizacionNew != null && !hospitalizacionNew.equals(hospitalizacionOld)) {
-                hospitalizacionNew.getExamenesCollection().add(examenes);
+                hospitalizacionNew.getExamenesList().add(examenes);
                 hospitalizacionNew = em.merge(hospitalizacionNew);
             }
             if (mascotaOld != null && !mascotaOld.equals(mascotaNew)) {
-                mascotaOld.getExamenesCollection().remove(examenes);
+                mascotaOld.getExamenesList().remove(examenes);
                 mascotaOld = em.merge(mascotaOld);
             }
             if (mascotaNew != null && !mascotaNew.equals(mascotaOld)) {
-                mascotaNew.getExamenesCollection().add(examenes);
+                mascotaNew.getExamenesList().add(examenes);
                 mascotaNew = em.merge(mascotaNew);
             }
             if (tipoExamenOld != null && !tipoExamenOld.equals(tipoExamenNew)) {
-                tipoExamenOld.getExamenesCollection().remove(examenes);
+                tipoExamenOld.getExamenesList().remove(examenes);
                 tipoExamenOld = em.merge(tipoExamenOld);
             }
             if (tipoExamenNew != null && !tipoExamenNew.equals(tipoExamenOld)) {
-                tipoExamenNew.getExamenesCollection().add(examenes);
+                tipoExamenNew.getExamenesList().add(examenes);
                 tipoExamenNew = em.merge(tipoExamenNew);
             }
             if (veterinarioOld != null && !veterinarioOld.equals(veterinarioNew)) {
-                veterinarioOld.getExamenesCollection().remove(examenes);
+                veterinarioOld.getExamenesList().remove(examenes);
                 veterinarioOld = em.merge(veterinarioOld);
             }
             if (veterinarioNew != null && !veterinarioNew.equals(veterinarioOld)) {
-                veterinarioNew.getExamenesCollection().add(examenes);
+                veterinarioNew.getExamenesList().add(examenes);
                 veterinarioNew = em.merge(veterinarioNew);
             }
             em.getTransaction().commit();
@@ -185,22 +185,22 @@ public class ExamenesJpaController implements Serializable {
             }
             Hospitalizacion hospitalizacion = examenes.getHospitalizacion();
             if (hospitalizacion != null) {
-                hospitalizacion.getExamenesCollection().remove(examenes);
+                hospitalizacion.getExamenesList().remove(examenes);
                 hospitalizacion = em.merge(hospitalizacion);
             }
             Mascota mascota = examenes.getMascota();
             if (mascota != null) {
-                mascota.getExamenesCollection().remove(examenes);
+                mascota.getExamenesList().remove(examenes);
                 mascota = em.merge(mascota);
             }
             TipoExamen tipoExamen = examenes.getTipoExamen();
             if (tipoExamen != null) {
-                tipoExamen.getExamenesCollection().remove(examenes);
+                tipoExamen.getExamenesList().remove(examenes);
                 tipoExamen = em.merge(tipoExamen);
             }
             Veterinario veterinario = examenes.getVeterinario();
             if (veterinario != null) {
-                veterinario.getExamenesCollection().remove(examenes);
+                veterinario.getExamenesList().remove(examenes);
                 veterinario = em.merge(veterinario);
             }
             em.remove(examenes);

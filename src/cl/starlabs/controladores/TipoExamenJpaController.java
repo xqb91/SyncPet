@@ -16,14 +16,13 @@ import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Examenes;
 import cl.starlabs.modelo.TipoExamen;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class TipoExamenJpaController implements Serializable {
 
@@ -37,27 +36,27 @@ public class TipoExamenJpaController implements Serializable {
     }
 
     public void create(TipoExamen tipoExamen) throws PreexistingEntityException, Exception {
-        if (tipoExamen.getExamenesCollection() == null) {
-            tipoExamen.setExamenesCollection(new ArrayList<Examenes>());
+        if (tipoExamen.getExamenesList() == null) {
+            tipoExamen.setExamenesList(new ArrayList<Examenes>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Collection<Examenes> attachedExamenesCollection = new ArrayList<Examenes>();
-            for (Examenes examenesCollectionExamenesToAttach : tipoExamen.getExamenesCollection()) {
-                examenesCollectionExamenesToAttach = em.getReference(examenesCollectionExamenesToAttach.getClass(), examenesCollectionExamenesToAttach.getIdExamen());
-                attachedExamenesCollection.add(examenesCollectionExamenesToAttach);
+            List<Examenes> attachedExamenesList = new ArrayList<Examenes>();
+            for (Examenes examenesListExamenesToAttach : tipoExamen.getExamenesList()) {
+                examenesListExamenesToAttach = em.getReference(examenesListExamenesToAttach.getClass(), examenesListExamenesToAttach.getIdExamen());
+                attachedExamenesList.add(examenesListExamenesToAttach);
             }
-            tipoExamen.setExamenesCollection(attachedExamenesCollection);
+            tipoExamen.setExamenesList(attachedExamenesList);
             em.persist(tipoExamen);
-            for (Examenes examenesCollectionExamenes : tipoExamen.getExamenesCollection()) {
-                TipoExamen oldTipoExamenOfExamenesCollectionExamenes = examenesCollectionExamenes.getTipoExamen();
-                examenesCollectionExamenes.setTipoExamen(tipoExamen);
-                examenesCollectionExamenes = em.merge(examenesCollectionExamenes);
-                if (oldTipoExamenOfExamenesCollectionExamenes != null) {
-                    oldTipoExamenOfExamenesCollectionExamenes.getExamenesCollection().remove(examenesCollectionExamenes);
-                    oldTipoExamenOfExamenesCollectionExamenes = em.merge(oldTipoExamenOfExamenesCollectionExamenes);
+            for (Examenes examenesListExamenes : tipoExamen.getExamenesList()) {
+                TipoExamen oldTipoExamenOfExamenesListExamenes = examenesListExamenes.getTipoExamen();
+                examenesListExamenes.setTipoExamen(tipoExamen);
+                examenesListExamenes = em.merge(examenesListExamenes);
+                if (oldTipoExamenOfExamenesListExamenes != null) {
+                    oldTipoExamenOfExamenesListExamenes.getExamenesList().remove(examenesListExamenes);
+                    oldTipoExamenOfExamenesListExamenes = em.merge(oldTipoExamenOfExamenesListExamenes);
                 }
             }
             em.getTransaction().commit();
@@ -79,36 +78,36 @@ public class TipoExamenJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             TipoExamen persistentTipoExamen = em.find(TipoExamen.class, tipoExamen.getIdTipoExamen());
-            Collection<Examenes> examenesCollectionOld = persistentTipoExamen.getExamenesCollection();
-            Collection<Examenes> examenesCollectionNew = tipoExamen.getExamenesCollection();
+            List<Examenes> examenesListOld = persistentTipoExamen.getExamenesList();
+            List<Examenes> examenesListNew = tipoExamen.getExamenesList();
             List<String> illegalOrphanMessages = null;
-            for (Examenes examenesCollectionOldExamenes : examenesCollectionOld) {
-                if (!examenesCollectionNew.contains(examenesCollectionOldExamenes)) {
+            for (Examenes examenesListOldExamenes : examenesListOld) {
+                if (!examenesListNew.contains(examenesListOldExamenes)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Examenes " + examenesCollectionOldExamenes + " since its tipoExamen field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Examenes " + examenesListOldExamenes + " since its tipoExamen field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Collection<Examenes> attachedExamenesCollectionNew = new ArrayList<Examenes>();
-            for (Examenes examenesCollectionNewExamenesToAttach : examenesCollectionNew) {
-                examenesCollectionNewExamenesToAttach = em.getReference(examenesCollectionNewExamenesToAttach.getClass(), examenesCollectionNewExamenesToAttach.getIdExamen());
-                attachedExamenesCollectionNew.add(examenesCollectionNewExamenesToAttach);
+            List<Examenes> attachedExamenesListNew = new ArrayList<Examenes>();
+            for (Examenes examenesListNewExamenesToAttach : examenesListNew) {
+                examenesListNewExamenesToAttach = em.getReference(examenesListNewExamenesToAttach.getClass(), examenesListNewExamenesToAttach.getIdExamen());
+                attachedExamenesListNew.add(examenesListNewExamenesToAttach);
             }
-            examenesCollectionNew = attachedExamenesCollectionNew;
-            tipoExamen.setExamenesCollection(examenesCollectionNew);
+            examenesListNew = attachedExamenesListNew;
+            tipoExamen.setExamenesList(examenesListNew);
             tipoExamen = em.merge(tipoExamen);
-            for (Examenes examenesCollectionNewExamenes : examenesCollectionNew) {
-                if (!examenesCollectionOld.contains(examenesCollectionNewExamenes)) {
-                    TipoExamen oldTipoExamenOfExamenesCollectionNewExamenes = examenesCollectionNewExamenes.getTipoExamen();
-                    examenesCollectionNewExamenes.setTipoExamen(tipoExamen);
-                    examenesCollectionNewExamenes = em.merge(examenesCollectionNewExamenes);
-                    if (oldTipoExamenOfExamenesCollectionNewExamenes != null && !oldTipoExamenOfExamenesCollectionNewExamenes.equals(tipoExamen)) {
-                        oldTipoExamenOfExamenesCollectionNewExamenes.getExamenesCollection().remove(examenesCollectionNewExamenes);
-                        oldTipoExamenOfExamenesCollectionNewExamenes = em.merge(oldTipoExamenOfExamenesCollectionNewExamenes);
+            for (Examenes examenesListNewExamenes : examenesListNew) {
+                if (!examenesListOld.contains(examenesListNewExamenes)) {
+                    TipoExamen oldTipoExamenOfExamenesListNewExamenes = examenesListNewExamenes.getTipoExamen();
+                    examenesListNewExamenes.setTipoExamen(tipoExamen);
+                    examenesListNewExamenes = em.merge(examenesListNewExamenes);
+                    if (oldTipoExamenOfExamenesListNewExamenes != null && !oldTipoExamenOfExamenesListNewExamenes.equals(tipoExamen)) {
+                        oldTipoExamenOfExamenesListNewExamenes.getExamenesList().remove(examenesListNewExamenes);
+                        oldTipoExamenOfExamenesListNewExamenes = em.merge(oldTipoExamenOfExamenesListNewExamenes);
                     }
                 }
             }
@@ -142,12 +141,12 @@ public class TipoExamenJpaController implements Serializable {
                 throw new NonexistentEntityException("The tipoExamen with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Examenes> examenesCollectionOrphanCheck = tipoExamen.getExamenesCollection();
-            for (Examenes examenesCollectionOrphanCheckExamenes : examenesCollectionOrphanCheck) {
+            List<Examenes> examenesListOrphanCheck = tipoExamen.getExamenesList();
+            for (Examenes examenesListOrphanCheckExamenes : examenesListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This TipoExamen (" + tipoExamen + ") cannot be destroyed since the Examenes " + examenesCollectionOrphanCheckExamenes + " in its examenesCollection field has a non-nullable tipoExamen field.");
+                illegalOrphanMessages.add("This TipoExamen (" + tipoExamen + ") cannot be destroyed since the Examenes " + examenesListOrphanCheckExamenes + " in its examenesList field has a non-nullable tipoExamen field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

@@ -16,14 +16,13 @@ import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Procedimientos;
 import cl.starlabs.modelo.TipoProcedimiento;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class TipoProcedimientoJpaController implements Serializable {
 
@@ -37,27 +36,27 @@ public class TipoProcedimientoJpaController implements Serializable {
     }
 
     public void create(TipoProcedimiento tipoProcedimiento) throws PreexistingEntityException, Exception {
-        if (tipoProcedimiento.getProcedimientosCollection() == null) {
-            tipoProcedimiento.setProcedimientosCollection(new ArrayList<Procedimientos>());
+        if (tipoProcedimiento.getProcedimientosList() == null) {
+            tipoProcedimiento.setProcedimientosList(new ArrayList<Procedimientos>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Collection<Procedimientos> attachedProcedimientosCollection = new ArrayList<Procedimientos>();
-            for (Procedimientos procedimientosCollectionProcedimientosToAttach : tipoProcedimiento.getProcedimientosCollection()) {
-                procedimientosCollectionProcedimientosToAttach = em.getReference(procedimientosCollectionProcedimientosToAttach.getClass(), procedimientosCollectionProcedimientosToAttach.getIdProcedimiento());
-                attachedProcedimientosCollection.add(procedimientosCollectionProcedimientosToAttach);
+            List<Procedimientos> attachedProcedimientosList = new ArrayList<Procedimientos>();
+            for (Procedimientos procedimientosListProcedimientosToAttach : tipoProcedimiento.getProcedimientosList()) {
+                procedimientosListProcedimientosToAttach = em.getReference(procedimientosListProcedimientosToAttach.getClass(), procedimientosListProcedimientosToAttach.getIdProcedimiento());
+                attachedProcedimientosList.add(procedimientosListProcedimientosToAttach);
             }
-            tipoProcedimiento.setProcedimientosCollection(attachedProcedimientosCollection);
+            tipoProcedimiento.setProcedimientosList(attachedProcedimientosList);
             em.persist(tipoProcedimiento);
-            for (Procedimientos procedimientosCollectionProcedimientos : tipoProcedimiento.getProcedimientosCollection()) {
-                TipoProcedimiento oldTipoProcedimientoOfProcedimientosCollectionProcedimientos = procedimientosCollectionProcedimientos.getTipoProcedimiento();
-                procedimientosCollectionProcedimientos.setTipoProcedimiento(tipoProcedimiento);
-                procedimientosCollectionProcedimientos = em.merge(procedimientosCollectionProcedimientos);
-                if (oldTipoProcedimientoOfProcedimientosCollectionProcedimientos != null) {
-                    oldTipoProcedimientoOfProcedimientosCollectionProcedimientos.getProcedimientosCollection().remove(procedimientosCollectionProcedimientos);
-                    oldTipoProcedimientoOfProcedimientosCollectionProcedimientos = em.merge(oldTipoProcedimientoOfProcedimientosCollectionProcedimientos);
+            for (Procedimientos procedimientosListProcedimientos : tipoProcedimiento.getProcedimientosList()) {
+                TipoProcedimiento oldTipoProcedimientoOfProcedimientosListProcedimientos = procedimientosListProcedimientos.getTipoProcedimiento();
+                procedimientosListProcedimientos.setTipoProcedimiento(tipoProcedimiento);
+                procedimientosListProcedimientos = em.merge(procedimientosListProcedimientos);
+                if (oldTipoProcedimientoOfProcedimientosListProcedimientos != null) {
+                    oldTipoProcedimientoOfProcedimientosListProcedimientos.getProcedimientosList().remove(procedimientosListProcedimientos);
+                    oldTipoProcedimientoOfProcedimientosListProcedimientos = em.merge(oldTipoProcedimientoOfProcedimientosListProcedimientos);
                 }
             }
             em.getTransaction().commit();
@@ -79,36 +78,36 @@ public class TipoProcedimientoJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             TipoProcedimiento persistentTipoProcedimiento = em.find(TipoProcedimiento.class, tipoProcedimiento.getIdTipoProcedimiento());
-            Collection<Procedimientos> procedimientosCollectionOld = persistentTipoProcedimiento.getProcedimientosCollection();
-            Collection<Procedimientos> procedimientosCollectionNew = tipoProcedimiento.getProcedimientosCollection();
+            List<Procedimientos> procedimientosListOld = persistentTipoProcedimiento.getProcedimientosList();
+            List<Procedimientos> procedimientosListNew = tipoProcedimiento.getProcedimientosList();
             List<String> illegalOrphanMessages = null;
-            for (Procedimientos procedimientosCollectionOldProcedimientos : procedimientosCollectionOld) {
-                if (!procedimientosCollectionNew.contains(procedimientosCollectionOldProcedimientos)) {
+            for (Procedimientos procedimientosListOldProcedimientos : procedimientosListOld) {
+                if (!procedimientosListNew.contains(procedimientosListOldProcedimientos)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Procedimientos " + procedimientosCollectionOldProcedimientos + " since its tipoProcedimiento field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Procedimientos " + procedimientosListOldProcedimientos + " since its tipoProcedimiento field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Collection<Procedimientos> attachedProcedimientosCollectionNew = new ArrayList<Procedimientos>();
-            for (Procedimientos procedimientosCollectionNewProcedimientosToAttach : procedimientosCollectionNew) {
-                procedimientosCollectionNewProcedimientosToAttach = em.getReference(procedimientosCollectionNewProcedimientosToAttach.getClass(), procedimientosCollectionNewProcedimientosToAttach.getIdProcedimiento());
-                attachedProcedimientosCollectionNew.add(procedimientosCollectionNewProcedimientosToAttach);
+            List<Procedimientos> attachedProcedimientosListNew = new ArrayList<Procedimientos>();
+            for (Procedimientos procedimientosListNewProcedimientosToAttach : procedimientosListNew) {
+                procedimientosListNewProcedimientosToAttach = em.getReference(procedimientosListNewProcedimientosToAttach.getClass(), procedimientosListNewProcedimientosToAttach.getIdProcedimiento());
+                attachedProcedimientosListNew.add(procedimientosListNewProcedimientosToAttach);
             }
-            procedimientosCollectionNew = attachedProcedimientosCollectionNew;
-            tipoProcedimiento.setProcedimientosCollection(procedimientosCollectionNew);
+            procedimientosListNew = attachedProcedimientosListNew;
+            tipoProcedimiento.setProcedimientosList(procedimientosListNew);
             tipoProcedimiento = em.merge(tipoProcedimiento);
-            for (Procedimientos procedimientosCollectionNewProcedimientos : procedimientosCollectionNew) {
-                if (!procedimientosCollectionOld.contains(procedimientosCollectionNewProcedimientos)) {
-                    TipoProcedimiento oldTipoProcedimientoOfProcedimientosCollectionNewProcedimientos = procedimientosCollectionNewProcedimientos.getTipoProcedimiento();
-                    procedimientosCollectionNewProcedimientos.setTipoProcedimiento(tipoProcedimiento);
-                    procedimientosCollectionNewProcedimientos = em.merge(procedimientosCollectionNewProcedimientos);
-                    if (oldTipoProcedimientoOfProcedimientosCollectionNewProcedimientos != null && !oldTipoProcedimientoOfProcedimientosCollectionNewProcedimientos.equals(tipoProcedimiento)) {
-                        oldTipoProcedimientoOfProcedimientosCollectionNewProcedimientos.getProcedimientosCollection().remove(procedimientosCollectionNewProcedimientos);
-                        oldTipoProcedimientoOfProcedimientosCollectionNewProcedimientos = em.merge(oldTipoProcedimientoOfProcedimientosCollectionNewProcedimientos);
+            for (Procedimientos procedimientosListNewProcedimientos : procedimientosListNew) {
+                if (!procedimientosListOld.contains(procedimientosListNewProcedimientos)) {
+                    TipoProcedimiento oldTipoProcedimientoOfProcedimientosListNewProcedimientos = procedimientosListNewProcedimientos.getTipoProcedimiento();
+                    procedimientosListNewProcedimientos.setTipoProcedimiento(tipoProcedimiento);
+                    procedimientosListNewProcedimientos = em.merge(procedimientosListNewProcedimientos);
+                    if (oldTipoProcedimientoOfProcedimientosListNewProcedimientos != null && !oldTipoProcedimientoOfProcedimientosListNewProcedimientos.equals(tipoProcedimiento)) {
+                        oldTipoProcedimientoOfProcedimientosListNewProcedimientos.getProcedimientosList().remove(procedimientosListNewProcedimientos);
+                        oldTipoProcedimientoOfProcedimientosListNewProcedimientos = em.merge(oldTipoProcedimientoOfProcedimientosListNewProcedimientos);
                     }
                 }
             }
@@ -142,12 +141,12 @@ public class TipoProcedimientoJpaController implements Serializable {
                 throw new NonexistentEntityException("The tipoProcedimiento with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Procedimientos> procedimientosCollectionOrphanCheck = tipoProcedimiento.getProcedimientosCollection();
-            for (Procedimientos procedimientosCollectionOrphanCheckProcedimientos : procedimientosCollectionOrphanCheck) {
+            List<Procedimientos> procedimientosListOrphanCheck = tipoProcedimiento.getProcedimientosList();
+            for (Procedimientos procedimientosListOrphanCheckProcedimientos : procedimientosListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This TipoProcedimiento (" + tipoProcedimiento + ") cannot be destroyed since the Procedimientos " + procedimientosCollectionOrphanCheckProcedimientos + " in its procedimientosCollection field has a non-nullable tipoProcedimiento field.");
+                illegalOrphanMessages.add("This TipoProcedimiento (" + tipoProcedimiento + ") cannot be destroyed since the Procedimientos " + procedimientosListOrphanCheckProcedimientos + " in its procedimientosList field has a non-nullable tipoProcedimiento field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

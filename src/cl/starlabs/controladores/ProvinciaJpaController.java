@@ -17,14 +17,13 @@ import cl.starlabs.modelo.Region;
 import cl.starlabs.modelo.Comuna;
 import cl.starlabs.modelo.Provincia;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class ProvinciaJpaController implements Serializable {
 
@@ -38,8 +37,8 @@ public class ProvinciaJpaController implements Serializable {
     }
 
     public void create(Provincia provincia) throws PreexistingEntityException, Exception {
-        if (provincia.getComunaCollection() == null) {
-            provincia.setComunaCollection(new ArrayList<Comuna>());
+        if (provincia.getComunaList() == null) {
+            provincia.setComunaList(new ArrayList<Comuna>());
         }
         EntityManager em = null;
         try {
@@ -50,24 +49,24 @@ public class ProvinciaJpaController implements Serializable {
                 region = em.getReference(region.getClass(), region.getIdRegion());
                 provincia.setRegion(region);
             }
-            Collection<Comuna> attachedComunaCollection = new ArrayList<Comuna>();
-            for (Comuna comunaCollectionComunaToAttach : provincia.getComunaCollection()) {
-                comunaCollectionComunaToAttach = em.getReference(comunaCollectionComunaToAttach.getClass(), comunaCollectionComunaToAttach.getIdComuna());
-                attachedComunaCollection.add(comunaCollectionComunaToAttach);
+            List<Comuna> attachedComunaList = new ArrayList<Comuna>();
+            for (Comuna comunaListComunaToAttach : provincia.getComunaList()) {
+                comunaListComunaToAttach = em.getReference(comunaListComunaToAttach.getClass(), comunaListComunaToAttach.getIdComuna());
+                attachedComunaList.add(comunaListComunaToAttach);
             }
-            provincia.setComunaCollection(attachedComunaCollection);
+            provincia.setComunaList(attachedComunaList);
             em.persist(provincia);
             if (region != null) {
-                region.getProvinciaCollection().add(provincia);
+                region.getProvinciaList().add(provincia);
                 region = em.merge(region);
             }
-            for (Comuna comunaCollectionComuna : provincia.getComunaCollection()) {
-                Provincia oldProvinciaOfComunaCollectionComuna = comunaCollectionComuna.getProvincia();
-                comunaCollectionComuna.setProvincia(provincia);
-                comunaCollectionComuna = em.merge(comunaCollectionComuna);
-                if (oldProvinciaOfComunaCollectionComuna != null) {
-                    oldProvinciaOfComunaCollectionComuna.getComunaCollection().remove(comunaCollectionComuna);
-                    oldProvinciaOfComunaCollectionComuna = em.merge(oldProvinciaOfComunaCollectionComuna);
+            for (Comuna comunaListComuna : provincia.getComunaList()) {
+                Provincia oldProvinciaOfComunaListComuna = comunaListComuna.getProvincia();
+                comunaListComuna.setProvincia(provincia);
+                comunaListComuna = em.merge(comunaListComuna);
+                if (oldProvinciaOfComunaListComuna != null) {
+                    oldProvinciaOfComunaListComuna.getComunaList().remove(comunaListComuna);
+                    oldProvinciaOfComunaListComuna = em.merge(oldProvinciaOfComunaListComuna);
                 }
             }
             em.getTransaction().commit();
@@ -91,15 +90,15 @@ public class ProvinciaJpaController implements Serializable {
             Provincia persistentProvincia = em.find(Provincia.class, provincia.getIdProvincia());
             Region regionOld = persistentProvincia.getRegion();
             Region regionNew = provincia.getRegion();
-            Collection<Comuna> comunaCollectionOld = persistentProvincia.getComunaCollection();
-            Collection<Comuna> comunaCollectionNew = provincia.getComunaCollection();
+            List<Comuna> comunaListOld = persistentProvincia.getComunaList();
+            List<Comuna> comunaListNew = provincia.getComunaList();
             List<String> illegalOrphanMessages = null;
-            for (Comuna comunaCollectionOldComuna : comunaCollectionOld) {
-                if (!comunaCollectionNew.contains(comunaCollectionOldComuna)) {
+            for (Comuna comunaListOldComuna : comunaListOld) {
+                if (!comunaListNew.contains(comunaListOldComuna)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Comuna " + comunaCollectionOldComuna + " since its provincia field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Comuna " + comunaListOldComuna + " since its provincia field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -109,30 +108,30 @@ public class ProvinciaJpaController implements Serializable {
                 regionNew = em.getReference(regionNew.getClass(), regionNew.getIdRegion());
                 provincia.setRegion(regionNew);
             }
-            Collection<Comuna> attachedComunaCollectionNew = new ArrayList<Comuna>();
-            for (Comuna comunaCollectionNewComunaToAttach : comunaCollectionNew) {
-                comunaCollectionNewComunaToAttach = em.getReference(comunaCollectionNewComunaToAttach.getClass(), comunaCollectionNewComunaToAttach.getIdComuna());
-                attachedComunaCollectionNew.add(comunaCollectionNewComunaToAttach);
+            List<Comuna> attachedComunaListNew = new ArrayList<Comuna>();
+            for (Comuna comunaListNewComunaToAttach : comunaListNew) {
+                comunaListNewComunaToAttach = em.getReference(comunaListNewComunaToAttach.getClass(), comunaListNewComunaToAttach.getIdComuna());
+                attachedComunaListNew.add(comunaListNewComunaToAttach);
             }
-            comunaCollectionNew = attachedComunaCollectionNew;
-            provincia.setComunaCollection(comunaCollectionNew);
+            comunaListNew = attachedComunaListNew;
+            provincia.setComunaList(comunaListNew);
             provincia = em.merge(provincia);
             if (regionOld != null && !regionOld.equals(regionNew)) {
-                regionOld.getProvinciaCollection().remove(provincia);
+                regionOld.getProvinciaList().remove(provincia);
                 regionOld = em.merge(regionOld);
             }
             if (regionNew != null && !regionNew.equals(regionOld)) {
-                regionNew.getProvinciaCollection().add(provincia);
+                regionNew.getProvinciaList().add(provincia);
                 regionNew = em.merge(regionNew);
             }
-            for (Comuna comunaCollectionNewComuna : comunaCollectionNew) {
-                if (!comunaCollectionOld.contains(comunaCollectionNewComuna)) {
-                    Provincia oldProvinciaOfComunaCollectionNewComuna = comunaCollectionNewComuna.getProvincia();
-                    comunaCollectionNewComuna.setProvincia(provincia);
-                    comunaCollectionNewComuna = em.merge(comunaCollectionNewComuna);
-                    if (oldProvinciaOfComunaCollectionNewComuna != null && !oldProvinciaOfComunaCollectionNewComuna.equals(provincia)) {
-                        oldProvinciaOfComunaCollectionNewComuna.getComunaCollection().remove(comunaCollectionNewComuna);
-                        oldProvinciaOfComunaCollectionNewComuna = em.merge(oldProvinciaOfComunaCollectionNewComuna);
+            for (Comuna comunaListNewComuna : comunaListNew) {
+                if (!comunaListOld.contains(comunaListNewComuna)) {
+                    Provincia oldProvinciaOfComunaListNewComuna = comunaListNewComuna.getProvincia();
+                    comunaListNewComuna.setProvincia(provincia);
+                    comunaListNewComuna = em.merge(comunaListNewComuna);
+                    if (oldProvinciaOfComunaListNewComuna != null && !oldProvinciaOfComunaListNewComuna.equals(provincia)) {
+                        oldProvinciaOfComunaListNewComuna.getComunaList().remove(comunaListNewComuna);
+                        oldProvinciaOfComunaListNewComuna = em.merge(oldProvinciaOfComunaListNewComuna);
                     }
                 }
             }
@@ -166,19 +165,19 @@ public class ProvinciaJpaController implements Serializable {
                 throw new NonexistentEntityException("The provincia with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Comuna> comunaCollectionOrphanCheck = provincia.getComunaCollection();
-            for (Comuna comunaCollectionOrphanCheckComuna : comunaCollectionOrphanCheck) {
+            List<Comuna> comunaListOrphanCheck = provincia.getComunaList();
+            for (Comuna comunaListOrphanCheckComuna : comunaListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Provincia (" + provincia + ") cannot be destroyed since the Comuna " + comunaCollectionOrphanCheckComuna + " in its comunaCollection field has a non-nullable provincia field.");
+                illegalOrphanMessages.add("This Provincia (" + provincia + ") cannot be destroyed since the Comuna " + comunaListOrphanCheckComuna + " in its comunaList field has a non-nullable provincia field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
             Region region = provincia.getRegion();
             if (region != null) {
-                region.getProvinciaCollection().remove(provincia);
+                region.getProvinciaList().remove(provincia);
                 region = em.merge(region);
             }
             em.remove(provincia);

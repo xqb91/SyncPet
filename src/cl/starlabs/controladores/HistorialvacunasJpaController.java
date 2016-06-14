@@ -23,7 +23,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class HistorialvacunasJpaController implements Serializable {
 
@@ -63,19 +63,19 @@ public class HistorialvacunasJpaController implements Serializable {
             }
             em.persist(historialvacunas);
             if (hospitalizacion != null) {
-                hospitalizacion.getHistorialvacunasCollection().add(historialvacunas);
+                hospitalizacion.getHistorialvacunasList().add(historialvacunas);
                 hospitalizacion = em.merge(hospitalizacion);
             }
             if (mascota != null) {
-                mascota.getHistorialvacunasCollection().add(historialvacunas);
+                mascota.getHistorialvacunasList().add(historialvacunas);
                 mascota = em.merge(mascota);
             }
             if (vacuna != null) {
-                vacuna.getHistorialvacunasCollection().add(historialvacunas);
+                vacuna.getHistorialvacunasList().add(historialvacunas);
                 vacuna = em.merge(vacuna);
             }
             if (veterinario != null) {
-                veterinario.getHistorialvacunasCollection().add(historialvacunas);
+                veterinario.getHistorialvacunasList().add(historialvacunas);
                 veterinario = em.merge(veterinario);
             }
             em.getTransaction().commit();
@@ -123,35 +123,35 @@ public class HistorialvacunasJpaController implements Serializable {
             }
             historialvacunas = em.merge(historialvacunas);
             if (hospitalizacionOld != null && !hospitalizacionOld.equals(hospitalizacionNew)) {
-                hospitalizacionOld.getHistorialvacunasCollection().remove(historialvacunas);
+                hospitalizacionOld.getHistorialvacunasList().remove(historialvacunas);
                 hospitalizacionOld = em.merge(hospitalizacionOld);
             }
             if (hospitalizacionNew != null && !hospitalizacionNew.equals(hospitalizacionOld)) {
-                hospitalizacionNew.getHistorialvacunasCollection().add(historialvacunas);
+                hospitalizacionNew.getHistorialvacunasList().add(historialvacunas);
                 hospitalizacionNew = em.merge(hospitalizacionNew);
             }
             if (mascotaOld != null && !mascotaOld.equals(mascotaNew)) {
-                mascotaOld.getHistorialvacunasCollection().remove(historialvacunas);
+                mascotaOld.getHistorialvacunasList().remove(historialvacunas);
                 mascotaOld = em.merge(mascotaOld);
             }
             if (mascotaNew != null && !mascotaNew.equals(mascotaOld)) {
-                mascotaNew.getHistorialvacunasCollection().add(historialvacunas);
+                mascotaNew.getHistorialvacunasList().add(historialvacunas);
                 mascotaNew = em.merge(mascotaNew);
             }
             if (vacunaOld != null && !vacunaOld.equals(vacunaNew)) {
-                vacunaOld.getHistorialvacunasCollection().remove(historialvacunas);
+                vacunaOld.getHistorialvacunasList().remove(historialvacunas);
                 vacunaOld = em.merge(vacunaOld);
             }
             if (vacunaNew != null && !vacunaNew.equals(vacunaOld)) {
-                vacunaNew.getHistorialvacunasCollection().add(historialvacunas);
+                vacunaNew.getHistorialvacunasList().add(historialvacunas);
                 vacunaNew = em.merge(vacunaNew);
             }
             if (veterinarioOld != null && !veterinarioOld.equals(veterinarioNew)) {
-                veterinarioOld.getHistorialvacunasCollection().remove(historialvacunas);
+                veterinarioOld.getHistorialvacunasList().remove(historialvacunas);
                 veterinarioOld = em.merge(veterinarioOld);
             }
             if (veterinarioNew != null && !veterinarioNew.equals(veterinarioOld)) {
-                veterinarioNew.getHistorialvacunasCollection().add(historialvacunas);
+                veterinarioNew.getHistorialvacunasList().add(historialvacunas);
                 veterinarioNew = em.merge(veterinarioNew);
             }
             em.getTransaction().commit();
@@ -185,22 +185,22 @@ public class HistorialvacunasJpaController implements Serializable {
             }
             Hospitalizacion hospitalizacion = historialvacunas.getHospitalizacion();
             if (hospitalizacion != null) {
-                hospitalizacion.getHistorialvacunasCollection().remove(historialvacunas);
+                hospitalizacion.getHistorialvacunasList().remove(historialvacunas);
                 hospitalizacion = em.merge(hospitalizacion);
             }
             Mascota mascota = historialvacunas.getMascota();
             if (mascota != null) {
-                mascota.getHistorialvacunasCollection().remove(historialvacunas);
+                mascota.getHistorialvacunasList().remove(historialvacunas);
                 mascota = em.merge(mascota);
             }
             Vacunas vacuna = historialvacunas.getVacuna();
             if (vacuna != null) {
-                vacuna.getHistorialvacunasCollection().remove(historialvacunas);
+                vacuna.getHistorialvacunasList().remove(historialvacunas);
                 vacuna = em.merge(vacuna);
             }
             Veterinario veterinario = historialvacunas.getVeterinario();
             if (veterinario != null) {
-                veterinario.getHistorialvacunasCollection().remove(historialvacunas);
+                veterinario.getHistorialvacunasList().remove(historialvacunas);
                 veterinario = em.merge(veterinario);
             }
             em.remove(historialvacunas);

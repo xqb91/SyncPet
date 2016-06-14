@@ -23,10 +23,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Anamnesis", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Anamnesis.findAll", query = "SELECT a FROM Anamnesis a"),
@@ -37,7 +37,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Anamnesis.findByFrecuenciaCardiaca", query = "SELECT a FROM Anamnesis a WHERE a.frecuenciaCardiaca = :frecuenciaCardiaca"),
     @NamedQuery(name = "Anamnesis.findByFrecuenciaRespiratoria", query = "SELECT a FROM Anamnesis a WHERE a.frecuenciaRespiratoria = :frecuenciaRespiratoria")})
 public class Anamnesis implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -48,27 +47,27 @@ public class Anamnesis implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaAnamnesis;
     @Basic(optional = false)
-    @Column(name = "peso", nullable = false)
+    @Column(nullable = false)
     private long peso;
     @Basic(optional = false)
-    @Column(name = "temperatura", nullable = false)
+    @Column(nullable = false)
     private long temperatura;
     @Basic(optional = false)
     @Lob
     @Column(name = "inspeccion_visual", nullable = false, length = 2147483647)
     private String inspeccionVisual;
     @Lob
-    @Column(name = "palpacion", length = 2147483647)
+    @Column(length = 2147483647)
     private String palpacion;
     @Lob
-    @Column(name = "percusion", length = 2147483647)
+    @Column(length = 2147483647)
     private String percusion;
     @Basic(optional = false)
     @Lob
-    @Column(name = "auscultacion", nullable = false, length = 2147483647)
+    @Column(nullable = false, length = 2147483647)
     private String auscultacion;
     @Lob
-    @Column(name = "olfaccion", length = 2147483647)
+    @Column(length = 2147483647)
     private String olfaccion;
     @Basic(optional = false)
     @Lob
@@ -79,7 +78,7 @@ public class Anamnesis implements Serializable {
     @Column(name = "nivel_movilidad", nullable = false, length = 2147483647)
     private String nivelMovilidad;
     @Lob
-    @Column(name = "actitud", length = 2147483647)
+    @Column(length = 2147483647)
     private String actitud;
     @Lob
     @Column(name = "estado_nutricion", length = 2147483647)

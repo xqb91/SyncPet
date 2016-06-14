@@ -22,7 +22,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class DesparacitacionesJpaController implements Serializable {
 
@@ -57,15 +57,15 @@ public class DesparacitacionesJpaController implements Serializable {
             }
             em.persist(desparacitaciones);
             if (hospitalizacion != null) {
-                hospitalizacion.getDesparacitacionesCollection().add(desparacitaciones);
+                hospitalizacion.getDesparacitacionesList().add(desparacitaciones);
                 hospitalizacion = em.merge(hospitalizacion);
             }
             if (mascota != null) {
-                mascota.getDesparacitacionesCollection().add(desparacitaciones);
+                mascota.getDesparacitacionesList().add(desparacitaciones);
                 mascota = em.merge(mascota);
             }
             if (especialista != null) {
-                especialista.getDesparacitacionesCollection().add(desparacitaciones);
+                especialista.getDesparacitacionesList().add(desparacitaciones);
                 especialista = em.merge(especialista);
             }
             em.getTransaction().commit();
@@ -107,27 +107,27 @@ public class DesparacitacionesJpaController implements Serializable {
             }
             desparacitaciones = em.merge(desparacitaciones);
             if (hospitalizacionOld != null && !hospitalizacionOld.equals(hospitalizacionNew)) {
-                hospitalizacionOld.getDesparacitacionesCollection().remove(desparacitaciones);
+                hospitalizacionOld.getDesparacitacionesList().remove(desparacitaciones);
                 hospitalizacionOld = em.merge(hospitalizacionOld);
             }
             if (hospitalizacionNew != null && !hospitalizacionNew.equals(hospitalizacionOld)) {
-                hospitalizacionNew.getDesparacitacionesCollection().add(desparacitaciones);
+                hospitalizacionNew.getDesparacitacionesList().add(desparacitaciones);
                 hospitalizacionNew = em.merge(hospitalizacionNew);
             }
             if (mascotaOld != null && !mascotaOld.equals(mascotaNew)) {
-                mascotaOld.getDesparacitacionesCollection().remove(desparacitaciones);
+                mascotaOld.getDesparacitacionesList().remove(desparacitaciones);
                 mascotaOld = em.merge(mascotaOld);
             }
             if (mascotaNew != null && !mascotaNew.equals(mascotaOld)) {
-                mascotaNew.getDesparacitacionesCollection().add(desparacitaciones);
+                mascotaNew.getDesparacitacionesList().add(desparacitaciones);
                 mascotaNew = em.merge(mascotaNew);
             }
             if (especialistaOld != null && !especialistaOld.equals(especialistaNew)) {
-                especialistaOld.getDesparacitacionesCollection().remove(desparacitaciones);
+                especialistaOld.getDesparacitacionesList().remove(desparacitaciones);
                 especialistaOld = em.merge(especialistaOld);
             }
             if (especialistaNew != null && !especialistaNew.equals(especialistaOld)) {
-                especialistaNew.getDesparacitacionesCollection().add(desparacitaciones);
+                especialistaNew.getDesparacitacionesList().add(desparacitaciones);
                 especialistaNew = em.merge(especialistaNew);
             }
             em.getTransaction().commit();
@@ -161,17 +161,17 @@ public class DesparacitacionesJpaController implements Serializable {
             }
             Hospitalizacion hospitalizacion = desparacitaciones.getHospitalizacion();
             if (hospitalizacion != null) {
-                hospitalizacion.getDesparacitacionesCollection().remove(desparacitaciones);
+                hospitalizacion.getDesparacitacionesList().remove(desparacitaciones);
                 hospitalizacion = em.merge(hospitalizacion);
             }
             Mascota mascota = desparacitaciones.getMascota();
             if (mascota != null) {
-                mascota.getDesparacitacionesCollection().remove(desparacitaciones);
+                mascota.getDesparacitacionesList().remove(desparacitaciones);
                 mascota = em.merge(mascota);
             }
             Veterinario especialista = desparacitaciones.getEspecialista();
             if (especialista != null) {
-                especialista.getDesparacitacionesCollection().remove(desparacitaciones);
+                especialista.getDesparacitacionesList().remove(desparacitaciones);
                 especialista = em.merge(especialista);
             }
             em.remove(desparacitaciones);

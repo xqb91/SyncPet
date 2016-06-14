@@ -6,7 +6,7 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,10 +24,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Sucursal", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Sucursal.findAll", query = "SELECT s FROM Sucursal s"),
@@ -36,27 +36,26 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Sucursal.findByDireccion", query = "SELECT s FROM Sucursal s WHERE s.direccion = :direccion"),
     @NamedQuery(name = "Sucursal.findByTelefono", query = "SELECT s FROM Sucursal s WHERE s.telefono = :telefono")})
 public class Sucursal implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_sucursal", nullable = false)
     private Integer idSucursal;
     @Basic(optional = false)
-    @Column(name = "nombre", nullable = false, length = 1)
+    @Column(nullable = false, length = 1)
     private String nombre;
     @Basic(optional = false)
-    @Column(name = "direccion", nullable = false, length = 250)
+    @Column(nullable = false, length = 250)
     private String direccion;
     @Basic(optional = false)
     @Lob
-    @Column(name = "email", nullable = false, length = 2147483647)
+    @Column(nullable = false, length = 2147483647)
     private String email;
     @Basic(optional = false)
-    @Column(name = "telefono", nullable = false)
+    @Column(nullable = false)
     private int telefono;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sucursal")
-    private Collection<Agenda> agendaCollection;
+    private List<Agenda> agendaList;
     @JoinColumn(name = "clinica", referencedColumnName = "id_clinica", nullable = false)
     @ManyToOne(optional = false)
     private Clinica clinica;
@@ -64,9 +63,9 @@ public class Sucursal implements Serializable {
     @ManyToOne(optional = false)
     private Comuna comuna;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sucursal")
-    private Collection<Propietario> propietarioCollection;
+    private List<Propietario> propietarioList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sucursal")
-    private Collection<Veterinario> veterinarioCollection;
+    private List<Veterinario> veterinarioList;
 
     public Sucursal() {
     }
@@ -124,12 +123,12 @@ public class Sucursal implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Agenda> getAgendaCollection() {
-        return agendaCollection;
+    public List<Agenda> getAgendaList() {
+        return agendaList;
     }
 
-    public void setAgendaCollection(Collection<Agenda> agendaCollection) {
-        this.agendaCollection = agendaCollection;
+    public void setAgendaList(List<Agenda> agendaList) {
+        this.agendaList = agendaList;
     }
 
     public Clinica getClinica() {
@@ -149,21 +148,21 @@ public class Sucursal implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Propietario> getPropietarioCollection() {
-        return propietarioCollection;
+    public List<Propietario> getPropietarioList() {
+        return propietarioList;
     }
 
-    public void setPropietarioCollection(Collection<Propietario> propietarioCollection) {
-        this.propietarioCollection = propietarioCollection;
+    public void setPropietarioList(List<Propietario> propietarioList) {
+        this.propietarioList = propietarioList;
     }
 
     @XmlTransient
-    public Collection<Veterinario> getVeterinarioCollection() {
-        return veterinarioCollection;
+    public List<Veterinario> getVeterinarioList() {
+        return veterinarioList;
     }
 
-    public void setVeterinarioCollection(Collection<Veterinario> veterinarioCollection) {
-        this.veterinarioCollection = veterinarioCollection;
+    public void setVeterinarioList(List<Veterinario> veterinarioList) {
+        this.veterinarioList = veterinarioList;
     }
 
     @Override

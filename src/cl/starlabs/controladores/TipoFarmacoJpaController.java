@@ -16,14 +16,13 @@ import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Farmacos;
 import cl.starlabs.modelo.TipoFarmaco;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class TipoFarmacoJpaController implements Serializable {
 
@@ -37,27 +36,27 @@ public class TipoFarmacoJpaController implements Serializable {
     }
 
     public void create(TipoFarmaco tipoFarmaco) throws PreexistingEntityException, Exception {
-        if (tipoFarmaco.getFarmacosCollection() == null) {
-            tipoFarmaco.setFarmacosCollection(new ArrayList<Farmacos>());
+        if (tipoFarmaco.getFarmacosList() == null) {
+            tipoFarmaco.setFarmacosList(new ArrayList<Farmacos>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Collection<Farmacos> attachedFarmacosCollection = new ArrayList<Farmacos>();
-            for (Farmacos farmacosCollectionFarmacosToAttach : tipoFarmaco.getFarmacosCollection()) {
-                farmacosCollectionFarmacosToAttach = em.getReference(farmacosCollectionFarmacosToAttach.getClass(), farmacosCollectionFarmacosToAttach.getIdFarmaco());
-                attachedFarmacosCollection.add(farmacosCollectionFarmacosToAttach);
+            List<Farmacos> attachedFarmacosList = new ArrayList<Farmacos>();
+            for (Farmacos farmacosListFarmacosToAttach : tipoFarmaco.getFarmacosList()) {
+                farmacosListFarmacosToAttach = em.getReference(farmacosListFarmacosToAttach.getClass(), farmacosListFarmacosToAttach.getIdFarmaco());
+                attachedFarmacosList.add(farmacosListFarmacosToAttach);
             }
-            tipoFarmaco.setFarmacosCollection(attachedFarmacosCollection);
+            tipoFarmaco.setFarmacosList(attachedFarmacosList);
             em.persist(tipoFarmaco);
-            for (Farmacos farmacosCollectionFarmacos : tipoFarmaco.getFarmacosCollection()) {
-                TipoFarmaco oldFarmacoOfFarmacosCollectionFarmacos = farmacosCollectionFarmacos.getFarmaco();
-                farmacosCollectionFarmacos.setFarmaco(tipoFarmaco);
-                farmacosCollectionFarmacos = em.merge(farmacosCollectionFarmacos);
-                if (oldFarmacoOfFarmacosCollectionFarmacos != null) {
-                    oldFarmacoOfFarmacosCollectionFarmacos.getFarmacosCollection().remove(farmacosCollectionFarmacos);
-                    oldFarmacoOfFarmacosCollectionFarmacos = em.merge(oldFarmacoOfFarmacosCollectionFarmacos);
+            for (Farmacos farmacosListFarmacos : tipoFarmaco.getFarmacosList()) {
+                TipoFarmaco oldFarmacoOfFarmacosListFarmacos = farmacosListFarmacos.getFarmaco();
+                farmacosListFarmacos.setFarmaco(tipoFarmaco);
+                farmacosListFarmacos = em.merge(farmacosListFarmacos);
+                if (oldFarmacoOfFarmacosListFarmacos != null) {
+                    oldFarmacoOfFarmacosListFarmacos.getFarmacosList().remove(farmacosListFarmacos);
+                    oldFarmacoOfFarmacosListFarmacos = em.merge(oldFarmacoOfFarmacosListFarmacos);
                 }
             }
             em.getTransaction().commit();
@@ -79,36 +78,36 @@ public class TipoFarmacoJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             TipoFarmaco persistentTipoFarmaco = em.find(TipoFarmaco.class, tipoFarmaco.getIdFarmaco());
-            Collection<Farmacos> farmacosCollectionOld = persistentTipoFarmaco.getFarmacosCollection();
-            Collection<Farmacos> farmacosCollectionNew = tipoFarmaco.getFarmacosCollection();
+            List<Farmacos> farmacosListOld = persistentTipoFarmaco.getFarmacosList();
+            List<Farmacos> farmacosListNew = tipoFarmaco.getFarmacosList();
             List<String> illegalOrphanMessages = null;
-            for (Farmacos farmacosCollectionOldFarmacos : farmacosCollectionOld) {
-                if (!farmacosCollectionNew.contains(farmacosCollectionOldFarmacos)) {
+            for (Farmacos farmacosListOldFarmacos : farmacosListOld) {
+                if (!farmacosListNew.contains(farmacosListOldFarmacos)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Farmacos " + farmacosCollectionOldFarmacos + " since its farmaco field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Farmacos " + farmacosListOldFarmacos + " since its farmaco field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Collection<Farmacos> attachedFarmacosCollectionNew = new ArrayList<Farmacos>();
-            for (Farmacos farmacosCollectionNewFarmacosToAttach : farmacosCollectionNew) {
-                farmacosCollectionNewFarmacosToAttach = em.getReference(farmacosCollectionNewFarmacosToAttach.getClass(), farmacosCollectionNewFarmacosToAttach.getIdFarmaco());
-                attachedFarmacosCollectionNew.add(farmacosCollectionNewFarmacosToAttach);
+            List<Farmacos> attachedFarmacosListNew = new ArrayList<Farmacos>();
+            for (Farmacos farmacosListNewFarmacosToAttach : farmacosListNew) {
+                farmacosListNewFarmacosToAttach = em.getReference(farmacosListNewFarmacosToAttach.getClass(), farmacosListNewFarmacosToAttach.getIdFarmaco());
+                attachedFarmacosListNew.add(farmacosListNewFarmacosToAttach);
             }
-            farmacosCollectionNew = attachedFarmacosCollectionNew;
-            tipoFarmaco.setFarmacosCollection(farmacosCollectionNew);
+            farmacosListNew = attachedFarmacosListNew;
+            tipoFarmaco.setFarmacosList(farmacosListNew);
             tipoFarmaco = em.merge(tipoFarmaco);
-            for (Farmacos farmacosCollectionNewFarmacos : farmacosCollectionNew) {
-                if (!farmacosCollectionOld.contains(farmacosCollectionNewFarmacos)) {
-                    TipoFarmaco oldFarmacoOfFarmacosCollectionNewFarmacos = farmacosCollectionNewFarmacos.getFarmaco();
-                    farmacosCollectionNewFarmacos.setFarmaco(tipoFarmaco);
-                    farmacosCollectionNewFarmacos = em.merge(farmacosCollectionNewFarmacos);
-                    if (oldFarmacoOfFarmacosCollectionNewFarmacos != null && !oldFarmacoOfFarmacosCollectionNewFarmacos.equals(tipoFarmaco)) {
-                        oldFarmacoOfFarmacosCollectionNewFarmacos.getFarmacosCollection().remove(farmacosCollectionNewFarmacos);
-                        oldFarmacoOfFarmacosCollectionNewFarmacos = em.merge(oldFarmacoOfFarmacosCollectionNewFarmacos);
+            for (Farmacos farmacosListNewFarmacos : farmacosListNew) {
+                if (!farmacosListOld.contains(farmacosListNewFarmacos)) {
+                    TipoFarmaco oldFarmacoOfFarmacosListNewFarmacos = farmacosListNewFarmacos.getFarmaco();
+                    farmacosListNewFarmacos.setFarmaco(tipoFarmaco);
+                    farmacosListNewFarmacos = em.merge(farmacosListNewFarmacos);
+                    if (oldFarmacoOfFarmacosListNewFarmacos != null && !oldFarmacoOfFarmacosListNewFarmacos.equals(tipoFarmaco)) {
+                        oldFarmacoOfFarmacosListNewFarmacos.getFarmacosList().remove(farmacosListNewFarmacos);
+                        oldFarmacoOfFarmacosListNewFarmacos = em.merge(oldFarmacoOfFarmacosListNewFarmacos);
                     }
                 }
             }
@@ -142,12 +141,12 @@ public class TipoFarmacoJpaController implements Serializable {
                 throw new NonexistentEntityException("The tipoFarmaco with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Farmacos> farmacosCollectionOrphanCheck = tipoFarmaco.getFarmacosCollection();
-            for (Farmacos farmacosCollectionOrphanCheckFarmacos : farmacosCollectionOrphanCheck) {
+            List<Farmacos> farmacosListOrphanCheck = tipoFarmaco.getFarmacosList();
+            for (Farmacos farmacosListOrphanCheckFarmacos : farmacosListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This TipoFarmaco (" + tipoFarmaco + ") cannot be destroyed since the Farmacos " + farmacosCollectionOrphanCheckFarmacos + " in its farmacosCollection field has a non-nullable farmaco field.");
+                illegalOrphanMessages.add("This TipoFarmaco (" + tipoFarmaco + ") cannot be destroyed since the Farmacos " + farmacosListOrphanCheckFarmacos + " in its farmacosList field has a non-nullable farmaco field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

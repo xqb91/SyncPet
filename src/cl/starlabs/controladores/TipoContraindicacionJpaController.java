@@ -16,14 +16,13 @@ import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Contraindicaciones;
 import cl.starlabs.modelo.TipoContraindicacion;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class TipoContraindicacionJpaController implements Serializable {
 
@@ -37,27 +36,27 @@ public class TipoContraindicacionJpaController implements Serializable {
     }
 
     public void create(TipoContraindicacion tipoContraindicacion) throws PreexistingEntityException, Exception {
-        if (tipoContraindicacion.getContraindicacionesCollection() == null) {
-            tipoContraindicacion.setContraindicacionesCollection(new ArrayList<Contraindicaciones>());
+        if (tipoContraindicacion.getContraindicacionesList() == null) {
+            tipoContraindicacion.setContraindicacionesList(new ArrayList<Contraindicaciones>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Collection<Contraindicaciones> attachedContraindicacionesCollection = new ArrayList<Contraindicaciones>();
-            for (Contraindicaciones contraindicacionesCollectionContraindicacionesToAttach : tipoContraindicacion.getContraindicacionesCollection()) {
-                contraindicacionesCollectionContraindicacionesToAttach = em.getReference(contraindicacionesCollectionContraindicacionesToAttach.getClass(), contraindicacionesCollectionContraindicacionesToAttach.getIdContraindicacion());
-                attachedContraindicacionesCollection.add(contraindicacionesCollectionContraindicacionesToAttach);
+            List<Contraindicaciones> attachedContraindicacionesList = new ArrayList<Contraindicaciones>();
+            for (Contraindicaciones contraindicacionesListContraindicacionesToAttach : tipoContraindicacion.getContraindicacionesList()) {
+                contraindicacionesListContraindicacionesToAttach = em.getReference(contraindicacionesListContraindicacionesToAttach.getClass(), contraindicacionesListContraindicacionesToAttach.getIdContraindicacion());
+                attachedContraindicacionesList.add(contraindicacionesListContraindicacionesToAttach);
             }
-            tipoContraindicacion.setContraindicacionesCollection(attachedContraindicacionesCollection);
+            tipoContraindicacion.setContraindicacionesList(attachedContraindicacionesList);
             em.persist(tipoContraindicacion);
-            for (Contraindicaciones contraindicacionesCollectionContraindicaciones : tipoContraindicacion.getContraindicacionesCollection()) {
-                TipoContraindicacion oldTipoContraindicicacionOfContraindicacionesCollectionContraindicaciones = contraindicacionesCollectionContraindicaciones.getTipoContraindicicacion();
-                contraindicacionesCollectionContraindicaciones.setTipoContraindicicacion(tipoContraindicacion);
-                contraindicacionesCollectionContraindicaciones = em.merge(contraindicacionesCollectionContraindicaciones);
-                if (oldTipoContraindicicacionOfContraindicacionesCollectionContraindicaciones != null) {
-                    oldTipoContraindicicacionOfContraindicacionesCollectionContraindicaciones.getContraindicacionesCollection().remove(contraindicacionesCollectionContraindicaciones);
-                    oldTipoContraindicicacionOfContraindicacionesCollectionContraindicaciones = em.merge(oldTipoContraindicicacionOfContraindicacionesCollectionContraindicaciones);
+            for (Contraindicaciones contraindicacionesListContraindicaciones : tipoContraindicacion.getContraindicacionesList()) {
+                TipoContraindicacion oldTipoContraindicicacionOfContraindicacionesListContraindicaciones = contraindicacionesListContraindicaciones.getTipoContraindicicacion();
+                contraindicacionesListContraindicaciones.setTipoContraindicicacion(tipoContraindicacion);
+                contraindicacionesListContraindicaciones = em.merge(contraindicacionesListContraindicaciones);
+                if (oldTipoContraindicicacionOfContraindicacionesListContraindicaciones != null) {
+                    oldTipoContraindicicacionOfContraindicacionesListContraindicaciones.getContraindicacionesList().remove(contraindicacionesListContraindicaciones);
+                    oldTipoContraindicicacionOfContraindicacionesListContraindicaciones = em.merge(oldTipoContraindicicacionOfContraindicacionesListContraindicaciones);
                 }
             }
             em.getTransaction().commit();
@@ -79,36 +78,36 @@ public class TipoContraindicacionJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             TipoContraindicacion persistentTipoContraindicacion = em.find(TipoContraindicacion.class, tipoContraindicacion.getIdTipoContraindicacion());
-            Collection<Contraindicaciones> contraindicacionesCollectionOld = persistentTipoContraindicacion.getContraindicacionesCollection();
-            Collection<Contraindicaciones> contraindicacionesCollectionNew = tipoContraindicacion.getContraindicacionesCollection();
+            List<Contraindicaciones> contraindicacionesListOld = persistentTipoContraindicacion.getContraindicacionesList();
+            List<Contraindicaciones> contraindicacionesListNew = tipoContraindicacion.getContraindicacionesList();
             List<String> illegalOrphanMessages = null;
-            for (Contraindicaciones contraindicacionesCollectionOldContraindicaciones : contraindicacionesCollectionOld) {
-                if (!contraindicacionesCollectionNew.contains(contraindicacionesCollectionOldContraindicaciones)) {
+            for (Contraindicaciones contraindicacionesListOldContraindicaciones : contraindicacionesListOld) {
+                if (!contraindicacionesListNew.contains(contraindicacionesListOldContraindicaciones)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Contraindicaciones " + contraindicacionesCollectionOldContraindicaciones + " since its tipoContraindicicacion field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Contraindicaciones " + contraindicacionesListOldContraindicaciones + " since its tipoContraindicicacion field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Collection<Contraindicaciones> attachedContraindicacionesCollectionNew = new ArrayList<Contraindicaciones>();
-            for (Contraindicaciones contraindicacionesCollectionNewContraindicacionesToAttach : contraindicacionesCollectionNew) {
-                contraindicacionesCollectionNewContraindicacionesToAttach = em.getReference(contraindicacionesCollectionNewContraindicacionesToAttach.getClass(), contraindicacionesCollectionNewContraindicacionesToAttach.getIdContraindicacion());
-                attachedContraindicacionesCollectionNew.add(contraindicacionesCollectionNewContraindicacionesToAttach);
+            List<Contraindicaciones> attachedContraindicacionesListNew = new ArrayList<Contraindicaciones>();
+            for (Contraindicaciones contraindicacionesListNewContraindicacionesToAttach : contraindicacionesListNew) {
+                contraindicacionesListNewContraindicacionesToAttach = em.getReference(contraindicacionesListNewContraindicacionesToAttach.getClass(), contraindicacionesListNewContraindicacionesToAttach.getIdContraindicacion());
+                attachedContraindicacionesListNew.add(contraindicacionesListNewContraindicacionesToAttach);
             }
-            contraindicacionesCollectionNew = attachedContraindicacionesCollectionNew;
-            tipoContraindicacion.setContraindicacionesCollection(contraindicacionesCollectionNew);
+            contraindicacionesListNew = attachedContraindicacionesListNew;
+            tipoContraindicacion.setContraindicacionesList(contraindicacionesListNew);
             tipoContraindicacion = em.merge(tipoContraindicacion);
-            for (Contraindicaciones contraindicacionesCollectionNewContraindicaciones : contraindicacionesCollectionNew) {
-                if (!contraindicacionesCollectionOld.contains(contraindicacionesCollectionNewContraindicaciones)) {
-                    TipoContraindicacion oldTipoContraindicicacionOfContraindicacionesCollectionNewContraindicaciones = contraindicacionesCollectionNewContraindicaciones.getTipoContraindicicacion();
-                    contraindicacionesCollectionNewContraindicaciones.setTipoContraindicicacion(tipoContraindicacion);
-                    contraindicacionesCollectionNewContraindicaciones = em.merge(contraindicacionesCollectionNewContraindicaciones);
-                    if (oldTipoContraindicicacionOfContraindicacionesCollectionNewContraindicaciones != null && !oldTipoContraindicicacionOfContraindicacionesCollectionNewContraindicaciones.equals(tipoContraindicacion)) {
-                        oldTipoContraindicicacionOfContraindicacionesCollectionNewContraindicaciones.getContraindicacionesCollection().remove(contraindicacionesCollectionNewContraindicaciones);
-                        oldTipoContraindicicacionOfContraindicacionesCollectionNewContraindicaciones = em.merge(oldTipoContraindicicacionOfContraindicacionesCollectionNewContraindicaciones);
+            for (Contraindicaciones contraindicacionesListNewContraindicaciones : contraindicacionesListNew) {
+                if (!contraindicacionesListOld.contains(contraindicacionesListNewContraindicaciones)) {
+                    TipoContraindicacion oldTipoContraindicicacionOfContraindicacionesListNewContraindicaciones = contraindicacionesListNewContraindicaciones.getTipoContraindicicacion();
+                    contraindicacionesListNewContraindicaciones.setTipoContraindicicacion(tipoContraindicacion);
+                    contraindicacionesListNewContraindicaciones = em.merge(contraindicacionesListNewContraindicaciones);
+                    if (oldTipoContraindicicacionOfContraindicacionesListNewContraindicaciones != null && !oldTipoContraindicicacionOfContraindicacionesListNewContraindicaciones.equals(tipoContraindicacion)) {
+                        oldTipoContraindicicacionOfContraindicacionesListNewContraindicaciones.getContraindicacionesList().remove(contraindicacionesListNewContraindicaciones);
+                        oldTipoContraindicicacionOfContraindicacionesListNewContraindicaciones = em.merge(oldTipoContraindicicacionOfContraindicacionesListNewContraindicaciones);
                     }
                 }
             }
@@ -142,12 +141,12 @@ public class TipoContraindicacionJpaController implements Serializable {
                 throw new NonexistentEntityException("The tipoContraindicacion with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Contraindicaciones> contraindicacionesCollectionOrphanCheck = tipoContraindicacion.getContraindicacionesCollection();
-            for (Contraindicaciones contraindicacionesCollectionOrphanCheckContraindicaciones : contraindicacionesCollectionOrphanCheck) {
+            List<Contraindicaciones> contraindicacionesListOrphanCheck = tipoContraindicacion.getContraindicacionesList();
+            for (Contraindicaciones contraindicacionesListOrphanCheckContraindicaciones : contraindicacionesListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This TipoContraindicacion (" + tipoContraindicacion + ") cannot be destroyed since the Contraindicaciones " + contraindicacionesCollectionOrphanCheckContraindicaciones + " in its contraindicacionesCollection field has a non-nullable tipoContraindicicacion field.");
+                illegalOrphanMessages.add("This TipoContraindicacion (" + tipoContraindicacion + ") cannot be destroyed since the Contraindicaciones " + contraindicacionesListOrphanCheckContraindicaciones + " in its contraindicacionesList field has a non-nullable tipoContraindicicacion field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

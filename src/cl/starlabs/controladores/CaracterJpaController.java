@@ -5,21 +5,24 @@
  */
 package cl.starlabs.controladores;
 
+import cl.starlabs.controladores.exceptions.IllegalOrphanException;
 import cl.starlabs.controladores.exceptions.NonexistentEntityException;
 import cl.starlabs.controladores.exceptions.PreexistingEntityException;
 import cl.starlabs.modelo.Caracter;
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import cl.starlabs.modelo.Mascota;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class CaracterJpaController implements Serializable {
 
@@ -33,11 +36,29 @@ public class CaracterJpaController implements Serializable {
     }
 
     public void create(Caracter caracter) throws PreexistingEntityException, Exception {
+        if (caracter.getMascotaList() == null) {
+            caracter.setMascotaList(new ArrayList<Mascota>());
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            List<Mascota> attachedMascotaList = new ArrayList<Mascota>();
+            for (Mascota mascotaListMascotaToAttach : caracter.getMascotaList()) {
+                mascotaListMascotaToAttach = em.getReference(mascotaListMascotaToAttach.getClass(), mascotaListMascotaToAttach.getIdMascota());
+                attachedMascotaList.add(mascotaListMascotaToAttach);
+            }
+            caracter.setMascotaList(attachedMascotaList);
             em.persist(caracter);
+            for (Mascota mascotaListMascota : caracter.getMascotaList()) {
+                Caracter oldCaracterOfMascotaListMascota = mascotaListMascota.getCaracter();
+                mascotaListMascota.setCaracter(caracter);
+                mascotaListMascota = em.merge(mascotaListMascota);
+                if (oldCaracterOfMascotaListMascota != null) {
+                    oldCaracterOfMascotaListMascota.getMascotaList().remove(mascotaListMascota);
+                    oldCaracterOfMascotaListMascota = em.merge(oldCaracterOfMascotaListMascota);
+                }
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             if (findCaracter(caracter.getIdCaracter()) != null) {
@@ -51,12 +72,45 @@ public class CaracterJpaController implements Serializable {
         }
     }
 
-    public void edit(Caracter caracter) throws NonexistentEntityException, Exception {
+    public void edit(Caracter caracter) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Caracter persistentCaracter = em.find(Caracter.class, caracter.getIdCaracter());
+            List<Mascota> mascotaListOld = persistentCaracter.getMascotaList();
+            List<Mascota> mascotaListNew = caracter.getMascotaList();
+            List<String> illegalOrphanMessages = null;
+            for (Mascota mascotaListOldMascota : mascotaListOld) {
+                if (!mascotaListNew.contains(mascotaListOldMascota)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Mascota " + mascotaListOldMascota + " since its caracter field is not nullable.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            List<Mascota> attachedMascotaListNew = new ArrayList<Mascota>();
+            for (Mascota mascotaListNewMascotaToAttach : mascotaListNew) {
+                mascotaListNewMascotaToAttach = em.getReference(mascotaListNewMascotaToAttach.getClass(), mascotaListNewMascotaToAttach.getIdMascota());
+                attachedMascotaListNew.add(mascotaListNewMascotaToAttach);
+            }
+            mascotaListNew = attachedMascotaListNew;
+            caracter.setMascotaList(mascotaListNew);
             caracter = em.merge(caracter);
+            for (Mascota mascotaListNewMascota : mascotaListNew) {
+                if (!mascotaListOld.contains(mascotaListNewMascota)) {
+                    Caracter oldCaracterOfMascotaListNewMascota = mascotaListNewMascota.getCaracter();
+                    mascotaListNewMascota.setCaracter(caracter);
+                    mascotaListNewMascota = em.merge(mascotaListNewMascota);
+                    if (oldCaracterOfMascotaListNewMascota != null && !oldCaracterOfMascotaListNewMascota.equals(caracter)) {
+                        oldCaracterOfMascotaListNewMascota.getMascotaList().remove(mascotaListNewMascota);
+                        oldCaracterOfMascotaListNewMascota = em.merge(oldCaracterOfMascotaListNewMascota);
+                    }
+                }
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -74,7 +128,7 @@ public class CaracterJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws NonexistentEntityException {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -85,6 +139,17 @@ public class CaracterJpaController implements Serializable {
                 caracter.getIdCaracter();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The caracter with id " + id + " no longer exists.", enfe);
+            }
+            List<String> illegalOrphanMessages = null;
+            List<Mascota> mascotaListOrphanCheck = caracter.getMascotaList();
+            for (Mascota mascotaListOrphanCheckMascota : mascotaListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Caracter (" + caracter + ") cannot be destroyed since the Mascota " + mascotaListOrphanCheckMascota + " in its mascotaList field has a non-nullable caracter field.");
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
             }
             em.remove(caracter);
             em.getTransaction().commit();

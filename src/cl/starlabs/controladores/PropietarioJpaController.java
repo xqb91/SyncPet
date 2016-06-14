@@ -18,14 +18,13 @@ import cl.starlabs.modelo.Sucursal;
 import cl.starlabs.modelo.Mascota;
 import cl.starlabs.modelo.Propietario;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class PropietarioJpaController implements Serializable {
 
@@ -39,8 +38,8 @@ public class PropietarioJpaController implements Serializable {
     }
 
     public void create(Propietario propietario) throws PreexistingEntityException, Exception {
-        if (propietario.getMascotaCollection() == null) {
-            propietario.setMascotaCollection(new ArrayList<Mascota>());
+        if (propietario.getMascotaList() == null) {
+            propietario.setMascotaList(new ArrayList<Mascota>());
         }
         EntityManager em = null;
         try {
@@ -56,28 +55,28 @@ public class PropietarioJpaController implements Serializable {
                 sucursal = em.getReference(sucursal.getClass(), sucursal.getIdSucursal());
                 propietario.setSucursal(sucursal);
             }
-            Collection<Mascota> attachedMascotaCollection = new ArrayList<Mascota>();
-            for (Mascota mascotaCollectionMascotaToAttach : propietario.getMascotaCollection()) {
-                mascotaCollectionMascotaToAttach = em.getReference(mascotaCollectionMascotaToAttach.getClass(), mascotaCollectionMascotaToAttach.getIdMascota());
-                attachedMascotaCollection.add(mascotaCollectionMascotaToAttach);
+            List<Mascota> attachedMascotaList = new ArrayList<Mascota>();
+            for (Mascota mascotaListMascotaToAttach : propietario.getMascotaList()) {
+                mascotaListMascotaToAttach = em.getReference(mascotaListMascotaToAttach.getClass(), mascotaListMascotaToAttach.getIdMascota());
+                attachedMascotaList.add(mascotaListMascotaToAttach);
             }
-            propietario.setMascotaCollection(attachedMascotaCollection);
+            propietario.setMascotaList(attachedMascotaList);
             em.persist(propietario);
             if (comuna != null) {
-                comuna.getPropietarioCollection().add(propietario);
+                comuna.getPropietarioList().add(propietario);
                 comuna = em.merge(comuna);
             }
             if (sucursal != null) {
-                sucursal.getPropietarioCollection().add(propietario);
+                sucursal.getPropietarioList().add(propietario);
                 sucursal = em.merge(sucursal);
             }
-            for (Mascota mascotaCollectionMascota : propietario.getMascotaCollection()) {
-                Propietario oldPropietarioOfMascotaCollectionMascota = mascotaCollectionMascota.getPropietario();
-                mascotaCollectionMascota.setPropietario(propietario);
-                mascotaCollectionMascota = em.merge(mascotaCollectionMascota);
-                if (oldPropietarioOfMascotaCollectionMascota != null) {
-                    oldPropietarioOfMascotaCollectionMascota.getMascotaCollection().remove(mascotaCollectionMascota);
-                    oldPropietarioOfMascotaCollectionMascota = em.merge(oldPropietarioOfMascotaCollectionMascota);
+            for (Mascota mascotaListMascota : propietario.getMascotaList()) {
+                Propietario oldPropietarioOfMascotaListMascota = mascotaListMascota.getPropietario();
+                mascotaListMascota.setPropietario(propietario);
+                mascotaListMascota = em.merge(mascotaListMascota);
+                if (oldPropietarioOfMascotaListMascota != null) {
+                    oldPropietarioOfMascotaListMascota.getMascotaList().remove(mascotaListMascota);
+                    oldPropietarioOfMascotaListMascota = em.merge(oldPropietarioOfMascotaListMascota);
                 }
             }
             em.getTransaction().commit();
@@ -103,15 +102,15 @@ public class PropietarioJpaController implements Serializable {
             Comuna comunaNew = propietario.getComuna();
             Sucursal sucursalOld = persistentPropietario.getSucursal();
             Sucursal sucursalNew = propietario.getSucursal();
-            Collection<Mascota> mascotaCollectionOld = persistentPropietario.getMascotaCollection();
-            Collection<Mascota> mascotaCollectionNew = propietario.getMascotaCollection();
+            List<Mascota> mascotaListOld = persistentPropietario.getMascotaList();
+            List<Mascota> mascotaListNew = propietario.getMascotaList();
             List<String> illegalOrphanMessages = null;
-            for (Mascota mascotaCollectionOldMascota : mascotaCollectionOld) {
-                if (!mascotaCollectionNew.contains(mascotaCollectionOldMascota)) {
+            for (Mascota mascotaListOldMascota : mascotaListOld) {
+                if (!mascotaListNew.contains(mascotaListOldMascota)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Mascota " + mascotaCollectionOldMascota + " since its propietario field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Mascota " + mascotaListOldMascota + " since its propietario field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -125,38 +124,38 @@ public class PropietarioJpaController implements Serializable {
                 sucursalNew = em.getReference(sucursalNew.getClass(), sucursalNew.getIdSucursal());
                 propietario.setSucursal(sucursalNew);
             }
-            Collection<Mascota> attachedMascotaCollectionNew = new ArrayList<Mascota>();
-            for (Mascota mascotaCollectionNewMascotaToAttach : mascotaCollectionNew) {
-                mascotaCollectionNewMascotaToAttach = em.getReference(mascotaCollectionNewMascotaToAttach.getClass(), mascotaCollectionNewMascotaToAttach.getIdMascota());
-                attachedMascotaCollectionNew.add(mascotaCollectionNewMascotaToAttach);
+            List<Mascota> attachedMascotaListNew = new ArrayList<Mascota>();
+            for (Mascota mascotaListNewMascotaToAttach : mascotaListNew) {
+                mascotaListNewMascotaToAttach = em.getReference(mascotaListNewMascotaToAttach.getClass(), mascotaListNewMascotaToAttach.getIdMascota());
+                attachedMascotaListNew.add(mascotaListNewMascotaToAttach);
             }
-            mascotaCollectionNew = attachedMascotaCollectionNew;
-            propietario.setMascotaCollection(mascotaCollectionNew);
+            mascotaListNew = attachedMascotaListNew;
+            propietario.setMascotaList(mascotaListNew);
             propietario = em.merge(propietario);
             if (comunaOld != null && !comunaOld.equals(comunaNew)) {
-                comunaOld.getPropietarioCollection().remove(propietario);
+                comunaOld.getPropietarioList().remove(propietario);
                 comunaOld = em.merge(comunaOld);
             }
             if (comunaNew != null && !comunaNew.equals(comunaOld)) {
-                comunaNew.getPropietarioCollection().add(propietario);
+                comunaNew.getPropietarioList().add(propietario);
                 comunaNew = em.merge(comunaNew);
             }
             if (sucursalOld != null && !sucursalOld.equals(sucursalNew)) {
-                sucursalOld.getPropietarioCollection().remove(propietario);
+                sucursalOld.getPropietarioList().remove(propietario);
                 sucursalOld = em.merge(sucursalOld);
             }
             if (sucursalNew != null && !sucursalNew.equals(sucursalOld)) {
-                sucursalNew.getPropietarioCollection().add(propietario);
+                sucursalNew.getPropietarioList().add(propietario);
                 sucursalNew = em.merge(sucursalNew);
             }
-            for (Mascota mascotaCollectionNewMascota : mascotaCollectionNew) {
-                if (!mascotaCollectionOld.contains(mascotaCollectionNewMascota)) {
-                    Propietario oldPropietarioOfMascotaCollectionNewMascota = mascotaCollectionNewMascota.getPropietario();
-                    mascotaCollectionNewMascota.setPropietario(propietario);
-                    mascotaCollectionNewMascota = em.merge(mascotaCollectionNewMascota);
-                    if (oldPropietarioOfMascotaCollectionNewMascota != null && !oldPropietarioOfMascotaCollectionNewMascota.equals(propietario)) {
-                        oldPropietarioOfMascotaCollectionNewMascota.getMascotaCollection().remove(mascotaCollectionNewMascota);
-                        oldPropietarioOfMascotaCollectionNewMascota = em.merge(oldPropietarioOfMascotaCollectionNewMascota);
+            for (Mascota mascotaListNewMascota : mascotaListNew) {
+                if (!mascotaListOld.contains(mascotaListNewMascota)) {
+                    Propietario oldPropietarioOfMascotaListNewMascota = mascotaListNewMascota.getPropietario();
+                    mascotaListNewMascota.setPropietario(propietario);
+                    mascotaListNewMascota = em.merge(mascotaListNewMascota);
+                    if (oldPropietarioOfMascotaListNewMascota != null && !oldPropietarioOfMascotaListNewMascota.equals(propietario)) {
+                        oldPropietarioOfMascotaListNewMascota.getMascotaList().remove(mascotaListNewMascota);
+                        oldPropietarioOfMascotaListNewMascota = em.merge(oldPropietarioOfMascotaListNewMascota);
                     }
                 }
             }
@@ -190,24 +189,24 @@ public class PropietarioJpaController implements Serializable {
                 throw new NonexistentEntityException("The propietario with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Mascota> mascotaCollectionOrphanCheck = propietario.getMascotaCollection();
-            for (Mascota mascotaCollectionOrphanCheckMascota : mascotaCollectionOrphanCheck) {
+            List<Mascota> mascotaListOrphanCheck = propietario.getMascotaList();
+            for (Mascota mascotaListOrphanCheckMascota : mascotaListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Propietario (" + propietario + ") cannot be destroyed since the Mascota " + mascotaCollectionOrphanCheckMascota + " in its mascotaCollection field has a non-nullable propietario field.");
+                illegalOrphanMessages.add("This Propietario (" + propietario + ") cannot be destroyed since the Mascota " + mascotaListOrphanCheckMascota + " in its mascotaList field has a non-nullable propietario field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
             Comuna comuna = propietario.getComuna();
             if (comuna != null) {
-                comuna.getPropietarioCollection().remove(propietario);
+                comuna.getPropietarioList().remove(propietario);
                 comuna = em.merge(comuna);
             }
             Sucursal sucursal = propietario.getSucursal();
             if (sucursal != null) {
-                sucursal.getPropietarioCollection().remove(propietario);
+                sucursal.getPropietarioList().remove(propietario);
                 sucursal = em.merge(sucursal);
             }
             em.remove(propietario);
@@ -262,6 +261,16 @@ public class PropietarioJpaController implements Serializable {
             return ((Long) q.getSingleResult()).intValue();
         } finally {
             em.close();
+        }
+    }
+    
+    public Integer ultimoIdentificador() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Propietario.findAll");
+            consulta.setMaxResults(1);
+            return ((Propietario)consulta.getSingleResult()).getIdPropietario()+1;
+        } catch (Exception e) {
+            return 1;
         }
     }
     

@@ -16,14 +16,13 @@ import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Patologias;
 import cl.starlabs.modelo.TipoPatología;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class TipoPatologíaJpaController implements Serializable {
 
@@ -37,27 +36,27 @@ public class TipoPatologíaJpaController implements Serializable {
     }
 
     public void create(TipoPatología tipoPatología) throws PreexistingEntityException, Exception {
-        if (tipoPatología.getPatologiasCollection() == null) {
-            tipoPatología.setPatologiasCollection(new ArrayList<Patologias>());
+        if (tipoPatología.getPatologiasList() == null) {
+            tipoPatología.setPatologiasList(new ArrayList<Patologias>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Collection<Patologias> attachedPatologiasCollection = new ArrayList<Patologias>();
-            for (Patologias patologiasCollectionPatologiasToAttach : tipoPatología.getPatologiasCollection()) {
-                patologiasCollectionPatologiasToAttach = em.getReference(patologiasCollectionPatologiasToAttach.getClass(), patologiasCollectionPatologiasToAttach.getIdPatologia());
-                attachedPatologiasCollection.add(patologiasCollectionPatologiasToAttach);
+            List<Patologias> attachedPatologiasList = new ArrayList<Patologias>();
+            for (Patologias patologiasListPatologiasToAttach : tipoPatología.getPatologiasList()) {
+                patologiasListPatologiasToAttach = em.getReference(patologiasListPatologiasToAttach.getClass(), patologiasListPatologiasToAttach.getIdPatologia());
+                attachedPatologiasList.add(patologiasListPatologiasToAttach);
             }
-            tipoPatología.setPatologiasCollection(attachedPatologiasCollection);
+            tipoPatología.setPatologiasList(attachedPatologiasList);
             em.persist(tipoPatología);
-            for (Patologias patologiasCollectionPatologias : tipoPatología.getPatologiasCollection()) {
-                TipoPatología oldTipoPatologiaOfPatologiasCollectionPatologias = patologiasCollectionPatologias.getTipoPatologia();
-                patologiasCollectionPatologias.setTipoPatologia(tipoPatología);
-                patologiasCollectionPatologias = em.merge(patologiasCollectionPatologias);
-                if (oldTipoPatologiaOfPatologiasCollectionPatologias != null) {
-                    oldTipoPatologiaOfPatologiasCollectionPatologias.getPatologiasCollection().remove(patologiasCollectionPatologias);
-                    oldTipoPatologiaOfPatologiasCollectionPatologias = em.merge(oldTipoPatologiaOfPatologiasCollectionPatologias);
+            for (Patologias patologiasListPatologias : tipoPatología.getPatologiasList()) {
+                TipoPatología oldTipoPatologiaOfPatologiasListPatologias = patologiasListPatologias.getTipoPatologia();
+                patologiasListPatologias.setTipoPatologia(tipoPatología);
+                patologiasListPatologias = em.merge(patologiasListPatologias);
+                if (oldTipoPatologiaOfPatologiasListPatologias != null) {
+                    oldTipoPatologiaOfPatologiasListPatologias.getPatologiasList().remove(patologiasListPatologias);
+                    oldTipoPatologiaOfPatologiasListPatologias = em.merge(oldTipoPatologiaOfPatologiasListPatologias);
                 }
             }
             em.getTransaction().commit();
@@ -79,36 +78,36 @@ public class TipoPatologíaJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             TipoPatología persistentTipoPatología = em.find(TipoPatología.class, tipoPatología.getIdTipoPatologia());
-            Collection<Patologias> patologiasCollectionOld = persistentTipoPatología.getPatologiasCollection();
-            Collection<Patologias> patologiasCollectionNew = tipoPatología.getPatologiasCollection();
+            List<Patologias> patologiasListOld = persistentTipoPatología.getPatologiasList();
+            List<Patologias> patologiasListNew = tipoPatología.getPatologiasList();
             List<String> illegalOrphanMessages = null;
-            for (Patologias patologiasCollectionOldPatologias : patologiasCollectionOld) {
-                if (!patologiasCollectionNew.contains(patologiasCollectionOldPatologias)) {
+            for (Patologias patologiasListOldPatologias : patologiasListOld) {
+                if (!patologiasListNew.contains(patologiasListOldPatologias)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Patologias " + patologiasCollectionOldPatologias + " since its tipoPatologia field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Patologias " + patologiasListOldPatologias + " since its tipoPatologia field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Collection<Patologias> attachedPatologiasCollectionNew = new ArrayList<Patologias>();
-            for (Patologias patologiasCollectionNewPatologiasToAttach : patologiasCollectionNew) {
-                patologiasCollectionNewPatologiasToAttach = em.getReference(patologiasCollectionNewPatologiasToAttach.getClass(), patologiasCollectionNewPatologiasToAttach.getIdPatologia());
-                attachedPatologiasCollectionNew.add(patologiasCollectionNewPatologiasToAttach);
+            List<Patologias> attachedPatologiasListNew = new ArrayList<Patologias>();
+            for (Patologias patologiasListNewPatologiasToAttach : patologiasListNew) {
+                patologiasListNewPatologiasToAttach = em.getReference(patologiasListNewPatologiasToAttach.getClass(), patologiasListNewPatologiasToAttach.getIdPatologia());
+                attachedPatologiasListNew.add(patologiasListNewPatologiasToAttach);
             }
-            patologiasCollectionNew = attachedPatologiasCollectionNew;
-            tipoPatología.setPatologiasCollection(patologiasCollectionNew);
+            patologiasListNew = attachedPatologiasListNew;
+            tipoPatología.setPatologiasList(patologiasListNew);
             tipoPatología = em.merge(tipoPatología);
-            for (Patologias patologiasCollectionNewPatologias : patologiasCollectionNew) {
-                if (!patologiasCollectionOld.contains(patologiasCollectionNewPatologias)) {
-                    TipoPatología oldTipoPatologiaOfPatologiasCollectionNewPatologias = patologiasCollectionNewPatologias.getTipoPatologia();
-                    patologiasCollectionNewPatologias.setTipoPatologia(tipoPatología);
-                    patologiasCollectionNewPatologias = em.merge(patologiasCollectionNewPatologias);
-                    if (oldTipoPatologiaOfPatologiasCollectionNewPatologias != null && !oldTipoPatologiaOfPatologiasCollectionNewPatologias.equals(tipoPatología)) {
-                        oldTipoPatologiaOfPatologiasCollectionNewPatologias.getPatologiasCollection().remove(patologiasCollectionNewPatologias);
-                        oldTipoPatologiaOfPatologiasCollectionNewPatologias = em.merge(oldTipoPatologiaOfPatologiasCollectionNewPatologias);
+            for (Patologias patologiasListNewPatologias : patologiasListNew) {
+                if (!patologiasListOld.contains(patologiasListNewPatologias)) {
+                    TipoPatología oldTipoPatologiaOfPatologiasListNewPatologias = patologiasListNewPatologias.getTipoPatologia();
+                    patologiasListNewPatologias.setTipoPatologia(tipoPatología);
+                    patologiasListNewPatologias = em.merge(patologiasListNewPatologias);
+                    if (oldTipoPatologiaOfPatologiasListNewPatologias != null && !oldTipoPatologiaOfPatologiasListNewPatologias.equals(tipoPatología)) {
+                        oldTipoPatologiaOfPatologiasListNewPatologias.getPatologiasList().remove(patologiasListNewPatologias);
+                        oldTipoPatologiaOfPatologiasListNewPatologias = em.merge(oldTipoPatologiaOfPatologiasListNewPatologias);
                     }
                 }
             }
@@ -142,12 +141,12 @@ public class TipoPatologíaJpaController implements Serializable {
                 throw new NonexistentEntityException("The tipoPatolog\u00eda with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Patologias> patologiasCollectionOrphanCheck = tipoPatología.getPatologiasCollection();
-            for (Patologias patologiasCollectionOrphanCheckPatologias : patologiasCollectionOrphanCheck) {
+            List<Patologias> patologiasListOrphanCheck = tipoPatología.getPatologiasList();
+            for (Patologias patologiasListOrphanCheckPatologias : patologiasListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This TipoPatolog\u00eda (" + tipoPatología + ") cannot be destroyed since the Patologias " + patologiasCollectionOrphanCheckPatologias + " in its patologiasCollection field has a non-nullable tipoPatologia field.");
+                illegalOrphanMessages.add("This TipoPatolog\u00eda (" + tipoPatología + ") cannot be destroyed since the Patologias " + patologiasListOrphanCheckPatologias + " in its patologiasList field has a non-nullable tipoPatologia field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

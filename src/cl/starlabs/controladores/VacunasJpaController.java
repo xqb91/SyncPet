@@ -16,14 +16,13 @@ import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Historialvacunas;
 import cl.starlabs.modelo.Vacunas;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class VacunasJpaController implements Serializable {
 
@@ -37,27 +36,27 @@ public class VacunasJpaController implements Serializable {
     }
 
     public void create(Vacunas vacunas) throws PreexistingEntityException, Exception {
-        if (vacunas.getHistorialvacunasCollection() == null) {
-            vacunas.setHistorialvacunasCollection(new ArrayList<Historialvacunas>());
+        if (vacunas.getHistorialvacunasList() == null) {
+            vacunas.setHistorialvacunasList(new ArrayList<Historialvacunas>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Collection<Historialvacunas> attachedHistorialvacunasCollection = new ArrayList<Historialvacunas>();
-            for (Historialvacunas historialvacunasCollectionHistorialvacunasToAttach : vacunas.getHistorialvacunasCollection()) {
-                historialvacunasCollectionHistorialvacunasToAttach = em.getReference(historialvacunasCollectionHistorialvacunasToAttach.getClass(), historialvacunasCollectionHistorialvacunasToAttach.getIdEvento());
-                attachedHistorialvacunasCollection.add(historialvacunasCollectionHistorialvacunasToAttach);
+            List<Historialvacunas> attachedHistorialvacunasList = new ArrayList<Historialvacunas>();
+            for (Historialvacunas historialvacunasListHistorialvacunasToAttach : vacunas.getHistorialvacunasList()) {
+                historialvacunasListHistorialvacunasToAttach = em.getReference(historialvacunasListHistorialvacunasToAttach.getClass(), historialvacunasListHistorialvacunasToAttach.getIdEvento());
+                attachedHistorialvacunasList.add(historialvacunasListHistorialvacunasToAttach);
             }
-            vacunas.setHistorialvacunasCollection(attachedHistorialvacunasCollection);
+            vacunas.setHistorialvacunasList(attachedHistorialvacunasList);
             em.persist(vacunas);
-            for (Historialvacunas historialvacunasCollectionHistorialvacunas : vacunas.getHistorialvacunasCollection()) {
-                Vacunas oldVacunaOfHistorialvacunasCollectionHistorialvacunas = historialvacunasCollectionHistorialvacunas.getVacuna();
-                historialvacunasCollectionHistorialvacunas.setVacuna(vacunas);
-                historialvacunasCollectionHistorialvacunas = em.merge(historialvacunasCollectionHistorialvacunas);
-                if (oldVacunaOfHistorialvacunasCollectionHistorialvacunas != null) {
-                    oldVacunaOfHistorialvacunasCollectionHistorialvacunas.getHistorialvacunasCollection().remove(historialvacunasCollectionHistorialvacunas);
-                    oldVacunaOfHistorialvacunasCollectionHistorialvacunas = em.merge(oldVacunaOfHistorialvacunasCollectionHistorialvacunas);
+            for (Historialvacunas historialvacunasListHistorialvacunas : vacunas.getHistorialvacunasList()) {
+                Vacunas oldVacunaOfHistorialvacunasListHistorialvacunas = historialvacunasListHistorialvacunas.getVacuna();
+                historialvacunasListHistorialvacunas.setVacuna(vacunas);
+                historialvacunasListHistorialvacunas = em.merge(historialvacunasListHistorialvacunas);
+                if (oldVacunaOfHistorialvacunasListHistorialvacunas != null) {
+                    oldVacunaOfHistorialvacunasListHistorialvacunas.getHistorialvacunasList().remove(historialvacunasListHistorialvacunas);
+                    oldVacunaOfHistorialvacunasListHistorialvacunas = em.merge(oldVacunaOfHistorialvacunasListHistorialvacunas);
                 }
             }
             em.getTransaction().commit();
@@ -79,36 +78,36 @@ public class VacunasJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Vacunas persistentVacunas = em.find(Vacunas.class, vacunas.getIdVacuna());
-            Collection<Historialvacunas> historialvacunasCollectionOld = persistentVacunas.getHistorialvacunasCollection();
-            Collection<Historialvacunas> historialvacunasCollectionNew = vacunas.getHistorialvacunasCollection();
+            List<Historialvacunas> historialvacunasListOld = persistentVacunas.getHistorialvacunasList();
+            List<Historialvacunas> historialvacunasListNew = vacunas.getHistorialvacunasList();
             List<String> illegalOrphanMessages = null;
-            for (Historialvacunas historialvacunasCollectionOldHistorialvacunas : historialvacunasCollectionOld) {
-                if (!historialvacunasCollectionNew.contains(historialvacunasCollectionOldHistorialvacunas)) {
+            for (Historialvacunas historialvacunasListOldHistorialvacunas : historialvacunasListOld) {
+                if (!historialvacunasListNew.contains(historialvacunasListOldHistorialvacunas)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Historialvacunas " + historialvacunasCollectionOldHistorialvacunas + " since its vacuna field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Historialvacunas " + historialvacunasListOldHistorialvacunas + " since its vacuna field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Collection<Historialvacunas> attachedHistorialvacunasCollectionNew = new ArrayList<Historialvacunas>();
-            for (Historialvacunas historialvacunasCollectionNewHistorialvacunasToAttach : historialvacunasCollectionNew) {
-                historialvacunasCollectionNewHistorialvacunasToAttach = em.getReference(historialvacunasCollectionNewHistorialvacunasToAttach.getClass(), historialvacunasCollectionNewHistorialvacunasToAttach.getIdEvento());
-                attachedHistorialvacunasCollectionNew.add(historialvacunasCollectionNewHistorialvacunasToAttach);
+            List<Historialvacunas> attachedHistorialvacunasListNew = new ArrayList<Historialvacunas>();
+            for (Historialvacunas historialvacunasListNewHistorialvacunasToAttach : historialvacunasListNew) {
+                historialvacunasListNewHistorialvacunasToAttach = em.getReference(historialvacunasListNewHistorialvacunasToAttach.getClass(), historialvacunasListNewHistorialvacunasToAttach.getIdEvento());
+                attachedHistorialvacunasListNew.add(historialvacunasListNewHistorialvacunasToAttach);
             }
-            historialvacunasCollectionNew = attachedHistorialvacunasCollectionNew;
-            vacunas.setHistorialvacunasCollection(historialvacunasCollectionNew);
+            historialvacunasListNew = attachedHistorialvacunasListNew;
+            vacunas.setHistorialvacunasList(historialvacunasListNew);
             vacunas = em.merge(vacunas);
-            for (Historialvacunas historialvacunasCollectionNewHistorialvacunas : historialvacunasCollectionNew) {
-                if (!historialvacunasCollectionOld.contains(historialvacunasCollectionNewHistorialvacunas)) {
-                    Vacunas oldVacunaOfHistorialvacunasCollectionNewHistorialvacunas = historialvacunasCollectionNewHistorialvacunas.getVacuna();
-                    historialvacunasCollectionNewHistorialvacunas.setVacuna(vacunas);
-                    historialvacunasCollectionNewHistorialvacunas = em.merge(historialvacunasCollectionNewHistorialvacunas);
-                    if (oldVacunaOfHistorialvacunasCollectionNewHistorialvacunas != null && !oldVacunaOfHistorialvacunasCollectionNewHistorialvacunas.equals(vacunas)) {
-                        oldVacunaOfHistorialvacunasCollectionNewHistorialvacunas.getHistorialvacunasCollection().remove(historialvacunasCollectionNewHistorialvacunas);
-                        oldVacunaOfHistorialvacunasCollectionNewHistorialvacunas = em.merge(oldVacunaOfHistorialvacunasCollectionNewHistorialvacunas);
+            for (Historialvacunas historialvacunasListNewHistorialvacunas : historialvacunasListNew) {
+                if (!historialvacunasListOld.contains(historialvacunasListNewHistorialvacunas)) {
+                    Vacunas oldVacunaOfHistorialvacunasListNewHistorialvacunas = historialvacunasListNewHistorialvacunas.getVacuna();
+                    historialvacunasListNewHistorialvacunas.setVacuna(vacunas);
+                    historialvacunasListNewHistorialvacunas = em.merge(historialvacunasListNewHistorialvacunas);
+                    if (oldVacunaOfHistorialvacunasListNewHistorialvacunas != null && !oldVacunaOfHistorialvacunasListNewHistorialvacunas.equals(vacunas)) {
+                        oldVacunaOfHistorialvacunasListNewHistorialvacunas.getHistorialvacunasList().remove(historialvacunasListNewHistorialvacunas);
+                        oldVacunaOfHistorialvacunasListNewHistorialvacunas = em.merge(oldVacunaOfHistorialvacunasListNewHistorialvacunas);
                     }
                 }
             }
@@ -142,12 +141,12 @@ public class VacunasJpaController implements Serializable {
                 throw new NonexistentEntityException("The vacunas with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Historialvacunas> historialvacunasCollectionOrphanCheck = vacunas.getHistorialvacunasCollection();
-            for (Historialvacunas historialvacunasCollectionOrphanCheckHistorialvacunas : historialvacunasCollectionOrphanCheck) {
+            List<Historialvacunas> historialvacunasListOrphanCheck = vacunas.getHistorialvacunasList();
+            for (Historialvacunas historialvacunasListOrphanCheckHistorialvacunas : historialvacunasListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Vacunas (" + vacunas + ") cannot be destroyed since the Historialvacunas " + historialvacunasCollectionOrphanCheckHistorialvacunas + " in its historialvacunasCollection field has a non-nullable vacuna field.");
+                illegalOrphanMessages.add("This Vacunas (" + vacunas + ") cannot be destroyed since the Historialvacunas " + historialvacunasListOrphanCheckHistorialvacunas + " in its historialvacunasList field has a non-nullable vacuna field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

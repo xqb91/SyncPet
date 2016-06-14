@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
 @Table(name = "Agenda_Detalle", catalog = "syncpet", schema = "dbo")
@@ -28,7 +28,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "AgendaDetalle.findAll", query = "SELECT a FROM AgendaDetalle a"),
     @NamedQuery(name = "AgendaDetalle.findByIdDetalle", query = "SELECT a FROM AgendaDetalle a WHERE a.idDetalle = :idDetalle")})
 public class AgendaDetalle implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)

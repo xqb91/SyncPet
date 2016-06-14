@@ -6,7 +6,7 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,10 +22,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Vacunas", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Vacunas.findAll", query = "SELECT v FROM Vacunas v"),
@@ -33,23 +33,22 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Vacunas.findByNombre", query = "SELECT v FROM Vacunas v WHERE v.nombre = :nombre"),
     @NamedQuery(name = "Vacunas.findByCompuestoActivo", query = "SELECT v FROM Vacunas v WHERE v.compuestoActivo = :compuestoActivo")})
 public class Vacunas implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_vacuna", nullable = false)
     private Integer idVacuna;
     @Basic(optional = false)
-    @Column(name = "nombre", nullable = false, length = 250)
+    @Column(nullable = false, length = 250)
     private String nombre;
     @Lob
-    @Column(name = "descripcion", length = 2147483647)
+    @Column(length = 2147483647)
     private String descripcion;
     @Basic(optional = false)
     @Column(name = "compuesto_activo", nullable = false, length = 150)
     private String compuestoActivo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "vacuna")
-    private Collection<Historialvacunas> historialvacunasCollection;
+    private List<Historialvacunas> historialvacunasList;
 
     public Vacunas() {
     }
@@ -97,12 +96,12 @@ public class Vacunas implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Historialvacunas> getHistorialvacunasCollection() {
-        return historialvacunasCollection;
+    public List<Historialvacunas> getHistorialvacunasList() {
+        return historialvacunasList;
     }
 
-    public void setHistorialvacunasCollection(Collection<Historialvacunas> historialvacunasCollection) {
-        this.historialvacunasCollection = historialvacunasCollection;
+    public void setHistorialvacunasList(List<Historialvacunas> historialvacunasList) {
+        this.historialvacunasList = historialvacunasList;
     }
 
     @Override

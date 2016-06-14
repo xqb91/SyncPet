@@ -20,16 +20,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Alergias", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Alergias.findAll", query = "SELECT a FROM Alergias a"),
     @NamedQuery(name = "Alergias.findByIdAlergia", query = "SELECT a FROM Alergias a WHERE a.idAlergia = :idAlergia")})
 public class Alergias implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -37,13 +36,13 @@ public class Alergias implements Serializable {
     private Integer idAlergia;
     @Basic(optional = false)
     @Lob
-    @Column(name = "descripcion", nullable = false, length = 2147483647)
+    @Column(nullable = false, length = 2147483647)
     private String descripcion;
     @JoinColumn(name = "mascota", referencedColumnName = "id_mascota", nullable = false)
     @ManyToOne(optional = false)
     private Mascota mascota;
-    @JoinColumn(name = "id_tipo_alergia", referencedColumnName = "id_tipo_alergia")
-    @ManyToOne
+    @JoinColumn(name = "id_tipo_alergia", referencedColumnName = "id_tipo_alergia", nullable = false)
+    @ManyToOne(optional = false)
     private TipoAlergia idTipoAlergia;
 
     public Alergias() {

@@ -22,7 +22,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class AnamnesisJpaController implements Serializable {
 
@@ -57,15 +57,15 @@ public class AnamnesisJpaController implements Serializable {
             }
             em.persist(anamnesis);
             if (hospitalizacion != null) {
-                hospitalizacion.getAnamnesisCollection().add(anamnesis);
+                hospitalizacion.getAnamnesisList().add(anamnesis);
                 hospitalizacion = em.merge(hospitalizacion);
             }
             if (mascota != null) {
-                mascota.getAnamnesisCollection().add(anamnesis);
+                mascota.getAnamnesisList().add(anamnesis);
                 mascota = em.merge(mascota);
             }
             if (veterinario != null) {
-                veterinario.getAnamnesisCollection().add(anamnesis);
+                veterinario.getAnamnesisList().add(anamnesis);
                 veterinario = em.merge(veterinario);
             }
             em.getTransaction().commit();
@@ -107,27 +107,27 @@ public class AnamnesisJpaController implements Serializable {
             }
             anamnesis = em.merge(anamnesis);
             if (hospitalizacionOld != null && !hospitalizacionOld.equals(hospitalizacionNew)) {
-                hospitalizacionOld.getAnamnesisCollection().remove(anamnesis);
+                hospitalizacionOld.getAnamnesisList().remove(anamnesis);
                 hospitalizacionOld = em.merge(hospitalizacionOld);
             }
             if (hospitalizacionNew != null && !hospitalizacionNew.equals(hospitalizacionOld)) {
-                hospitalizacionNew.getAnamnesisCollection().add(anamnesis);
+                hospitalizacionNew.getAnamnesisList().add(anamnesis);
                 hospitalizacionNew = em.merge(hospitalizacionNew);
             }
             if (mascotaOld != null && !mascotaOld.equals(mascotaNew)) {
-                mascotaOld.getAnamnesisCollection().remove(anamnesis);
+                mascotaOld.getAnamnesisList().remove(anamnesis);
                 mascotaOld = em.merge(mascotaOld);
             }
             if (mascotaNew != null && !mascotaNew.equals(mascotaOld)) {
-                mascotaNew.getAnamnesisCollection().add(anamnesis);
+                mascotaNew.getAnamnesisList().add(anamnesis);
                 mascotaNew = em.merge(mascotaNew);
             }
             if (veterinarioOld != null && !veterinarioOld.equals(veterinarioNew)) {
-                veterinarioOld.getAnamnesisCollection().remove(anamnesis);
+                veterinarioOld.getAnamnesisList().remove(anamnesis);
                 veterinarioOld = em.merge(veterinarioOld);
             }
             if (veterinarioNew != null && !veterinarioNew.equals(veterinarioOld)) {
-                veterinarioNew.getAnamnesisCollection().add(anamnesis);
+                veterinarioNew.getAnamnesisList().add(anamnesis);
                 veterinarioNew = em.merge(veterinarioNew);
             }
             em.getTransaction().commit();
@@ -161,17 +161,17 @@ public class AnamnesisJpaController implements Serializable {
             }
             Hospitalizacion hospitalizacion = anamnesis.getHospitalizacion();
             if (hospitalizacion != null) {
-                hospitalizacion.getAnamnesisCollection().remove(anamnesis);
+                hospitalizacion.getAnamnesisList().remove(anamnesis);
                 hospitalizacion = em.merge(hospitalizacion);
             }
             Mascota mascota = anamnesis.getMascota();
             if (mascota != null) {
-                mascota.getAnamnesisCollection().remove(anamnesis);
+                mascota.getAnamnesisList().remove(anamnesis);
                 mascota = em.merge(mascota);
             }
             Veterinario veterinario = anamnesis.getVeterinario();
             if (veterinario != null) {
-                veterinario.getAnamnesisCollection().remove(anamnesis);
+                veterinario.getAnamnesisList().remove(anamnesis);
                 veterinario = em.merge(veterinario);
             }
             em.remove(anamnesis);

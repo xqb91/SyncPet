@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
 @Table(name = "Historial_vacunas", catalog = "syncpet", schema = "dbo")
@@ -33,18 +33,17 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Historialvacunas.findByIdEvento", query = "SELECT h FROM Historialvacunas h WHERE h.idEvento = :idEvento"),
     @NamedQuery(name = "Historialvacunas.findByFecha", query = "SELECT h FROM Historialvacunas h WHERE h.fecha = :fecha")})
 public class Historialvacunas implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_evento", nullable = false)
     private Integer idEvento;
     @Basic(optional = false)
-    @Column(name = "fecha", nullable = false)
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date fecha;
     @Lob
-    @Column(name = "observaciones", length = 2147483647)
+    @Column(length = 2147483647)
     private String observaciones;
     @JoinColumn(name = "hospitalizacion", referencedColumnName = "id_hospitalizacion", nullable = false)
     @ManyToOne(optional = false)

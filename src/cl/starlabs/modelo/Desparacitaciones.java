@@ -23,28 +23,27 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Desparacitaciones", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Desparacitaciones.findAll", query = "SELECT d FROM Desparacitaciones d"),
     @NamedQuery(name = "Desparacitaciones.findByIdDesparacitacion", query = "SELECT d FROM Desparacitaciones d WHERE d.idDesparacitacion = :idDesparacitacion"),
     @NamedQuery(name = "Desparacitaciones.findByFecha", query = "SELECT d FROM Desparacitaciones d WHERE d.fecha = :fecha")})
 public class Desparacitaciones implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_desparacitacion", nullable = false)
     private Integer idDesparacitacion;
     @Basic(optional = false)
-    @Column(name = "fecha", nullable = false)
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date fecha;
     @Lob
-    @Column(name = "descripcion", length = 2147483647)
+    @Column(length = 2147483647)
     private String descripcion;
     @JoinColumn(name = "hospitalizacion", referencedColumnName = "id_hospitalizacion", nullable = false)
     @ManyToOne(optional = false)

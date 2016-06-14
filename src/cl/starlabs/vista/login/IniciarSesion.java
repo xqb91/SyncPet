@@ -5,6 +5,7 @@
  */
 package cl.starlabs.vista.login;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.swing.UIManager;
@@ -57,17 +58,30 @@ public class IniciarSesion extends javax.swing.JFrame {
 
         panelLogin.setBorder(javax.swing.BorderFactory.createTitledBorder("Iniciar Sesión"));
 
-        lblNombreUsuario.setText("Nombre de Usuario");
+        lblNombreUsuario.setText("Rut Usuario");
 
         lblPassword.setText("Contraseña");
 
         lblSucursal.setText("Sucursal");
 
+        txtNombreUsuario.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtNombreUsuarioFocusLost(evt);
+            }
+        });
+
         slcSucursal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione..." }));
+        slcSucursal.setEnabled(false);
 
         btnIniciarSesion.setText("Iniciar Sesión");
+        btnIniciarSesion.setEnabled(false);
 
         btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelLoginLayout = new javax.swing.GroupLayout(panelLogin);
         panelLogin.setLayout(panelLoginLayout);
@@ -81,12 +95,12 @@ public class IniciarSesion extends javax.swing.JFrame {
                     .addComponent(lblSucursal))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtNombreUsuario)
-                    .addComponent(slcSucursal, 0, 208, Short.MAX_VALUE)
+                    .addComponent(slcSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNombreUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
                     .addComponent(txtPassword))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnIniciarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnIniciarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
                     .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -96,9 +110,9 @@ public class IniciarSesion extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelLoginLayout.createSequentialGroup()
-                        .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblNombreUsuario)
-                            .addComponent(txtNombreUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtNombreUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblPassword)
@@ -160,6 +174,27 @@ public class IniciarSesion extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void txtNombreUsuarioFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreUsuarioFocusLost
+        if(!txtNombreUsuario.getText().isEmpty()) {
+            txtNombreUsuario.setText(cl.starlabs.herramientas.HerramientasRut.formatear(txtNombreUsuario.getText()));
+            if(!cl.starlabs.herramientas.HerramientasRut.validar(txtNombreUsuario.getText())) {
+                lblNombreUsuario.setForeground(Color.red);
+                txtNombreUsuario.setForeground(Color.white);
+                txtNombreUsuario.setBackground(Color.red);
+                txtNombreUsuario.selectAll();
+                txtNombreUsuario.requestFocus();
+            }else{
+                lblNombreUsuario.setForeground(Color.black);
+                txtNombreUsuario.setForeground(Color.black);
+                txtNombreUsuario.setBackground(Color.white);
+            }
+        }
+    }//GEN-LAST:event_txtNombreUsuarioFocusLost
 
     /**
      * @param args the command line arguments

@@ -6,8 +6,8 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,10 +26,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Agenda", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Agenda.findAll", query = "SELECT a FROM Agenda a"),
@@ -37,7 +37,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Agenda.findByFechaEvento", query = "SELECT a FROM Agenda a WHERE a.fechaEvento = :fechaEvento"),
     @NamedQuery(name = "Agenda.findByEstado", query = "SELECT a FROM Agenda a WHERE a.estado = :estado")})
 public class Agenda implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -48,10 +47,10 @@ public class Agenda implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaEvento;
     @Basic(optional = false)
-    @Column(name = "estado", nullable = false, length = 30)
+    @Column(nullable = false, length = 30)
     private String estado;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventoAgenda")
-    private Collection<AgendaDetalle> agendaDetalleCollection;
+    private List<AgendaDetalle> agendaDetalleList;
     @JoinColumn(name = "sucursal", referencedColumnName = "id_sucursal", nullable = false)
     @ManyToOne(optional = false)
     private Sucursal sucursal;
@@ -94,12 +93,12 @@ public class Agenda implements Serializable {
     }
 
     @XmlTransient
-    public Collection<AgendaDetalle> getAgendaDetalleCollection() {
-        return agendaDetalleCollection;
+    public List<AgendaDetalle> getAgendaDetalleList() {
+        return agendaDetalleList;
     }
 
-    public void setAgendaDetalleCollection(Collection<AgendaDetalle> agendaDetalleCollection) {
-        this.agendaDetalleCollection = agendaDetalleCollection;
+    public void setAgendaDetalleList(List<AgendaDetalle> agendaDetalleList) {
+        this.agendaDetalleList = agendaDetalleList;
     }
 
     public Sucursal getSucursal() {

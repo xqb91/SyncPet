@@ -23,7 +23,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class PatologiasJpaController implements Serializable {
 
@@ -63,19 +63,19 @@ public class PatologiasJpaController implements Serializable {
             }
             em.persist(patologias);
             if (hospitalizacion != null) {
-                hospitalizacion.getPatologiasCollection().add(patologias);
+                hospitalizacion.getPatologiasList().add(patologias);
                 hospitalizacion = em.merge(hospitalizacion);
             }
             if (mascota != null) {
-                mascota.getPatologiasCollection().add(patologias);
+                mascota.getPatologiasList().add(patologias);
                 mascota = em.merge(mascota);
             }
             if (tipoPatologia != null) {
-                tipoPatologia.getPatologiasCollection().add(patologias);
+                tipoPatologia.getPatologiasList().add(patologias);
                 tipoPatologia = em.merge(tipoPatologia);
             }
             if (veterinario != null) {
-                veterinario.getPatologiasCollection().add(patologias);
+                veterinario.getPatologiasList().add(patologias);
                 veterinario = em.merge(veterinario);
             }
             em.getTransaction().commit();
@@ -123,35 +123,35 @@ public class PatologiasJpaController implements Serializable {
             }
             patologias = em.merge(patologias);
             if (hospitalizacionOld != null && !hospitalizacionOld.equals(hospitalizacionNew)) {
-                hospitalizacionOld.getPatologiasCollection().remove(patologias);
+                hospitalizacionOld.getPatologiasList().remove(patologias);
                 hospitalizacionOld = em.merge(hospitalizacionOld);
             }
             if (hospitalizacionNew != null && !hospitalizacionNew.equals(hospitalizacionOld)) {
-                hospitalizacionNew.getPatologiasCollection().add(patologias);
+                hospitalizacionNew.getPatologiasList().add(patologias);
                 hospitalizacionNew = em.merge(hospitalizacionNew);
             }
             if (mascotaOld != null && !mascotaOld.equals(mascotaNew)) {
-                mascotaOld.getPatologiasCollection().remove(patologias);
+                mascotaOld.getPatologiasList().remove(patologias);
                 mascotaOld = em.merge(mascotaOld);
             }
             if (mascotaNew != null && !mascotaNew.equals(mascotaOld)) {
-                mascotaNew.getPatologiasCollection().add(patologias);
+                mascotaNew.getPatologiasList().add(patologias);
                 mascotaNew = em.merge(mascotaNew);
             }
             if (tipoPatologiaOld != null && !tipoPatologiaOld.equals(tipoPatologiaNew)) {
-                tipoPatologiaOld.getPatologiasCollection().remove(patologias);
+                tipoPatologiaOld.getPatologiasList().remove(patologias);
                 tipoPatologiaOld = em.merge(tipoPatologiaOld);
             }
             if (tipoPatologiaNew != null && !tipoPatologiaNew.equals(tipoPatologiaOld)) {
-                tipoPatologiaNew.getPatologiasCollection().add(patologias);
+                tipoPatologiaNew.getPatologiasList().add(patologias);
                 tipoPatologiaNew = em.merge(tipoPatologiaNew);
             }
             if (veterinarioOld != null && !veterinarioOld.equals(veterinarioNew)) {
-                veterinarioOld.getPatologiasCollection().remove(patologias);
+                veterinarioOld.getPatologiasList().remove(patologias);
                 veterinarioOld = em.merge(veterinarioOld);
             }
             if (veterinarioNew != null && !veterinarioNew.equals(veterinarioOld)) {
-                veterinarioNew.getPatologiasCollection().add(patologias);
+                veterinarioNew.getPatologiasList().add(patologias);
                 veterinarioNew = em.merge(veterinarioNew);
             }
             em.getTransaction().commit();
@@ -185,22 +185,22 @@ public class PatologiasJpaController implements Serializable {
             }
             Hospitalizacion hospitalizacion = patologias.getHospitalizacion();
             if (hospitalizacion != null) {
-                hospitalizacion.getPatologiasCollection().remove(patologias);
+                hospitalizacion.getPatologiasList().remove(patologias);
                 hospitalizacion = em.merge(hospitalizacion);
             }
             Mascota mascota = patologias.getMascota();
             if (mascota != null) {
-                mascota.getPatologiasCollection().remove(patologias);
+                mascota.getPatologiasList().remove(patologias);
                 mascota = em.merge(mascota);
             }
             TipoPatología tipoPatologia = patologias.getTipoPatologia();
             if (tipoPatologia != null) {
-                tipoPatologia.getPatologiasCollection().remove(patologias);
+                tipoPatologia.getPatologiasList().remove(patologias);
                 tipoPatologia = em.merge(tipoPatologia);
             }
             Veterinario veterinario = patologias.getVeterinario();
             if (veterinario != null) {
-                veterinario.getPatologiasCollection().remove(patologias);
+                veterinario.getPatologiasList().remove(patologias);
                 veterinario = em.merge(veterinario);
             }
             em.remove(patologias);

@@ -6,7 +6,7 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,27 +23,26 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Provincia", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Provincia.findAll", query = "SELECT p FROM Provincia p"),
     @NamedQuery(name = "Provincia.findByIdProvincia", query = "SELECT p FROM Provincia p WHERE p.idProvincia = :idProvincia"),
     @NamedQuery(name = "Provincia.findByNombre", query = "SELECT p FROM Provincia p WHERE p.nombre = :nombre")})
 public class Provincia implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_provincia", nullable = false)
     private Integer idProvincia;
     @Basic(optional = false)
-    @Column(name = "nombre", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String nombre;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "provincia")
-    private Collection<Comuna> comunaCollection;
+    private List<Comuna> comunaList;
     @JoinColumn(name = "region", referencedColumnName = "id_region", nullable = false)
     @ManyToOne(optional = false)
     private Region region;
@@ -77,12 +76,12 @@ public class Provincia implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Comuna> getComunaCollection() {
-        return comunaCollection;
+    public List<Comuna> getComunaList() {
+        return comunaList;
     }
 
-    public void setComunaCollection(Collection<Comuna> comunaCollection) {
-        this.comunaCollection = comunaCollection;
+    public void setComunaList(List<Comuna> comunaList) {
+        this.comunaList = comunaList;
     }
 
     public Region getRegion() {

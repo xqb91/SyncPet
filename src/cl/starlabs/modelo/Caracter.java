@@ -6,36 +6,41 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Caracter", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Caracter.findAll", query = "SELECT c FROM Caracter c"),
     @NamedQuery(name = "Caracter.findByIdCaracter", query = "SELECT c FROM Caracter c WHERE c.idCaracter = :idCaracter"),
     @NamedQuery(name = "Caracter.findByNombre", query = "SELECT c FROM Caracter c WHERE c.nombre = :nombre")})
 public class Caracter implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_caracter", nullable = false)
     private Integer idCaracter;
     @Basic(optional = false)
-    @Column(name = "nombre", nullable = false, length = 40)
+    @Column(nullable = false, length = 40)
     private String nombre;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "caracter")
+    private List<Mascota> mascotaList;
 
     public Caracter() {
     }
@@ -63,6 +68,15 @@ public class Caracter implements Serializable {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    @XmlTransient
+    public List<Mascota> getMascotaList() {
+        return mascotaList;
+    }
+
+    public void setMascotaList(List<Mascota> mascotaList) {
+        this.mascotaList = mascotaList;
     }
 
     @Override

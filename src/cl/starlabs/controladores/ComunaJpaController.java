@@ -17,15 +17,14 @@ import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Provincia;
 import cl.starlabs.modelo.Sucursal;
 import java.util.ArrayList;
-import java.util.Collection;
-import cl.starlabs.modelo.Propietario;
 import java.util.List;
+import cl.starlabs.modelo.Propietario;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class ComunaJpaController implements Serializable {
 
@@ -39,11 +38,11 @@ public class ComunaJpaController implements Serializable {
     }
 
     public void create(Comuna comuna) throws PreexistingEntityException, Exception {
-        if (comuna.getSucursalCollection() == null) {
-            comuna.setSucursalCollection(new ArrayList<Sucursal>());
+        if (comuna.getSucursalList() == null) {
+            comuna.setSucursalList(new ArrayList<Sucursal>());
         }
-        if (comuna.getPropietarioCollection() == null) {
-            comuna.setPropietarioCollection(new ArrayList<Propietario>());
+        if (comuna.getPropietarioList() == null) {
+            comuna.setPropietarioList(new ArrayList<Propietario>());
         }
         EntityManager em = null;
         try {
@@ -54,39 +53,39 @@ public class ComunaJpaController implements Serializable {
                 provincia = em.getReference(provincia.getClass(), provincia.getIdProvincia());
                 comuna.setProvincia(provincia);
             }
-            Collection<Sucursal> attachedSucursalCollection = new ArrayList<Sucursal>();
-            for (Sucursal sucursalCollectionSucursalToAttach : comuna.getSucursalCollection()) {
-                sucursalCollectionSucursalToAttach = em.getReference(sucursalCollectionSucursalToAttach.getClass(), sucursalCollectionSucursalToAttach.getIdSucursal());
-                attachedSucursalCollection.add(sucursalCollectionSucursalToAttach);
+            List<Sucursal> attachedSucursalList = new ArrayList<Sucursal>();
+            for (Sucursal sucursalListSucursalToAttach : comuna.getSucursalList()) {
+                sucursalListSucursalToAttach = em.getReference(sucursalListSucursalToAttach.getClass(), sucursalListSucursalToAttach.getIdSucursal());
+                attachedSucursalList.add(sucursalListSucursalToAttach);
             }
-            comuna.setSucursalCollection(attachedSucursalCollection);
-            Collection<Propietario> attachedPropietarioCollection = new ArrayList<Propietario>();
-            for (Propietario propietarioCollectionPropietarioToAttach : comuna.getPropietarioCollection()) {
-                propietarioCollectionPropietarioToAttach = em.getReference(propietarioCollectionPropietarioToAttach.getClass(), propietarioCollectionPropietarioToAttach.getIdPropietario());
-                attachedPropietarioCollection.add(propietarioCollectionPropietarioToAttach);
+            comuna.setSucursalList(attachedSucursalList);
+            List<Propietario> attachedPropietarioList = new ArrayList<Propietario>();
+            for (Propietario propietarioListPropietarioToAttach : comuna.getPropietarioList()) {
+                propietarioListPropietarioToAttach = em.getReference(propietarioListPropietarioToAttach.getClass(), propietarioListPropietarioToAttach.getIdPropietario());
+                attachedPropietarioList.add(propietarioListPropietarioToAttach);
             }
-            comuna.setPropietarioCollection(attachedPropietarioCollection);
+            comuna.setPropietarioList(attachedPropietarioList);
             em.persist(comuna);
             if (provincia != null) {
-                provincia.getComunaCollection().add(comuna);
+                provincia.getComunaList().add(comuna);
                 provincia = em.merge(provincia);
             }
-            for (Sucursal sucursalCollectionSucursal : comuna.getSucursalCollection()) {
-                Comuna oldComunaOfSucursalCollectionSucursal = sucursalCollectionSucursal.getComuna();
-                sucursalCollectionSucursal.setComuna(comuna);
-                sucursalCollectionSucursal = em.merge(sucursalCollectionSucursal);
-                if (oldComunaOfSucursalCollectionSucursal != null) {
-                    oldComunaOfSucursalCollectionSucursal.getSucursalCollection().remove(sucursalCollectionSucursal);
-                    oldComunaOfSucursalCollectionSucursal = em.merge(oldComunaOfSucursalCollectionSucursal);
+            for (Sucursal sucursalListSucursal : comuna.getSucursalList()) {
+                Comuna oldComunaOfSucursalListSucursal = sucursalListSucursal.getComuna();
+                sucursalListSucursal.setComuna(comuna);
+                sucursalListSucursal = em.merge(sucursalListSucursal);
+                if (oldComunaOfSucursalListSucursal != null) {
+                    oldComunaOfSucursalListSucursal.getSucursalList().remove(sucursalListSucursal);
+                    oldComunaOfSucursalListSucursal = em.merge(oldComunaOfSucursalListSucursal);
                 }
             }
-            for (Propietario propietarioCollectionPropietario : comuna.getPropietarioCollection()) {
-                Comuna oldComunaOfPropietarioCollectionPropietario = propietarioCollectionPropietario.getComuna();
-                propietarioCollectionPropietario.setComuna(comuna);
-                propietarioCollectionPropietario = em.merge(propietarioCollectionPropietario);
-                if (oldComunaOfPropietarioCollectionPropietario != null) {
-                    oldComunaOfPropietarioCollectionPropietario.getPropietarioCollection().remove(propietarioCollectionPropietario);
-                    oldComunaOfPropietarioCollectionPropietario = em.merge(oldComunaOfPropietarioCollectionPropietario);
+            for (Propietario propietarioListPropietario : comuna.getPropietarioList()) {
+                Comuna oldComunaOfPropietarioListPropietario = propietarioListPropietario.getComuna();
+                propietarioListPropietario.setComuna(comuna);
+                propietarioListPropietario = em.merge(propietarioListPropietario);
+                if (oldComunaOfPropietarioListPropietario != null) {
+                    oldComunaOfPropietarioListPropietario.getPropietarioList().remove(propietarioListPropietario);
+                    oldComunaOfPropietarioListPropietario = em.merge(oldComunaOfPropietarioListPropietario);
                 }
             }
             em.getTransaction().commit();
@@ -110,25 +109,25 @@ public class ComunaJpaController implements Serializable {
             Comuna persistentComuna = em.find(Comuna.class, comuna.getIdComuna());
             Provincia provinciaOld = persistentComuna.getProvincia();
             Provincia provinciaNew = comuna.getProvincia();
-            Collection<Sucursal> sucursalCollectionOld = persistentComuna.getSucursalCollection();
-            Collection<Sucursal> sucursalCollectionNew = comuna.getSucursalCollection();
-            Collection<Propietario> propietarioCollectionOld = persistentComuna.getPropietarioCollection();
-            Collection<Propietario> propietarioCollectionNew = comuna.getPropietarioCollection();
+            List<Sucursal> sucursalListOld = persistentComuna.getSucursalList();
+            List<Sucursal> sucursalListNew = comuna.getSucursalList();
+            List<Propietario> propietarioListOld = persistentComuna.getPropietarioList();
+            List<Propietario> propietarioListNew = comuna.getPropietarioList();
             List<String> illegalOrphanMessages = null;
-            for (Sucursal sucursalCollectionOldSucursal : sucursalCollectionOld) {
-                if (!sucursalCollectionNew.contains(sucursalCollectionOldSucursal)) {
+            for (Sucursal sucursalListOldSucursal : sucursalListOld) {
+                if (!sucursalListNew.contains(sucursalListOldSucursal)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Sucursal " + sucursalCollectionOldSucursal + " since its comuna field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Sucursal " + sucursalListOldSucursal + " since its comuna field is not nullable.");
                 }
             }
-            for (Propietario propietarioCollectionOldPropietario : propietarioCollectionOld) {
-                if (!propietarioCollectionNew.contains(propietarioCollectionOldPropietario)) {
+            for (Propietario propietarioListOldPropietario : propietarioListOld) {
+                if (!propietarioListNew.contains(propietarioListOldPropietario)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Propietario " + propietarioCollectionOldPropietario + " since its comuna field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Propietario " + propietarioListOldPropietario + " since its comuna field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -138,48 +137,48 @@ public class ComunaJpaController implements Serializable {
                 provinciaNew = em.getReference(provinciaNew.getClass(), provinciaNew.getIdProvincia());
                 comuna.setProvincia(provinciaNew);
             }
-            Collection<Sucursal> attachedSucursalCollectionNew = new ArrayList<Sucursal>();
-            for (Sucursal sucursalCollectionNewSucursalToAttach : sucursalCollectionNew) {
-                sucursalCollectionNewSucursalToAttach = em.getReference(sucursalCollectionNewSucursalToAttach.getClass(), sucursalCollectionNewSucursalToAttach.getIdSucursal());
-                attachedSucursalCollectionNew.add(sucursalCollectionNewSucursalToAttach);
+            List<Sucursal> attachedSucursalListNew = new ArrayList<Sucursal>();
+            for (Sucursal sucursalListNewSucursalToAttach : sucursalListNew) {
+                sucursalListNewSucursalToAttach = em.getReference(sucursalListNewSucursalToAttach.getClass(), sucursalListNewSucursalToAttach.getIdSucursal());
+                attachedSucursalListNew.add(sucursalListNewSucursalToAttach);
             }
-            sucursalCollectionNew = attachedSucursalCollectionNew;
-            comuna.setSucursalCollection(sucursalCollectionNew);
-            Collection<Propietario> attachedPropietarioCollectionNew = new ArrayList<Propietario>();
-            for (Propietario propietarioCollectionNewPropietarioToAttach : propietarioCollectionNew) {
-                propietarioCollectionNewPropietarioToAttach = em.getReference(propietarioCollectionNewPropietarioToAttach.getClass(), propietarioCollectionNewPropietarioToAttach.getIdPropietario());
-                attachedPropietarioCollectionNew.add(propietarioCollectionNewPropietarioToAttach);
+            sucursalListNew = attachedSucursalListNew;
+            comuna.setSucursalList(sucursalListNew);
+            List<Propietario> attachedPropietarioListNew = new ArrayList<Propietario>();
+            for (Propietario propietarioListNewPropietarioToAttach : propietarioListNew) {
+                propietarioListNewPropietarioToAttach = em.getReference(propietarioListNewPropietarioToAttach.getClass(), propietarioListNewPropietarioToAttach.getIdPropietario());
+                attachedPropietarioListNew.add(propietarioListNewPropietarioToAttach);
             }
-            propietarioCollectionNew = attachedPropietarioCollectionNew;
-            comuna.setPropietarioCollection(propietarioCollectionNew);
+            propietarioListNew = attachedPropietarioListNew;
+            comuna.setPropietarioList(propietarioListNew);
             comuna = em.merge(comuna);
             if (provinciaOld != null && !provinciaOld.equals(provinciaNew)) {
-                provinciaOld.getComunaCollection().remove(comuna);
+                provinciaOld.getComunaList().remove(comuna);
                 provinciaOld = em.merge(provinciaOld);
             }
             if (provinciaNew != null && !provinciaNew.equals(provinciaOld)) {
-                provinciaNew.getComunaCollection().add(comuna);
+                provinciaNew.getComunaList().add(comuna);
                 provinciaNew = em.merge(provinciaNew);
             }
-            for (Sucursal sucursalCollectionNewSucursal : sucursalCollectionNew) {
-                if (!sucursalCollectionOld.contains(sucursalCollectionNewSucursal)) {
-                    Comuna oldComunaOfSucursalCollectionNewSucursal = sucursalCollectionNewSucursal.getComuna();
-                    sucursalCollectionNewSucursal.setComuna(comuna);
-                    sucursalCollectionNewSucursal = em.merge(sucursalCollectionNewSucursal);
-                    if (oldComunaOfSucursalCollectionNewSucursal != null && !oldComunaOfSucursalCollectionNewSucursal.equals(comuna)) {
-                        oldComunaOfSucursalCollectionNewSucursal.getSucursalCollection().remove(sucursalCollectionNewSucursal);
-                        oldComunaOfSucursalCollectionNewSucursal = em.merge(oldComunaOfSucursalCollectionNewSucursal);
+            for (Sucursal sucursalListNewSucursal : sucursalListNew) {
+                if (!sucursalListOld.contains(sucursalListNewSucursal)) {
+                    Comuna oldComunaOfSucursalListNewSucursal = sucursalListNewSucursal.getComuna();
+                    sucursalListNewSucursal.setComuna(comuna);
+                    sucursalListNewSucursal = em.merge(sucursalListNewSucursal);
+                    if (oldComunaOfSucursalListNewSucursal != null && !oldComunaOfSucursalListNewSucursal.equals(comuna)) {
+                        oldComunaOfSucursalListNewSucursal.getSucursalList().remove(sucursalListNewSucursal);
+                        oldComunaOfSucursalListNewSucursal = em.merge(oldComunaOfSucursalListNewSucursal);
                     }
                 }
             }
-            for (Propietario propietarioCollectionNewPropietario : propietarioCollectionNew) {
-                if (!propietarioCollectionOld.contains(propietarioCollectionNewPropietario)) {
-                    Comuna oldComunaOfPropietarioCollectionNewPropietario = propietarioCollectionNewPropietario.getComuna();
-                    propietarioCollectionNewPropietario.setComuna(comuna);
-                    propietarioCollectionNewPropietario = em.merge(propietarioCollectionNewPropietario);
-                    if (oldComunaOfPropietarioCollectionNewPropietario != null && !oldComunaOfPropietarioCollectionNewPropietario.equals(comuna)) {
-                        oldComunaOfPropietarioCollectionNewPropietario.getPropietarioCollection().remove(propietarioCollectionNewPropietario);
-                        oldComunaOfPropietarioCollectionNewPropietario = em.merge(oldComunaOfPropietarioCollectionNewPropietario);
+            for (Propietario propietarioListNewPropietario : propietarioListNew) {
+                if (!propietarioListOld.contains(propietarioListNewPropietario)) {
+                    Comuna oldComunaOfPropietarioListNewPropietario = propietarioListNewPropietario.getComuna();
+                    propietarioListNewPropietario.setComuna(comuna);
+                    propietarioListNewPropietario = em.merge(propietarioListNewPropietario);
+                    if (oldComunaOfPropietarioListNewPropietario != null && !oldComunaOfPropietarioListNewPropietario.equals(comuna)) {
+                        oldComunaOfPropietarioListNewPropietario.getPropietarioList().remove(propietarioListNewPropietario);
+                        oldComunaOfPropietarioListNewPropietario = em.merge(oldComunaOfPropietarioListNewPropietario);
                     }
                 }
             }
@@ -213,26 +212,26 @@ public class ComunaJpaController implements Serializable {
                 throw new NonexistentEntityException("The comuna with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Sucursal> sucursalCollectionOrphanCheck = comuna.getSucursalCollection();
-            for (Sucursal sucursalCollectionOrphanCheckSucursal : sucursalCollectionOrphanCheck) {
+            List<Sucursal> sucursalListOrphanCheck = comuna.getSucursalList();
+            for (Sucursal sucursalListOrphanCheckSucursal : sucursalListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Comuna (" + comuna + ") cannot be destroyed since the Sucursal " + sucursalCollectionOrphanCheckSucursal + " in its sucursalCollection field has a non-nullable comuna field.");
+                illegalOrphanMessages.add("This Comuna (" + comuna + ") cannot be destroyed since the Sucursal " + sucursalListOrphanCheckSucursal + " in its sucursalList field has a non-nullable comuna field.");
             }
-            Collection<Propietario> propietarioCollectionOrphanCheck = comuna.getPropietarioCollection();
-            for (Propietario propietarioCollectionOrphanCheckPropietario : propietarioCollectionOrphanCheck) {
+            List<Propietario> propietarioListOrphanCheck = comuna.getPropietarioList();
+            for (Propietario propietarioListOrphanCheckPropietario : propietarioListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Comuna (" + comuna + ") cannot be destroyed since the Propietario " + propietarioCollectionOrphanCheckPropietario + " in its propietarioCollection field has a non-nullable comuna field.");
+                illegalOrphanMessages.add("This Comuna (" + comuna + ") cannot be destroyed since the Propietario " + propietarioListOrphanCheckPropietario + " in its propietarioList field has a non-nullable comuna field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
             Provincia provincia = comuna.getProvincia();
             if (provincia != null) {
-                provincia.getComunaCollection().remove(comuna);
+                provincia.getComunaList().remove(comuna);
                 provincia = em.merge(provincia);
             }
             em.remove(comuna);
@@ -287,6 +286,26 @@ public class ComunaJpaController implements Serializable {
             return ((Long) q.getSingleResult()).intValue();
         } finally {
             em.close();
+        }
+    }
+    
+    public List<Comuna> listar()
+    {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Comuna.findAll");
+            return consulta.getResultList();
+        }catch(Exception e) {
+            return null;
+        }
+    }
+    
+    public Comuna buscarComunaPorNombre(String comuna) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Comuna.findByNombre");
+            consulta.setParameter("nombre", comuna);
+            return (Comuna)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
         }
     }
     

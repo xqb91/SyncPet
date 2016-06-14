@@ -7,8 +7,8 @@ package cl.starlabs.modelo;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -28,10 +28,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Mascota", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Mascota.findAll", query = "SELECT m FROM Mascota m"),
@@ -42,29 +42,25 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Mascota.findByPeso", query = "SELECT m FROM Mascota m WHERE m.peso = :peso"),
     @NamedQuery(name = "Mascota.findBySexo", query = "SELECT m FROM Mascota m WHERE m.sexo = :sexo"),
     @NamedQuery(name = "Mascota.findByNumeroChip", query = "SELECT m FROM Mascota m WHERE m.numeroChip = :numeroChip"),
-    @NamedQuery(name = "Mascota.findByGrupoSanguineo", query = "SELECT m FROM Mascota m WHERE m.grupoSanguineo = :grupoSanguineo"),
-    @NamedQuery(name = "Mascota.findByCaracter", query = "SELECT m FROM Mascota m WHERE m.caracter = :caracter")})
+    @NamedQuery(name = "Mascota.findByGrupoSanguineo", query = "SELECT m FROM Mascota m WHERE m.grupoSanguineo = :grupoSanguineo")})
 public class Mascota implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_mascota", nullable = false)
     private Integer idMascota;
     @Basic(optional = false)
-    @Column(name = "nombre", nullable = false, length = 75)
+    @Column(nullable = false, length = 75)
     private String nombre;
     @Basic(optional = false)
     @Column(name = "fecha_nacimiento", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date fechaNacimiento;
-    @Column(name = "defuncion")
     @Temporal(TemporalType.DATE)
     private Date defuncion;
-    @Column(name = "peso")
     private BigInteger peso;
     @Basic(optional = false)
-    @Column(name = "sexo", nullable = false)
+    @Column(nullable = false)
     private Character sexo;
     @Column(name = "numero_chip")
     private Integer numeroChip;
@@ -72,31 +68,31 @@ public class Mascota implements Serializable {
     @Column(name = "grupo_sanguineo", nullable = false, length = 10)
     private String grupoSanguineo;
     @Lob
-    @Column(name = "foto", length = 2147483647)
+    @Column(length = 2147483647)
     private String foto;
-    @Basic(optional = false)
-    @Column(name = "caracter", nullable = false)
-    private int caracter;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "mascota")
-    private Collection<Examenes> examenesCollection;
+    private List<Examenes> examenesList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "mascota")
-    private Collection<Historialvacunas> historialvacunasCollection;
+    private List<Historialvacunas> historialvacunasList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "mascota")
-    private Collection<Contraindicaciones> contraindicacionesCollection;
+    private List<Contraindicaciones> contraindicacionesList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "mascota")
-    private Collection<Desparacitaciones> desparacitacionesCollection;
+    private List<Desparacitaciones> desparacitacionesList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "mascota")
-    private Collection<Alergias> alergiasCollection;
+    private List<Alergias> alergiasList;
+    @JoinColumn(name = "caracter", referencedColumnName = "id_caracter", nullable = false)
+    @ManyToOne(optional = false)
+    private Caracter caracter;
     @JoinColumn(name = "habitad", referencedColumnName = "id_habitad", nullable = false)
     @ManyToOne(optional = false)
     private Habitad habitad;
     @OneToMany(mappedBy = "madre")
-    private Collection<Mascota> mascotaCollection;
+    private List<Mascota> mascotaList;
     @JoinColumn(name = "madre", referencedColumnName = "id_mascota")
     @ManyToOne
     private Mascota madre;
     @OneToMany(mappedBy = "padre")
-    private Collection<Mascota> mascotaCollection1;
+    private List<Mascota> mascotaList1;
     @JoinColumn(name = "padre", referencedColumnName = "id_mascota")
     @ManyToOne
     private Mascota padre;
@@ -107,15 +103,17 @@ public class Mascota implements Serializable {
     @ManyToOne(optional = false)
     private Raza raza;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "mascota")
-    private Collection<Farmacos> farmacosCollection;
+    private List<Farmacos> farmacosList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "mascota")
-    private Collection<Hospitalizacion> hospitalizacionCollection;
+    private List<Procedimientos> procedimientosList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "mascota")
-    private Collection<AgendaDetalle> agendaDetalleCollection;
+    private List<Hospitalizacion> hospitalizacionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "mascota")
-    private Collection<Anamnesis> anamnesisCollection;
+    private List<AgendaDetalle> agendaDetalleList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "mascota")
-    private Collection<Patologias> patologiasCollection;
+    private List<Anamnesis> anamnesisList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "mascota")
+    private List<Patologias> patologiasList;
 
     public Mascota() {
     }
@@ -124,13 +122,12 @@ public class Mascota implements Serializable {
         this.idMascota = idMascota;
     }
 
-    public Mascota(Integer idMascota, String nombre, Date fechaNacimiento, Character sexo, String grupoSanguineo, int caracter) {
+    public Mascota(Integer idMascota, String nombre, Date fechaNacimiento, Character sexo, String grupoSanguineo) {
         this.idMascota = idMascota;
         this.nombre = nombre;
         this.fechaNacimiento = fechaNacimiento;
         this.sexo = sexo;
         this.grupoSanguineo = grupoSanguineo;
-        this.caracter = caracter;
     }
 
     public Integer getIdMascota() {
@@ -205,57 +202,57 @@ public class Mascota implements Serializable {
         this.foto = foto;
     }
 
-    public int getCaracter() {
+    @XmlTransient
+    public List<Examenes> getExamenesList() {
+        return examenesList;
+    }
+
+    public void setExamenesList(List<Examenes> examenesList) {
+        this.examenesList = examenesList;
+    }
+
+    @XmlTransient
+    public List<Historialvacunas> getHistorialvacunasList() {
+        return historialvacunasList;
+    }
+
+    public void setHistorialvacunasList(List<Historialvacunas> historialvacunasList) {
+        this.historialvacunasList = historialvacunasList;
+    }
+
+    @XmlTransient
+    public List<Contraindicaciones> getContraindicacionesList() {
+        return contraindicacionesList;
+    }
+
+    public void setContraindicacionesList(List<Contraindicaciones> contraindicacionesList) {
+        this.contraindicacionesList = contraindicacionesList;
+    }
+
+    @XmlTransient
+    public List<Desparacitaciones> getDesparacitacionesList() {
+        return desparacitacionesList;
+    }
+
+    public void setDesparacitacionesList(List<Desparacitaciones> desparacitacionesList) {
+        this.desparacitacionesList = desparacitacionesList;
+    }
+
+    @XmlTransient
+    public List<Alergias> getAlergiasList() {
+        return alergiasList;
+    }
+
+    public void setAlergiasList(List<Alergias> alergiasList) {
+        this.alergiasList = alergiasList;
+    }
+
+    public Caracter getCaracter() {
         return caracter;
     }
 
-    public void setCaracter(int caracter) {
+    public void setCaracter(Caracter caracter) {
         this.caracter = caracter;
-    }
-
-    @XmlTransient
-    public Collection<Examenes> getExamenesCollection() {
-        return examenesCollection;
-    }
-
-    public void setExamenesCollection(Collection<Examenes> examenesCollection) {
-        this.examenesCollection = examenesCollection;
-    }
-
-    @XmlTransient
-    public Collection<Historialvacunas> getHistorialvacunasCollection() {
-        return historialvacunasCollection;
-    }
-
-    public void setHistorialvacunasCollection(Collection<Historialvacunas> historialvacunasCollection) {
-        this.historialvacunasCollection = historialvacunasCollection;
-    }
-
-    @XmlTransient
-    public Collection<Contraindicaciones> getContraindicacionesCollection() {
-        return contraindicacionesCollection;
-    }
-
-    public void setContraindicacionesCollection(Collection<Contraindicaciones> contraindicacionesCollection) {
-        this.contraindicacionesCollection = contraindicacionesCollection;
-    }
-
-    @XmlTransient
-    public Collection<Desparacitaciones> getDesparacitacionesCollection() {
-        return desparacitacionesCollection;
-    }
-
-    public void setDesparacitacionesCollection(Collection<Desparacitaciones> desparacitacionesCollection) {
-        this.desparacitacionesCollection = desparacitacionesCollection;
-    }
-
-    @XmlTransient
-    public Collection<Alergias> getAlergiasCollection() {
-        return alergiasCollection;
-    }
-
-    public void setAlergiasCollection(Collection<Alergias> alergiasCollection) {
-        this.alergiasCollection = alergiasCollection;
     }
 
     public Habitad getHabitad() {
@@ -267,12 +264,12 @@ public class Mascota implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Mascota> getMascotaCollection() {
-        return mascotaCollection;
+    public List<Mascota> getMascotaList() {
+        return mascotaList;
     }
 
-    public void setMascotaCollection(Collection<Mascota> mascotaCollection) {
-        this.mascotaCollection = mascotaCollection;
+    public void setMascotaList(List<Mascota> mascotaList) {
+        this.mascotaList = mascotaList;
     }
 
     public Mascota getMadre() {
@@ -284,12 +281,12 @@ public class Mascota implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Mascota> getMascotaCollection1() {
-        return mascotaCollection1;
+    public List<Mascota> getMascotaList1() {
+        return mascotaList1;
     }
 
-    public void setMascotaCollection1(Collection<Mascota> mascotaCollection1) {
-        this.mascotaCollection1 = mascotaCollection1;
+    public void setMascotaList1(List<Mascota> mascotaList1) {
+        this.mascotaList1 = mascotaList1;
     }
 
     public Mascota getPadre() {
@@ -317,48 +314,57 @@ public class Mascota implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Farmacos> getFarmacosCollection() {
-        return farmacosCollection;
+    public List<Farmacos> getFarmacosList() {
+        return farmacosList;
     }
 
-    public void setFarmacosCollection(Collection<Farmacos> farmacosCollection) {
-        this.farmacosCollection = farmacosCollection;
-    }
-
-    @XmlTransient
-    public Collection<Hospitalizacion> getHospitalizacionCollection() {
-        return hospitalizacionCollection;
-    }
-
-    public void setHospitalizacionCollection(Collection<Hospitalizacion> hospitalizacionCollection) {
-        this.hospitalizacionCollection = hospitalizacionCollection;
+    public void setFarmacosList(List<Farmacos> farmacosList) {
+        this.farmacosList = farmacosList;
     }
 
     @XmlTransient
-    public Collection<AgendaDetalle> getAgendaDetalleCollection() {
-        return agendaDetalleCollection;
+    public List<Procedimientos> getProcedimientosList() {
+        return procedimientosList;
     }
 
-    public void setAgendaDetalleCollection(Collection<AgendaDetalle> agendaDetalleCollection) {
-        this.agendaDetalleCollection = agendaDetalleCollection;
-    }
-
-    @XmlTransient
-    public Collection<Anamnesis> getAnamnesisCollection() {
-        return anamnesisCollection;
-    }
-
-    public void setAnamnesisCollection(Collection<Anamnesis> anamnesisCollection) {
-        this.anamnesisCollection = anamnesisCollection;
+    public void setProcedimientosList(List<Procedimientos> procedimientosList) {
+        this.procedimientosList = procedimientosList;
     }
 
     @XmlTransient
-    public Collection<Patologias> getPatologiasCollection() {
-        return patologiasCollection;
+    public List<Hospitalizacion> getHospitalizacionList() {
+        return hospitalizacionList;
     }
 
-    public void setPatologiasCollection(Collection<Patologias> patologiasCollection) {
-        this.patologiasCollection = patologiasCollection;
+    public void setHospitalizacionList(List<Hospitalizacion> hospitalizacionList) {
+        this.hospitalizacionList = hospitalizacionList;
+    }
+
+    @XmlTransient
+    public List<AgendaDetalle> getAgendaDetalleList() {
+        return agendaDetalleList;
+    }
+
+    public void setAgendaDetalleList(List<AgendaDetalle> agendaDetalleList) {
+        this.agendaDetalleList = agendaDetalleList;
+    }
+
+    @XmlTransient
+    public List<Anamnesis> getAnamnesisList() {
+        return anamnesisList;
+    }
+
+    public void setAnamnesisList(List<Anamnesis> anamnesisList) {
+        this.anamnesisList = anamnesisList;
+    }
+
+    @XmlTransient
+    public List<Patologias> getPatologiasList() {
+        return patologiasList;
+    }
+
+    public void setPatologiasList(List<Patologias> patologiasList) {
+        this.patologiasList = patologiasList;
     }
 
     @Override

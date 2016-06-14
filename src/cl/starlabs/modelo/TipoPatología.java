@@ -6,7 +6,7 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
 @Table(name = "Tipo_Patolog\u00eda", catalog = "syncpet", schema = "dbo")
@@ -32,7 +32,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TipoPatolog\u00eda.findByIdTipoPatologia", query = "SELECT t FROM TipoPatolog\u00eda t WHERE t.idTipoPatologia = :idTipoPatologia"),
     @NamedQuery(name = "TipoPatolog\u00eda.findByNombrePatolog\u00eda", query = "SELECT t FROM TipoPatolog\u00eda t WHERE t.nombrePatolog\u00eda = :nombrePatolog\u00eda")})
 public class TipoPatología implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -43,18 +42,18 @@ public class TipoPatología implements Serializable {
     private String nombrePatología;
     @Basic(optional = false)
     @Lob
-    @Column(name = "etiologia", nullable = false, length = 2147483647)
+    @Column(nullable = false, length = 2147483647)
     private String etiologia;
     @Basic(optional = false)
     @Lob
-    @Column(name = "patogenia", nullable = false, length = 2147483647)
+    @Column(nullable = false, length = 2147483647)
     private String patogenia;
     @Basic(optional = false)
     @Lob
-    @Column(name = "morfologia", nullable = false, length = 2147483647)
+    @Column(nullable = false, length = 2147483647)
     private String morfologia;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoPatologia")
-    private Collection<Patologias> patologiasCollection;
+    private List<Patologias> patologiasList;
 
     public TipoPatología() {
     }
@@ -112,12 +111,12 @@ public class TipoPatología implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Patologias> getPatologiasCollection() {
-        return patologiasCollection;
+    public List<Patologias> getPatologiasList() {
+        return patologiasList;
     }
 
-    public void setPatologiasCollection(Collection<Patologias> patologiasCollection) {
-        this.patologiasCollection = patologiasCollection;
+    public void setPatologiasList(List<Patologias> patologiasList) {
+        this.patologiasList = patologiasList;
     }
 
     @Override

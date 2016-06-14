@@ -16,14 +16,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Region;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class PaisJpaController implements Serializable {
 
@@ -37,27 +36,27 @@ public class PaisJpaController implements Serializable {
     }
 
     public void create(Pais pais) throws PreexistingEntityException, Exception {
-        if (pais.getRegionCollection() == null) {
-            pais.setRegionCollection(new ArrayList<Region>());
+        if (pais.getRegionList() == null) {
+            pais.setRegionList(new ArrayList<Region>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Collection<Region> attachedRegionCollection = new ArrayList<Region>();
-            for (Region regionCollectionRegionToAttach : pais.getRegionCollection()) {
-                regionCollectionRegionToAttach = em.getReference(regionCollectionRegionToAttach.getClass(), regionCollectionRegionToAttach.getIdRegion());
-                attachedRegionCollection.add(regionCollectionRegionToAttach);
+            List<Region> attachedRegionList = new ArrayList<Region>();
+            for (Region regionListRegionToAttach : pais.getRegionList()) {
+                regionListRegionToAttach = em.getReference(regionListRegionToAttach.getClass(), regionListRegionToAttach.getIdRegion());
+                attachedRegionList.add(regionListRegionToAttach);
             }
-            pais.setRegionCollection(attachedRegionCollection);
+            pais.setRegionList(attachedRegionList);
             em.persist(pais);
-            for (Region regionCollectionRegion : pais.getRegionCollection()) {
-                Pais oldPaisOfRegionCollectionRegion = regionCollectionRegion.getPais();
-                regionCollectionRegion.setPais(pais);
-                regionCollectionRegion = em.merge(regionCollectionRegion);
-                if (oldPaisOfRegionCollectionRegion != null) {
-                    oldPaisOfRegionCollectionRegion.getRegionCollection().remove(regionCollectionRegion);
-                    oldPaisOfRegionCollectionRegion = em.merge(oldPaisOfRegionCollectionRegion);
+            for (Region regionListRegion : pais.getRegionList()) {
+                Pais oldPaisOfRegionListRegion = regionListRegion.getPais();
+                regionListRegion.setPais(pais);
+                regionListRegion = em.merge(regionListRegion);
+                if (oldPaisOfRegionListRegion != null) {
+                    oldPaisOfRegionListRegion.getRegionList().remove(regionListRegion);
+                    oldPaisOfRegionListRegion = em.merge(oldPaisOfRegionListRegion);
                 }
             }
             em.getTransaction().commit();
@@ -79,36 +78,36 @@ public class PaisJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Pais persistentPais = em.find(Pais.class, pais.getIdPais());
-            Collection<Region> regionCollectionOld = persistentPais.getRegionCollection();
-            Collection<Region> regionCollectionNew = pais.getRegionCollection();
+            List<Region> regionListOld = persistentPais.getRegionList();
+            List<Region> regionListNew = pais.getRegionList();
             List<String> illegalOrphanMessages = null;
-            for (Region regionCollectionOldRegion : regionCollectionOld) {
-                if (!regionCollectionNew.contains(regionCollectionOldRegion)) {
+            for (Region regionListOldRegion : regionListOld) {
+                if (!regionListNew.contains(regionListOldRegion)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Region " + regionCollectionOldRegion + " since its pais field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Region " + regionListOldRegion + " since its pais field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Collection<Region> attachedRegionCollectionNew = new ArrayList<Region>();
-            for (Region regionCollectionNewRegionToAttach : regionCollectionNew) {
-                regionCollectionNewRegionToAttach = em.getReference(regionCollectionNewRegionToAttach.getClass(), regionCollectionNewRegionToAttach.getIdRegion());
-                attachedRegionCollectionNew.add(regionCollectionNewRegionToAttach);
+            List<Region> attachedRegionListNew = new ArrayList<Region>();
+            for (Region regionListNewRegionToAttach : regionListNew) {
+                regionListNewRegionToAttach = em.getReference(regionListNewRegionToAttach.getClass(), regionListNewRegionToAttach.getIdRegion());
+                attachedRegionListNew.add(regionListNewRegionToAttach);
             }
-            regionCollectionNew = attachedRegionCollectionNew;
-            pais.setRegionCollection(regionCollectionNew);
+            regionListNew = attachedRegionListNew;
+            pais.setRegionList(regionListNew);
             pais = em.merge(pais);
-            for (Region regionCollectionNewRegion : regionCollectionNew) {
-                if (!regionCollectionOld.contains(regionCollectionNewRegion)) {
-                    Pais oldPaisOfRegionCollectionNewRegion = regionCollectionNewRegion.getPais();
-                    regionCollectionNewRegion.setPais(pais);
-                    regionCollectionNewRegion = em.merge(regionCollectionNewRegion);
-                    if (oldPaisOfRegionCollectionNewRegion != null && !oldPaisOfRegionCollectionNewRegion.equals(pais)) {
-                        oldPaisOfRegionCollectionNewRegion.getRegionCollection().remove(regionCollectionNewRegion);
-                        oldPaisOfRegionCollectionNewRegion = em.merge(oldPaisOfRegionCollectionNewRegion);
+            for (Region regionListNewRegion : regionListNew) {
+                if (!regionListOld.contains(regionListNewRegion)) {
+                    Pais oldPaisOfRegionListNewRegion = regionListNewRegion.getPais();
+                    regionListNewRegion.setPais(pais);
+                    regionListNewRegion = em.merge(regionListNewRegion);
+                    if (oldPaisOfRegionListNewRegion != null && !oldPaisOfRegionListNewRegion.equals(pais)) {
+                        oldPaisOfRegionListNewRegion.getRegionList().remove(regionListNewRegion);
+                        oldPaisOfRegionListNewRegion = em.merge(oldPaisOfRegionListNewRegion);
                     }
                 }
             }
@@ -142,12 +141,12 @@ public class PaisJpaController implements Serializable {
                 throw new NonexistentEntityException("The pais with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Region> regionCollectionOrphanCheck = pais.getRegionCollection();
-            for (Region regionCollectionOrphanCheckRegion : regionCollectionOrphanCheck) {
+            List<Region> regionListOrphanCheck = pais.getRegionList();
+            for (Region regionListOrphanCheckRegion : regionListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Pais (" + pais + ") cannot be destroyed since the Region " + regionCollectionOrphanCheckRegion + " in its regionCollection field has a non-nullable pais field.");
+                illegalOrphanMessages.add("This Pais (" + pais + ") cannot be destroyed since the Region " + regionListOrphanCheckRegion + " in its regionList field has a non-nullable pais field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

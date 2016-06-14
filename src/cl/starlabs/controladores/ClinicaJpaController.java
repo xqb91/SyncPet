@@ -16,14 +16,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Sucursal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class ClinicaJpaController implements Serializable {
 
@@ -37,27 +36,27 @@ public class ClinicaJpaController implements Serializable {
     }
 
     public void create(Clinica clinica) throws PreexistingEntityException, Exception {
-        if (clinica.getSucursalCollection() == null) {
-            clinica.setSucursalCollection(new ArrayList<Sucursal>());
+        if (clinica.getSucursalList() == null) {
+            clinica.setSucursalList(new ArrayList<Sucursal>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Collection<Sucursal> attachedSucursalCollection = new ArrayList<Sucursal>();
-            for (Sucursal sucursalCollectionSucursalToAttach : clinica.getSucursalCollection()) {
-                sucursalCollectionSucursalToAttach = em.getReference(sucursalCollectionSucursalToAttach.getClass(), sucursalCollectionSucursalToAttach.getIdSucursal());
-                attachedSucursalCollection.add(sucursalCollectionSucursalToAttach);
+            List<Sucursal> attachedSucursalList = new ArrayList<Sucursal>();
+            for (Sucursal sucursalListSucursalToAttach : clinica.getSucursalList()) {
+                sucursalListSucursalToAttach = em.getReference(sucursalListSucursalToAttach.getClass(), sucursalListSucursalToAttach.getIdSucursal());
+                attachedSucursalList.add(sucursalListSucursalToAttach);
             }
-            clinica.setSucursalCollection(attachedSucursalCollection);
+            clinica.setSucursalList(attachedSucursalList);
             em.persist(clinica);
-            for (Sucursal sucursalCollectionSucursal : clinica.getSucursalCollection()) {
-                Clinica oldClinicaOfSucursalCollectionSucursal = sucursalCollectionSucursal.getClinica();
-                sucursalCollectionSucursal.setClinica(clinica);
-                sucursalCollectionSucursal = em.merge(sucursalCollectionSucursal);
-                if (oldClinicaOfSucursalCollectionSucursal != null) {
-                    oldClinicaOfSucursalCollectionSucursal.getSucursalCollection().remove(sucursalCollectionSucursal);
-                    oldClinicaOfSucursalCollectionSucursal = em.merge(oldClinicaOfSucursalCollectionSucursal);
+            for (Sucursal sucursalListSucursal : clinica.getSucursalList()) {
+                Clinica oldClinicaOfSucursalListSucursal = sucursalListSucursal.getClinica();
+                sucursalListSucursal.setClinica(clinica);
+                sucursalListSucursal = em.merge(sucursalListSucursal);
+                if (oldClinicaOfSucursalListSucursal != null) {
+                    oldClinicaOfSucursalListSucursal.getSucursalList().remove(sucursalListSucursal);
+                    oldClinicaOfSucursalListSucursal = em.merge(oldClinicaOfSucursalListSucursal);
                 }
             }
             em.getTransaction().commit();
@@ -79,36 +78,36 @@ public class ClinicaJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Clinica persistentClinica = em.find(Clinica.class, clinica.getIdClinica());
-            Collection<Sucursal> sucursalCollectionOld = persistentClinica.getSucursalCollection();
-            Collection<Sucursal> sucursalCollectionNew = clinica.getSucursalCollection();
+            List<Sucursal> sucursalListOld = persistentClinica.getSucursalList();
+            List<Sucursal> sucursalListNew = clinica.getSucursalList();
             List<String> illegalOrphanMessages = null;
-            for (Sucursal sucursalCollectionOldSucursal : sucursalCollectionOld) {
-                if (!sucursalCollectionNew.contains(sucursalCollectionOldSucursal)) {
+            for (Sucursal sucursalListOldSucursal : sucursalListOld) {
+                if (!sucursalListNew.contains(sucursalListOldSucursal)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Sucursal " + sucursalCollectionOldSucursal + " since its clinica field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Sucursal " + sucursalListOldSucursal + " since its clinica field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Collection<Sucursal> attachedSucursalCollectionNew = new ArrayList<Sucursal>();
-            for (Sucursal sucursalCollectionNewSucursalToAttach : sucursalCollectionNew) {
-                sucursalCollectionNewSucursalToAttach = em.getReference(sucursalCollectionNewSucursalToAttach.getClass(), sucursalCollectionNewSucursalToAttach.getIdSucursal());
-                attachedSucursalCollectionNew.add(sucursalCollectionNewSucursalToAttach);
+            List<Sucursal> attachedSucursalListNew = new ArrayList<Sucursal>();
+            for (Sucursal sucursalListNewSucursalToAttach : sucursalListNew) {
+                sucursalListNewSucursalToAttach = em.getReference(sucursalListNewSucursalToAttach.getClass(), sucursalListNewSucursalToAttach.getIdSucursal());
+                attachedSucursalListNew.add(sucursalListNewSucursalToAttach);
             }
-            sucursalCollectionNew = attachedSucursalCollectionNew;
-            clinica.setSucursalCollection(sucursalCollectionNew);
+            sucursalListNew = attachedSucursalListNew;
+            clinica.setSucursalList(sucursalListNew);
             clinica = em.merge(clinica);
-            for (Sucursal sucursalCollectionNewSucursal : sucursalCollectionNew) {
-                if (!sucursalCollectionOld.contains(sucursalCollectionNewSucursal)) {
-                    Clinica oldClinicaOfSucursalCollectionNewSucursal = sucursalCollectionNewSucursal.getClinica();
-                    sucursalCollectionNewSucursal.setClinica(clinica);
-                    sucursalCollectionNewSucursal = em.merge(sucursalCollectionNewSucursal);
-                    if (oldClinicaOfSucursalCollectionNewSucursal != null && !oldClinicaOfSucursalCollectionNewSucursal.equals(clinica)) {
-                        oldClinicaOfSucursalCollectionNewSucursal.getSucursalCollection().remove(sucursalCollectionNewSucursal);
-                        oldClinicaOfSucursalCollectionNewSucursal = em.merge(oldClinicaOfSucursalCollectionNewSucursal);
+            for (Sucursal sucursalListNewSucursal : sucursalListNew) {
+                if (!sucursalListOld.contains(sucursalListNewSucursal)) {
+                    Clinica oldClinicaOfSucursalListNewSucursal = sucursalListNewSucursal.getClinica();
+                    sucursalListNewSucursal.setClinica(clinica);
+                    sucursalListNewSucursal = em.merge(sucursalListNewSucursal);
+                    if (oldClinicaOfSucursalListNewSucursal != null && !oldClinicaOfSucursalListNewSucursal.equals(clinica)) {
+                        oldClinicaOfSucursalListNewSucursal.getSucursalList().remove(sucursalListNewSucursal);
+                        oldClinicaOfSucursalListNewSucursal = em.merge(oldClinicaOfSucursalListNewSucursal);
                     }
                 }
             }
@@ -142,12 +141,12 @@ public class ClinicaJpaController implements Serializable {
                 throw new NonexistentEntityException("The clinica with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Sucursal> sucursalCollectionOrphanCheck = clinica.getSucursalCollection();
-            for (Sucursal sucursalCollectionOrphanCheckSucursal : sucursalCollectionOrphanCheck) {
+            List<Sucursal> sucursalListOrphanCheck = clinica.getSucursalList();
+            for (Sucursal sucursalListOrphanCheckSucursal : sucursalListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Clinica (" + clinica + ") cannot be destroyed since the Sucursal " + sucursalCollectionOrphanCheckSucursal + " in its sucursalCollection field has a non-nullable clinica field.");
+                illegalOrphanMessages.add("This Clinica (" + clinica + ") cannot be destroyed since the Sucursal " + sucursalListOrphanCheckSucursal + " in its sucursalList field has a non-nullable clinica field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

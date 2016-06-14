@@ -6,7 +6,7 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
 @Table(name = "Tipo_Farmaco", catalog = "syncpet", schema = "dbo")
@@ -37,7 +37,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TipoFarmaco.findByPresentacion", query = "SELECT t FROM TipoFarmaco t WHERE t.presentacion = :presentacion"),
     @NamedQuery(name = "TipoFarmaco.findByProporcion", query = "SELECT t FROM TipoFarmaco t WHERE t.proporcion = :proporcion")})
 public class TipoFarmaco implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -57,16 +56,16 @@ public class TipoFarmaco implements Serializable {
     @Column(name = "via_administracion", nullable = false, length = 75)
     private String viaAdministracion;
     @Basic(optional = false)
-    @Column(name = "categoria", nullable = false, length = 120)
+    @Column(nullable = false, length = 120)
     private String categoria;
     @Basic(optional = false)
-    @Column(name = "presentacion", nullable = false, length = 75)
+    @Column(nullable = false, length = 75)
     private String presentacion;
     @Basic(optional = false)
-    @Column(name = "proporcion", nullable = false, length = 20)
+    @Column(nullable = false, length = 20)
     private String proporcion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "farmaco")
-    private Collection<Farmacos> farmacosCollection;
+    private List<Farmacos> farmacosList;
 
     public TipoFarmaco() {
     }
@@ -151,12 +150,12 @@ public class TipoFarmaco implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Farmacos> getFarmacosCollection() {
-        return farmacosCollection;
+    public List<Farmacos> getFarmacosList() {
+        return farmacosList;
     }
 
-    public void setFarmacosCollection(Collection<Farmacos> farmacosCollection) {
-        this.farmacosCollection = farmacosCollection;
+    public void setFarmacosList(List<Farmacos> farmacosList) {
+        this.farmacosList = farmacosList;
     }
 
     @Override

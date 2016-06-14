@@ -20,23 +20,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Contraindicaciones", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Contraindicaciones.findAll", query = "SELECT c FROM Contraindicaciones c"),
     @NamedQuery(name = "Contraindicaciones.findByIdContraindicacion", query = "SELECT c FROM Contraindicaciones c WHERE c.idContraindicacion = :idContraindicacion")})
 public class Contraindicaciones implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_contraindicacion", nullable = false)
     private Integer idContraindicacion;
     @Lob
-    @Column(name = "observaciones", length = 2147483647)
+    @Column(length = 2147483647)
     private String observaciones;
     @JoinColumn(name = "hospitalizacion", referencedColumnName = "id_hospitalizacion", nullable = false)
     @ManyToOne(optional = false)

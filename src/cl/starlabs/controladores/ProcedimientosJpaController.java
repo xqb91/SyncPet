@@ -13,6 +13,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Hospitalizacion;
+import cl.starlabs.modelo.Mascota;
 import cl.starlabs.modelo.Procedimientos;
 import cl.starlabs.modelo.TipoProcedimiento;
 import cl.starlabs.modelo.Veterinario;
@@ -22,7 +23,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class ProcedimientosJpaController implements Serializable {
 
@@ -45,6 +46,11 @@ public class ProcedimientosJpaController implements Serializable {
                 hospitalizacion = em.getReference(hospitalizacion.getClass(), hospitalizacion.getIdHospitalizacion());
                 procedimientos.setHospitalizacion(hospitalizacion);
             }
+            Mascota mascota = procedimientos.getMascota();
+            if (mascota != null) {
+                mascota = em.getReference(mascota.getClass(), mascota.getIdMascota());
+                procedimientos.setMascota(mascota);
+            }
             TipoProcedimiento tipoProcedimiento = procedimientos.getTipoProcedimiento();
             if (tipoProcedimiento != null) {
                 tipoProcedimiento = em.getReference(tipoProcedimiento.getClass(), tipoProcedimiento.getIdTipoProcedimiento());
@@ -57,15 +63,19 @@ public class ProcedimientosJpaController implements Serializable {
             }
             em.persist(procedimientos);
             if (hospitalizacion != null) {
-                hospitalizacion.getProcedimientosCollection().add(procedimientos);
+                hospitalizacion.getProcedimientosList().add(procedimientos);
                 hospitalizacion = em.merge(hospitalizacion);
             }
+            if (mascota != null) {
+                mascota.getProcedimientosList().add(procedimientos);
+                mascota = em.merge(mascota);
+            }
             if (tipoProcedimiento != null) {
-                tipoProcedimiento.getProcedimientosCollection().add(procedimientos);
+                tipoProcedimiento.getProcedimientosList().add(procedimientos);
                 tipoProcedimiento = em.merge(tipoProcedimiento);
             }
             if (veterinario != null) {
-                veterinario.getProcedimientosCollection().add(procedimientos);
+                veterinario.getProcedimientosList().add(procedimientos);
                 veterinario = em.merge(veterinario);
             }
             em.getTransaction().commit();
@@ -89,6 +99,8 @@ public class ProcedimientosJpaController implements Serializable {
             Procedimientos persistentProcedimientos = em.find(Procedimientos.class, procedimientos.getIdProcedimiento());
             Hospitalizacion hospitalizacionOld = persistentProcedimientos.getHospitalizacion();
             Hospitalizacion hospitalizacionNew = procedimientos.getHospitalizacion();
+            Mascota mascotaOld = persistentProcedimientos.getMascota();
+            Mascota mascotaNew = procedimientos.getMascota();
             TipoProcedimiento tipoProcedimientoOld = persistentProcedimientos.getTipoProcedimiento();
             TipoProcedimiento tipoProcedimientoNew = procedimientos.getTipoProcedimiento();
             Veterinario veterinarioOld = persistentProcedimientos.getVeterinario();
@@ -96,6 +108,10 @@ public class ProcedimientosJpaController implements Serializable {
             if (hospitalizacionNew != null) {
                 hospitalizacionNew = em.getReference(hospitalizacionNew.getClass(), hospitalizacionNew.getIdHospitalizacion());
                 procedimientos.setHospitalizacion(hospitalizacionNew);
+            }
+            if (mascotaNew != null) {
+                mascotaNew = em.getReference(mascotaNew.getClass(), mascotaNew.getIdMascota());
+                procedimientos.setMascota(mascotaNew);
             }
             if (tipoProcedimientoNew != null) {
                 tipoProcedimientoNew = em.getReference(tipoProcedimientoNew.getClass(), tipoProcedimientoNew.getIdTipoProcedimiento());
@@ -107,27 +123,35 @@ public class ProcedimientosJpaController implements Serializable {
             }
             procedimientos = em.merge(procedimientos);
             if (hospitalizacionOld != null && !hospitalizacionOld.equals(hospitalizacionNew)) {
-                hospitalizacionOld.getProcedimientosCollection().remove(procedimientos);
+                hospitalizacionOld.getProcedimientosList().remove(procedimientos);
                 hospitalizacionOld = em.merge(hospitalizacionOld);
             }
             if (hospitalizacionNew != null && !hospitalizacionNew.equals(hospitalizacionOld)) {
-                hospitalizacionNew.getProcedimientosCollection().add(procedimientos);
+                hospitalizacionNew.getProcedimientosList().add(procedimientos);
                 hospitalizacionNew = em.merge(hospitalizacionNew);
             }
+            if (mascotaOld != null && !mascotaOld.equals(mascotaNew)) {
+                mascotaOld.getProcedimientosList().remove(procedimientos);
+                mascotaOld = em.merge(mascotaOld);
+            }
+            if (mascotaNew != null && !mascotaNew.equals(mascotaOld)) {
+                mascotaNew.getProcedimientosList().add(procedimientos);
+                mascotaNew = em.merge(mascotaNew);
+            }
             if (tipoProcedimientoOld != null && !tipoProcedimientoOld.equals(tipoProcedimientoNew)) {
-                tipoProcedimientoOld.getProcedimientosCollection().remove(procedimientos);
+                tipoProcedimientoOld.getProcedimientosList().remove(procedimientos);
                 tipoProcedimientoOld = em.merge(tipoProcedimientoOld);
             }
             if (tipoProcedimientoNew != null && !tipoProcedimientoNew.equals(tipoProcedimientoOld)) {
-                tipoProcedimientoNew.getProcedimientosCollection().add(procedimientos);
+                tipoProcedimientoNew.getProcedimientosList().add(procedimientos);
                 tipoProcedimientoNew = em.merge(tipoProcedimientoNew);
             }
             if (veterinarioOld != null && !veterinarioOld.equals(veterinarioNew)) {
-                veterinarioOld.getProcedimientosCollection().remove(procedimientos);
+                veterinarioOld.getProcedimientosList().remove(procedimientos);
                 veterinarioOld = em.merge(veterinarioOld);
             }
             if (veterinarioNew != null && !veterinarioNew.equals(veterinarioOld)) {
-                veterinarioNew.getProcedimientosCollection().add(procedimientos);
+                veterinarioNew.getProcedimientosList().add(procedimientos);
                 veterinarioNew = em.merge(veterinarioNew);
             }
             em.getTransaction().commit();
@@ -161,17 +185,22 @@ public class ProcedimientosJpaController implements Serializable {
             }
             Hospitalizacion hospitalizacion = procedimientos.getHospitalizacion();
             if (hospitalizacion != null) {
-                hospitalizacion.getProcedimientosCollection().remove(procedimientos);
+                hospitalizacion.getProcedimientosList().remove(procedimientos);
                 hospitalizacion = em.merge(hospitalizacion);
+            }
+            Mascota mascota = procedimientos.getMascota();
+            if (mascota != null) {
+                mascota.getProcedimientosList().remove(procedimientos);
+                mascota = em.merge(mascota);
             }
             TipoProcedimiento tipoProcedimiento = procedimientos.getTipoProcedimiento();
             if (tipoProcedimiento != null) {
-                tipoProcedimiento.getProcedimientosCollection().remove(procedimientos);
+                tipoProcedimiento.getProcedimientosList().remove(procedimientos);
                 tipoProcedimiento = em.merge(tipoProcedimiento);
             }
             Veterinario veterinario = procedimientos.getVeterinario();
             if (veterinario != null) {
-                veterinario.getProcedimientosCollection().remove(procedimientos);
+                veterinario.getProcedimientosList().remove(procedimientos);
                 veterinario = em.merge(veterinario);
             }
             em.remove(procedimientos);

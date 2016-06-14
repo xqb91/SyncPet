@@ -6,7 +6,7 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,10 +21,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Especie", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Especie.findAll", query = "SELECT e FROM Especie e"),
@@ -32,20 +32,19 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Especie.findByNombre", query = "SELECT e FROM Especie e WHERE e.nombre = :nombre"),
     @NamedQuery(name = "Especie.findByFamilia", query = "SELECT e FROM Especie e WHERE e.familia = :familia")})
 public class Especie implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_especie", nullable = false)
     private Integer idEspecie;
     @Basic(optional = false)
-    @Column(name = "nombre", nullable = false, length = 40)
+    @Column(nullable = false, length = 40)
     private String nombre;
     @Basic(optional = false)
-    @Column(name = "familia", nullable = false, length = 50)
+    @Column(nullable = false, length = 50)
     private String familia;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "especie")
-    private Collection<Raza> razaCollection;
+    private List<Raza> razaList;
 
     public Especie() {
     }
@@ -85,12 +84,12 @@ public class Especie implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Raza> getRazaCollection() {
-        return razaCollection;
+    public List<Raza> getRazaList() {
+        return razaList;
     }
 
-    public void setRazaCollection(Collection<Raza> razaCollection) {
-        this.razaCollection = razaCollection;
+    public void setRazaList(List<Raza> razaList) {
+        this.razaList = razaList;
     }
 
     @Override

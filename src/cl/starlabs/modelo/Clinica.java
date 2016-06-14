@@ -6,7 +6,7 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,10 +21,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Clinica", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Clinica.findAll", query = "SELECT c FROM Clinica c"),
@@ -34,7 +34,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Clinica.findByRut", query = "SELECT c FROM Clinica c WHERE c.rut = :rut"),
     @NamedQuery(name = "Clinica.findByDv", query = "SELECT c FROM Clinica c WHERE c.dv = :dv")})
 public class Clinica implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -47,13 +46,13 @@ public class Clinica implements Serializable {
     @Column(name = "nombre_real", nullable = false, length = 250)
     private String nombreReal;
     @Basic(optional = false)
-    @Column(name = "rut", nullable = false)
+    @Column(nullable = false)
     private int rut;
     @Basic(optional = false)
-    @Column(name = "dv", nullable = false)
+    @Column(nullable = false)
     private Character dv;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clinica")
-    private Collection<Sucursal> sucursalCollection;
+    private List<Sucursal> sucursalList;
 
     public Clinica() {
     }
@@ -111,12 +110,12 @@ public class Clinica implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Sucursal> getSucursalCollection() {
-        return sucursalCollection;
+    public List<Sucursal> getSucursalList() {
+        return sucursalList;
     }
 
-    public void setSucursalCollection(Collection<Sucursal> sucursalCollection) {
-        this.sucursalCollection = sucursalCollection;
+    public void setSucursalList(List<Sucursal> sucursalList) {
+        this.sucursalList = sucursalList;
     }
 
     @Override

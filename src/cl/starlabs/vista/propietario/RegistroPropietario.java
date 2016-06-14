@@ -5,6 +5,14 @@
  */
 package cl.starlabs.vista.propietario;
 
+import cl.starlabs.controladores.ComunaJpaController;
+import cl.starlabs.controladores.PropietarioJpaController;
+import cl.starlabs.modelo.Comuna;
+import cl.starlabs.modelo.Propietario;
+import java.awt.Color;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
@@ -12,12 +20,20 @@ import javax.swing.UIManager;
  * @author Janno
  */
 public class RegistroPropietario extends javax.swing.JFrame {
-
-    /**
-     * Creates new form RegistroPropietario
-     */
+    
+    EntityManagerFactory emf = null;
+    
     public RegistroPropietario() {
         initComponents();
+        //iniciando entitymanagerfactory
+        emf = Persistence.createEntityManagerFactory("SyncPetPU");
+        //centrando ventana
+        this.setLocationRelativeTo(null);
+        //rellenando campos necesarios
+        
+        for(Comuna c : new ComunaJpaController(emf).listar()) {
+            cmbCiudad.addItem(c.getNombre());
+        }
     }
 
     /**
@@ -30,26 +46,26 @@ public class RegistroPropietario extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        lblRunPropietario = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        lblEmail = new javax.swing.JLabel();
+        lblTelefonoFijo = new javax.swing.JLabel();
+        lblCelular = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         txtRun = new javax.swing.JTextField();
         txtNombres = new javax.swing.JTextField();
         txtApaterno = new javax.swing.JTextField();
         txtAmaterno = new javax.swing.JTextField();
-        cmbEstadoCivil = new javax.swing.JComboBox<>();
+        cmbEstadoCivil = new javax.swing.JComboBox<String>();
         txtCorreo = new javax.swing.JTextField();
         txtTelefono = new javax.swing.JTextField();
         txtCelular = new javax.swing.JTextField();
         txtDireccion = new javax.swing.JTextField();
-        cmbCiudad = new javax.swing.JComboBox<>();
+        cmbCiudad = new javax.swing.JComboBox<String>();
         jPanel2 = new javax.swing.JPanel();
         lblImagenUsuario = new javax.swing.JLabel();
         btnCargarFoto = new javax.swing.JButton();
@@ -65,7 +81,7 @@ public class RegistroPropietario extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos del propietario"));
 
-        jLabel1.setText("Run");
+        lblRunPropietario.setText("Run");
 
         jLabel2.setText("Nombres");
 
@@ -77,17 +93,74 @@ public class RegistroPropietario extends javax.swing.JFrame {
 
         jLabel6.setText("Ciudad");
 
-        jLabel7.setText("Correo electrónico");
+        lblEmail.setText("Correo electrónico");
 
-        jLabel8.setText("Teléfono fijo");
+        lblTelefonoFijo.setText("Teléfono fijo");
 
-        jLabel9.setText("Teléfono Celular");
+        lblCelular.setText("Teléfono Celular");
 
         jLabel10.setText("Estado Civil");
 
-        cmbEstadoCivil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        txtRun.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtRunFocusLost(evt);
+            }
+        });
+        txtRun.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtRunKeyTyped(evt);
+            }
+        });
 
-        cmbCiudad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        txtNombres.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtNombresFocusLost(evt);
+            }
+        });
+
+        txtApaterno.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtApaternoFocusLost(evt);
+            }
+        });
+
+        txtAmaterno.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtAmaternoFocusLost(evt);
+            }
+        });
+
+        cmbEstadoCivil.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione...", "Casado", "Soltero", "Viudo", "Separado", "En Convivencia" }));
+
+        txtCorreo.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCorreoFocusLost(evt);
+            }
+        });
+
+        txtTelefono.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtTelefonoFocusLost(evt);
+            }
+        });
+        txtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTelefonoKeyTyped(evt);
+            }
+        });
+
+        txtCelular.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCelularFocusLost(evt);
+            }
+        });
+        txtCelular.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCelularKeyTyped(evt);
+            }
+        });
+
+        cmbCiudad.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione..." }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -100,7 +173,7 @@ public class RegistroPropietario extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jLabel2)
-                            .addComponent(jLabel1))
+                            .addComponent(lblRunPropietario))
                         .addGap(28, 28, 28)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtNombres, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -108,9 +181,9 @@ public class RegistroPropietario extends javax.swing.JFrame {
                             .addComponent(txtRun, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel9)
+                            .addComponent(lblEmail)
+                            .addComponent(lblTelefonoFijo)
+                            .addComponent(lblCelular)
                             .addComponent(jLabel5)
                             .addComponent(jLabel6))
                         .addGap(18, 18, 18)
@@ -135,7 +208,7 @@ public class RegistroPropietario extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                    .addComponent(lblRunPropietario)
                     .addComponent(txtRun, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -155,15 +228,15 @@ public class RegistroPropietario extends javax.swing.JFrame {
                     .addComponent(cmbEstadoCivil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
+                    .addComponent(lblEmail)
                     .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
+                    .addComponent(lblTelefonoFijo)
                     .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
+                    .addComponent(lblCelular)
                     .addComponent(txtCelular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -185,6 +258,11 @@ public class RegistroPropietario extends javax.swing.JFrame {
 
         btnTomarFoto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/camera_add.png"))); // NOI18N
         btnTomarFoto.setText("Tomar Foto");
+        btnTomarFoto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTomarFotoActionPerformed(evt);
+            }
+        });
 
         btnGuardarFoto.setText("Guardar Foto");
         btnGuardarFoto.setEnabled(false);
@@ -223,18 +301,28 @@ public class RegistroPropietario extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnTomarFoto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnGuardarFoto)
                     .addComponent(btnCancelarFoto))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         btnGuardarFormulario.setText("Guardar");
+        btnGuardarFormulario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarFormularioActionPerformed(evt);
+            }
+        });
 
         btnCancelarFormulario.setText("Cancelar");
         btnCancelarFormulario.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 btnCancelarFormularioItemStateChanged(evt);
+            }
+        });
+        btnCancelarFormulario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarFormularioActionPerformed(evt);
             }
         });
 
@@ -278,6 +366,224 @@ public class RegistroPropietario extends javax.swing.JFrame {
     private void btnCancelarFormularioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnCancelarFormularioItemStateChanged
         
     }//GEN-LAST:event_btnCancelarFormularioItemStateChanged
+
+    private void txtRunKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRunKeyTyped
+        //comprobacion de caracteres validos para ingreso de rut
+        char c = evt.getKeyChar();
+        if((!Character.isDigit(c)) && (!((c == 'K') || (c == 'k') || (c == '-') || (c == '.'))))
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtRunKeyTyped
+
+    private void txtRunFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtRunFocusLost
+        //formateo del rut del propietario
+        if(!txtRun.getText().isEmpty()) {
+            this.txtRun.setText(cl.starlabs.herramientas.HerramientasRut.formatear(txtRun.getText()).toUpperCase());
+            //validando rut
+            if(!cl.starlabs.herramientas.HerramientasRut.validar(txtRun.getText())){
+                txtRun.requestFocus();
+                lblRunPropietario.setForeground(Color.red);
+                txtRun.setForeground(Color.white);
+                txtRun.setBackground(Color.red);
+            }else{
+                lblRunPropietario.setForeground(Color.black);
+                txtRun.setForeground(Color.black);
+                txtRun.setBackground(Color.white);
+            }
+        }
+    }//GEN-LAST:event_txtRunFocusLost
+
+    private void txtNombresFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombresFocusLost
+        //formateando nombre
+        txtNombres.setText(txtNombres.getText().toUpperCase());
+    }//GEN-LAST:event_txtNombresFocusLost
+
+    private void txtApaternoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtApaternoFocusLost
+        //formateando apellido
+        txtApaterno.setText(txtApaterno.getText().toUpperCase());
+    }//GEN-LAST:event_txtApaternoFocusLost
+
+    private void txtAmaternoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtAmaternoFocusLost
+        //formateando apellido
+        txtAmaterno.setText(txtAmaterno.getText().toUpperCase());
+    }//GEN-LAST:event_txtAmaternoFocusLost
+
+    private void txtCorreoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCorreoFocusLost
+        //validacion de correo electrónico
+        if(!txtCorreo.getText().isEmpty()) {
+            if(!cl.starlabs.herramientas.HerramientasCorreo.validarEmail(txtCorreo.getText())) {
+                lblEmail.setForeground(Color.red);
+                txtCorreo.setForeground(Color.white);
+                txtCorreo.setBackground(Color.red);
+                txtCorreo.requestFocus();
+            }else{
+                lblEmail.setForeground(Color.black);
+                txtCorreo.setForeground(Color.black);
+                txtCorreo.setBackground(Color.white);
+                txtCorreo.setText(txtCorreo.getText().toUpperCase());
+            }
+        }
+    }//GEN-LAST:event_txtCorreoFocusLost
+
+    private void txtTelefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyTyped
+        //Aceptando valores validos para numero telefonico
+        char c = evt.getKeyChar();
+        if((!Character.isDigit(c)) && (!(c == '+')) ){
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtTelefonoKeyTyped
+
+    private void txtTelefonoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTelefonoFocusLost
+        //comprobando telefono valido
+        if(!txtTelefono.getText().isEmpty()) {
+            if(!cl.starlabs.herramientas.HerramientasTelefono.validarTelefono(txtTelefono.getText())) {
+                lblTelefonoFijo.setForeground(Color.red);
+                txtTelefono.setBackground(Color.red);
+                txtTelefono.setForeground(Color.white);
+                txtTelefono.requestFocus();
+            }else{
+                //formateando telefono valido
+                txtTelefono.setText(cl.starlabs.herramientas.HerramientasTelefono.formatearTelefono(txtTelefono.getText()));
+                lblTelefonoFijo.setForeground(Color.black);
+                txtTelefono.setBackground(Color.white);
+                txtTelefono.setForeground(Color.black);
+            }
+        }
+    }//GEN-LAST:event_txtTelefonoFocusLost
+
+    private void txtCelularFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCelularFocusLost
+        //comprobando celular valido
+        if(!txtCelular.getText().isEmpty()){
+            if(!cl.starlabs.herramientas.HerramientasTelefono.validarCelular(txtCelular.getText())) {
+                lblCelular.setForeground(Color.red);
+                txtCelular.setBackground(Color.red);
+                txtCelular.setForeground(Color.white);
+                txtCelular.requestFocus();
+            }else{
+                txtCelular.setText(cl.starlabs.herramientas.HerramientasTelefono.formatearCelular(txtCelular.getText()));
+                lblCelular.setForeground(Color.black);
+                txtCelular.setBackground(Color.white);
+                txtCelular.setForeground(Color.black);
+            }
+        }
+    }//GEN-LAST:event_txtCelularFocusLost
+
+    private void txtCelularKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCelularKeyTyped
+        //Aceptando valores validos para numero telefonico
+        char c = evt.getKeyChar();
+        if((!Character.isDigit(c)) && (!(c == '+')) ){
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtCelularKeyTyped
+
+    private void btnCancelarFormularioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarFormularioActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnCancelarFormularioActionPerformed
+
+    private void btnTomarFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTomarFotoActionPerformed
+        new TomarFoto().setVisible(true);
+    }//GEN-LAST:event_btnTomarFotoActionPerformed
+
+    private void btnGuardarFormularioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarFormularioActionPerformed
+        //verificación antes de guardar al propietario
+        Propietario prop = new Propietario();
+        try {
+            if(txtRun.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "El rut está vacío");
+                txtRun.requestFocus();
+            }else{
+                //seteando valores de rut
+                String rut = txtRun.getText().split("-")[0];
+                char dv  = (txtRun.getText().split("-")[1]).charAt(0);
+                rut = rut.replace(".", "");
+                prop.setRut(Integer.parseInt(rut));
+                prop.setDv(dv);
+                //---//
+                if(txtNombres.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Debe especificar el nombre del propietario");
+                    txtNombres.requestFocus();
+                }else{
+                    //seteando valores de nombre
+                    prop.setNombres(txtNombres.getText());
+                    //--//
+
+                    if(txtApaterno.getText().isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Debe especificar el apellido paterno de "+txtNombres.getText());
+                        txtApaterno.requestFocus();
+                    }else{
+                        //seteando valores de apellido paterno
+                        prop.setApaterno(txtApaterno.getText());
+
+                        if(txtAmaterno.getText().isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "Debe especificar el apellido materno de "+txtNombres.getText()+" "+txtApaterno.getText());
+                            txtAmaterno.requestFocus();
+                        }else{
+                            prop.setAmaterno(txtAmaterno.getText());
+
+                            if(cmbEstadoCivil.getSelectedIndex() == 0) {
+                                JOptionPane.showMessageDialog(null, "Debe especificar el estado civil del propietario");
+                                cmbEstadoCivil.requestFocus();
+                            }else{
+                                if(txtCorreo.getText().isEmpty()) {
+                                    JOptionPane.showMessageDialog(null, "Debe especificar el correo electrónico del propietario");
+                                    txtCorreo.requestFocus();
+                                }else{
+                                    prop.setEmail(txtCorreo.getText());
+
+                                    if(txtTelefono.getText().isEmpty()) {
+                                        JOptionPane.showMessageDialog(null, "Debe especificar el teléfono del propietario");
+                                        txtTelefono.requestFocus();
+                                    }else{
+                                        String telefono = txtTelefono.getText().replace("+562", "");
+                                        prop.setTelefono(Integer.parseInt(telefono));
+
+                                        if(txtCelular.getText().isEmpty()) {
+                                            JOptionPane.showMessageDialog(null, "Debe especificar el celular del propietario");
+                                            txtCelular.requestFocus();
+                                        }else{
+                                            String celular = txtCelular.getText().replace("+569", "");
+                                            prop.setCelular(Integer.parseInt(celular));
+
+                                            if(txtDireccion.getText().isEmpty()) {
+                                                JOptionPane.showMessageDialog(null, "Debe especificar la dirección del propietario");
+                                                txtDireccion.requestFocus();
+                                            }else{
+                                                prop.setDireccion(txtDireccion.getText());
+
+                                                if(cmbCiudad.getSelectedIndex() == 0) {
+                                                    JOptionPane.showMessageDialog(null, "Debe especificar la ciudad de residencia del propietario");
+                                                    cmbCiudad.requestFocus();
+                                                }else{
+                                                    Comuna c = new ComunaJpaController(emf).buscarComunaPorNombre(cmbCiudad.getSelectedItem().toString().trim());
+                                                    if(c == null) {
+                                                        JOptionPane.showMessageDialog(null, "Error interno: No se pudo hallar la ciudad");
+                                                    }else{
+                                                        prop.setComuna(c);
+                                                        //registro de propietario
+                                                        try {
+                                                            prop.setIdPropietario(new PropietarioJpaController(emf).ultimoIdentificador());
+                                                            new PropietarioJpaController(emf).create(prop);
+                                                            JOptionPane.showConfirmDialog(null, "Propietario Registrado con éxito");
+                                                            this.dispose();
+                                                        } catch (Exception e) {
+                                                            JOptionPane.showMessageDialog(null, "Error: El servidor dijo... "+e.getMessage());
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }catch(Exception e) {
+            JOptionPane.showMessageDialog(null, "Error interno... SyncPet ha dicho: "+e.getMessage());
+        }
+    }//GEN-LAST:event_btnGuardarFormularioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -323,19 +629,19 @@ public class RegistroPropietario extends javax.swing.JFrame {
     private javax.swing.JButton btnTomarFoto;
     private javax.swing.JComboBox<String> cmbCiudad;
     private javax.swing.JComboBox<String> cmbEstadoCivil;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel lblCelular;
+    private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblImagenUsuario;
+    private javax.swing.JLabel lblRunPropietario;
+    private javax.swing.JLabel lblTelefonoFijo;
     private javax.swing.JTextField txtAmaterno;
     private javax.swing.JTextField txtApaterno;
     private javax.swing.JTextField txtCelular;

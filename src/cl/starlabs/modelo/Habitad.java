@@ -6,7 +6,7 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,30 +22,29 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Habitad", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Habitad.findAll", query = "SELECT h FROM Habitad h"),
     @NamedQuery(name = "Habitad.findByIdHabitad", query = "SELECT h FROM Habitad h WHERE h.idHabitad = :idHabitad"),
     @NamedQuery(name = "Habitad.findByNombre", query = "SELECT h FROM Habitad h WHERE h.nombre = :nombre")})
 public class Habitad implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_habitad", nullable = false)
     private Integer idHabitad;
     @Basic(optional = false)
-    @Column(name = "nombre", nullable = false, length = 75)
+    @Column(nullable = false, length = 75)
     private String nombre;
     @Lob
-    @Column(name = "descripcion", length = 2147483647)
+    @Column(length = 2147483647)
     private String descripcion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "habitad")
-    private Collection<Mascota> mascotaCollection;
+    private List<Mascota> mascotaList;
 
     public Habitad() {
     }
@@ -84,12 +83,12 @@ public class Habitad implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Mascota> getMascotaCollection() {
-        return mascotaCollection;
+    public List<Mascota> getMascotaList() {
+        return mascotaList;
     }
 
-    public void setMascotaCollection(Collection<Mascota> mascotaCollection) {
-        this.mascotaCollection = mascotaCollection;
+    public void setMascotaList(List<Mascota> mascotaList) {
+        this.mascotaList = mascotaList;
     }
 
     @Override

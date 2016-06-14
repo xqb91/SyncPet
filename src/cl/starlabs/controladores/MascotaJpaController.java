@@ -13,29 +13,30 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import cl.starlabs.modelo.Caracter;
 import cl.starlabs.modelo.Habitad;
 import cl.starlabs.modelo.Mascota;
 import cl.starlabs.modelo.Propietario;
 import cl.starlabs.modelo.Raza;
 import cl.starlabs.modelo.Examenes;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import cl.starlabs.modelo.Historialvacunas;
 import cl.starlabs.modelo.Contraindicaciones;
 import cl.starlabs.modelo.Desparacitaciones;
 import cl.starlabs.modelo.Alergias;
 import cl.starlabs.modelo.Farmacos;
+import cl.starlabs.modelo.Procedimientos;
 import cl.starlabs.modelo.Hospitalizacion;
 import cl.starlabs.modelo.AgendaDetalle;
 import cl.starlabs.modelo.Anamnesis;
 import cl.starlabs.modelo.Patologias;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class MascotaJpaController implements Serializable {
 
@@ -49,46 +50,54 @@ public class MascotaJpaController implements Serializable {
     }
 
     public void create(Mascota mascota) throws PreexistingEntityException, Exception {
-        if (mascota.getExamenesCollection() == null) {
-            mascota.setExamenesCollection(new ArrayList<Examenes>());
+        if (mascota.getExamenesList() == null) {
+            mascota.setExamenesList(new ArrayList<Examenes>());
         }
-        if (mascota.getHistorialvacunasCollection() == null) {
-            mascota.setHistorialvacunasCollection(new ArrayList<Historialvacunas>());
+        if (mascota.getHistorialvacunasList() == null) {
+            mascota.setHistorialvacunasList(new ArrayList<Historialvacunas>());
         }
-        if (mascota.getContraindicacionesCollection() == null) {
-            mascota.setContraindicacionesCollection(new ArrayList<Contraindicaciones>());
+        if (mascota.getContraindicacionesList() == null) {
+            mascota.setContraindicacionesList(new ArrayList<Contraindicaciones>());
         }
-        if (mascota.getDesparacitacionesCollection() == null) {
-            mascota.setDesparacitacionesCollection(new ArrayList<Desparacitaciones>());
+        if (mascota.getDesparacitacionesList() == null) {
+            mascota.setDesparacitacionesList(new ArrayList<Desparacitaciones>());
         }
-        if (mascota.getAlergiasCollection() == null) {
-            mascota.setAlergiasCollection(new ArrayList<Alergias>());
+        if (mascota.getAlergiasList() == null) {
+            mascota.setAlergiasList(new ArrayList<Alergias>());
         }
-        if (mascota.getMascotaCollection() == null) {
-            mascota.setMascotaCollection(new ArrayList<Mascota>());
+        if (mascota.getMascotaList() == null) {
+            mascota.setMascotaList(new ArrayList<Mascota>());
         }
-        if (mascota.getMascotaCollection1() == null) {
-            mascota.setMascotaCollection1(new ArrayList<Mascota>());
+        if (mascota.getMascotaList1() == null) {
+            mascota.setMascotaList1(new ArrayList<Mascota>());
         }
-        if (mascota.getFarmacosCollection() == null) {
-            mascota.setFarmacosCollection(new ArrayList<Farmacos>());
+        if (mascota.getFarmacosList() == null) {
+            mascota.setFarmacosList(new ArrayList<Farmacos>());
         }
-        if (mascota.getHospitalizacionCollection() == null) {
-            mascota.setHospitalizacionCollection(new ArrayList<Hospitalizacion>());
+        if (mascota.getProcedimientosList() == null) {
+            mascota.setProcedimientosList(new ArrayList<Procedimientos>());
         }
-        if (mascota.getAgendaDetalleCollection() == null) {
-            mascota.setAgendaDetalleCollection(new ArrayList<AgendaDetalle>());
+        if (mascota.getHospitalizacionList() == null) {
+            mascota.setHospitalizacionList(new ArrayList<Hospitalizacion>());
         }
-        if (mascota.getAnamnesisCollection() == null) {
-            mascota.setAnamnesisCollection(new ArrayList<Anamnesis>());
+        if (mascota.getAgendaDetalleList() == null) {
+            mascota.setAgendaDetalleList(new ArrayList<AgendaDetalle>());
         }
-        if (mascota.getPatologiasCollection() == null) {
-            mascota.setPatologiasCollection(new ArrayList<Patologias>());
+        if (mascota.getAnamnesisList() == null) {
+            mascota.setAnamnesisList(new ArrayList<Anamnesis>());
+        }
+        if (mascota.getPatologiasList() == null) {
+            mascota.setPatologiasList(new ArrayList<Patologias>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Caracter caracter = mascota.getCaracter();
+            if (caracter != null) {
+                caracter = em.getReference(caracter.getClass(), caracter.getIdCaracter());
+                mascota.setCaracter(caracter);
+            }
             Habitad habitad = mascota.getHabitad();
             if (habitad != null) {
                 habitad = em.getReference(habitad.getClass(), habitad.getIdHabitad());
@@ -114,205 +123,224 @@ public class MascotaJpaController implements Serializable {
                 raza = em.getReference(raza.getClass(), raza.getIdRaza());
                 mascota.setRaza(raza);
             }
-            Collection<Examenes> attachedExamenesCollection = new ArrayList<Examenes>();
-            for (Examenes examenesCollectionExamenesToAttach : mascota.getExamenesCollection()) {
-                examenesCollectionExamenesToAttach = em.getReference(examenesCollectionExamenesToAttach.getClass(), examenesCollectionExamenesToAttach.getIdExamen());
-                attachedExamenesCollection.add(examenesCollectionExamenesToAttach);
+            List<Examenes> attachedExamenesList = new ArrayList<Examenes>();
+            for (Examenes examenesListExamenesToAttach : mascota.getExamenesList()) {
+                examenesListExamenesToAttach = em.getReference(examenesListExamenesToAttach.getClass(), examenesListExamenesToAttach.getIdExamen());
+                attachedExamenesList.add(examenesListExamenesToAttach);
             }
-            mascota.setExamenesCollection(attachedExamenesCollection);
-            Collection<Historialvacunas> attachedHistorialvacunasCollection = new ArrayList<Historialvacunas>();
-            for (Historialvacunas historialvacunasCollectionHistorialvacunasToAttach : mascota.getHistorialvacunasCollection()) {
-                historialvacunasCollectionHistorialvacunasToAttach = em.getReference(historialvacunasCollectionHistorialvacunasToAttach.getClass(), historialvacunasCollectionHistorialvacunasToAttach.getIdEvento());
-                attachedHistorialvacunasCollection.add(historialvacunasCollectionHistorialvacunasToAttach);
+            mascota.setExamenesList(attachedExamenesList);
+            List<Historialvacunas> attachedHistorialvacunasList = new ArrayList<Historialvacunas>();
+            for (Historialvacunas historialvacunasListHistorialvacunasToAttach : mascota.getHistorialvacunasList()) {
+                historialvacunasListHistorialvacunasToAttach = em.getReference(historialvacunasListHistorialvacunasToAttach.getClass(), historialvacunasListHistorialvacunasToAttach.getIdEvento());
+                attachedHistorialvacunasList.add(historialvacunasListHistorialvacunasToAttach);
             }
-            mascota.setHistorialvacunasCollection(attachedHistorialvacunasCollection);
-            Collection<Contraindicaciones> attachedContraindicacionesCollection = new ArrayList<Contraindicaciones>();
-            for (Contraindicaciones contraindicacionesCollectionContraindicacionesToAttach : mascota.getContraindicacionesCollection()) {
-                contraindicacionesCollectionContraindicacionesToAttach = em.getReference(contraindicacionesCollectionContraindicacionesToAttach.getClass(), contraindicacionesCollectionContraindicacionesToAttach.getIdContraindicacion());
-                attachedContraindicacionesCollection.add(contraindicacionesCollectionContraindicacionesToAttach);
+            mascota.setHistorialvacunasList(attachedHistorialvacunasList);
+            List<Contraindicaciones> attachedContraindicacionesList = new ArrayList<Contraindicaciones>();
+            for (Contraindicaciones contraindicacionesListContraindicacionesToAttach : mascota.getContraindicacionesList()) {
+                contraindicacionesListContraindicacionesToAttach = em.getReference(contraindicacionesListContraindicacionesToAttach.getClass(), contraindicacionesListContraindicacionesToAttach.getIdContraindicacion());
+                attachedContraindicacionesList.add(contraindicacionesListContraindicacionesToAttach);
             }
-            mascota.setContraindicacionesCollection(attachedContraindicacionesCollection);
-            Collection<Desparacitaciones> attachedDesparacitacionesCollection = new ArrayList<Desparacitaciones>();
-            for (Desparacitaciones desparacitacionesCollectionDesparacitacionesToAttach : mascota.getDesparacitacionesCollection()) {
-                desparacitacionesCollectionDesparacitacionesToAttach = em.getReference(desparacitacionesCollectionDesparacitacionesToAttach.getClass(), desparacitacionesCollectionDesparacitacionesToAttach.getIdDesparacitacion());
-                attachedDesparacitacionesCollection.add(desparacitacionesCollectionDesparacitacionesToAttach);
+            mascota.setContraindicacionesList(attachedContraindicacionesList);
+            List<Desparacitaciones> attachedDesparacitacionesList = new ArrayList<Desparacitaciones>();
+            for (Desparacitaciones desparacitacionesListDesparacitacionesToAttach : mascota.getDesparacitacionesList()) {
+                desparacitacionesListDesparacitacionesToAttach = em.getReference(desparacitacionesListDesparacitacionesToAttach.getClass(), desparacitacionesListDesparacitacionesToAttach.getIdDesparacitacion());
+                attachedDesparacitacionesList.add(desparacitacionesListDesparacitacionesToAttach);
             }
-            mascota.setDesparacitacionesCollection(attachedDesparacitacionesCollection);
-            Collection<Alergias> attachedAlergiasCollection = new ArrayList<Alergias>();
-            for (Alergias alergiasCollectionAlergiasToAttach : mascota.getAlergiasCollection()) {
-                alergiasCollectionAlergiasToAttach = em.getReference(alergiasCollectionAlergiasToAttach.getClass(), alergiasCollectionAlergiasToAttach.getIdAlergia());
-                attachedAlergiasCollection.add(alergiasCollectionAlergiasToAttach);
+            mascota.setDesparacitacionesList(attachedDesparacitacionesList);
+            List<Alergias> attachedAlergiasList = new ArrayList<Alergias>();
+            for (Alergias alergiasListAlergiasToAttach : mascota.getAlergiasList()) {
+                alergiasListAlergiasToAttach = em.getReference(alergiasListAlergiasToAttach.getClass(), alergiasListAlergiasToAttach.getIdAlergia());
+                attachedAlergiasList.add(alergiasListAlergiasToAttach);
             }
-            mascota.setAlergiasCollection(attachedAlergiasCollection);
-            Collection<Mascota> attachedMascotaCollection = new ArrayList<Mascota>();
-            for (Mascota mascotaCollectionMascotaToAttach : mascota.getMascotaCollection()) {
-                mascotaCollectionMascotaToAttach = em.getReference(mascotaCollectionMascotaToAttach.getClass(), mascotaCollectionMascotaToAttach.getIdMascota());
-                attachedMascotaCollection.add(mascotaCollectionMascotaToAttach);
+            mascota.setAlergiasList(attachedAlergiasList);
+            List<Mascota> attachedMascotaList = new ArrayList<Mascota>();
+            for (Mascota mascotaListMascotaToAttach : mascota.getMascotaList()) {
+                mascotaListMascotaToAttach = em.getReference(mascotaListMascotaToAttach.getClass(), mascotaListMascotaToAttach.getIdMascota());
+                attachedMascotaList.add(mascotaListMascotaToAttach);
             }
-            mascota.setMascotaCollection(attachedMascotaCollection);
-            Collection<Mascota> attachedMascotaCollection1 = new ArrayList<Mascota>();
-            for (Mascota mascotaCollection1MascotaToAttach : mascota.getMascotaCollection1()) {
-                mascotaCollection1MascotaToAttach = em.getReference(mascotaCollection1MascotaToAttach.getClass(), mascotaCollection1MascotaToAttach.getIdMascota());
-                attachedMascotaCollection1.add(mascotaCollection1MascotaToAttach);
+            mascota.setMascotaList(attachedMascotaList);
+            List<Mascota> attachedMascotaList1 = new ArrayList<Mascota>();
+            for (Mascota mascotaList1MascotaToAttach : mascota.getMascotaList1()) {
+                mascotaList1MascotaToAttach = em.getReference(mascotaList1MascotaToAttach.getClass(), mascotaList1MascotaToAttach.getIdMascota());
+                attachedMascotaList1.add(mascotaList1MascotaToAttach);
             }
-            mascota.setMascotaCollection1(attachedMascotaCollection1);
-            Collection<Farmacos> attachedFarmacosCollection = new ArrayList<Farmacos>();
-            for (Farmacos farmacosCollectionFarmacosToAttach : mascota.getFarmacosCollection()) {
-                farmacosCollectionFarmacosToAttach = em.getReference(farmacosCollectionFarmacosToAttach.getClass(), farmacosCollectionFarmacosToAttach.getIdFarmaco());
-                attachedFarmacosCollection.add(farmacosCollectionFarmacosToAttach);
+            mascota.setMascotaList1(attachedMascotaList1);
+            List<Farmacos> attachedFarmacosList = new ArrayList<Farmacos>();
+            for (Farmacos farmacosListFarmacosToAttach : mascota.getFarmacosList()) {
+                farmacosListFarmacosToAttach = em.getReference(farmacosListFarmacosToAttach.getClass(), farmacosListFarmacosToAttach.getIdFarmaco());
+                attachedFarmacosList.add(farmacosListFarmacosToAttach);
             }
-            mascota.setFarmacosCollection(attachedFarmacosCollection);
-            Collection<Hospitalizacion> attachedHospitalizacionCollection = new ArrayList<Hospitalizacion>();
-            for (Hospitalizacion hospitalizacionCollectionHospitalizacionToAttach : mascota.getHospitalizacionCollection()) {
-                hospitalizacionCollectionHospitalizacionToAttach = em.getReference(hospitalizacionCollectionHospitalizacionToAttach.getClass(), hospitalizacionCollectionHospitalizacionToAttach.getIdHospitalizacion());
-                attachedHospitalizacionCollection.add(hospitalizacionCollectionHospitalizacionToAttach);
+            mascota.setFarmacosList(attachedFarmacosList);
+            List<Procedimientos> attachedProcedimientosList = new ArrayList<Procedimientos>();
+            for (Procedimientos procedimientosListProcedimientosToAttach : mascota.getProcedimientosList()) {
+                procedimientosListProcedimientosToAttach = em.getReference(procedimientosListProcedimientosToAttach.getClass(), procedimientosListProcedimientosToAttach.getIdProcedimiento());
+                attachedProcedimientosList.add(procedimientosListProcedimientosToAttach);
             }
-            mascota.setHospitalizacionCollection(attachedHospitalizacionCollection);
-            Collection<AgendaDetalle> attachedAgendaDetalleCollection = new ArrayList<AgendaDetalle>();
-            for (AgendaDetalle agendaDetalleCollectionAgendaDetalleToAttach : mascota.getAgendaDetalleCollection()) {
-                agendaDetalleCollectionAgendaDetalleToAttach = em.getReference(agendaDetalleCollectionAgendaDetalleToAttach.getClass(), agendaDetalleCollectionAgendaDetalleToAttach.getIdDetalle());
-                attachedAgendaDetalleCollection.add(agendaDetalleCollectionAgendaDetalleToAttach);
+            mascota.setProcedimientosList(attachedProcedimientosList);
+            List<Hospitalizacion> attachedHospitalizacionList = new ArrayList<Hospitalizacion>();
+            for (Hospitalizacion hospitalizacionListHospitalizacionToAttach : mascota.getHospitalizacionList()) {
+                hospitalizacionListHospitalizacionToAttach = em.getReference(hospitalizacionListHospitalizacionToAttach.getClass(), hospitalizacionListHospitalizacionToAttach.getIdHospitalizacion());
+                attachedHospitalizacionList.add(hospitalizacionListHospitalizacionToAttach);
             }
-            mascota.setAgendaDetalleCollection(attachedAgendaDetalleCollection);
-            Collection<Anamnesis> attachedAnamnesisCollection = new ArrayList<Anamnesis>();
-            for (Anamnesis anamnesisCollectionAnamnesisToAttach : mascota.getAnamnesisCollection()) {
-                anamnesisCollectionAnamnesisToAttach = em.getReference(anamnesisCollectionAnamnesisToAttach.getClass(), anamnesisCollectionAnamnesisToAttach.getIdAnamnesis());
-                attachedAnamnesisCollection.add(anamnesisCollectionAnamnesisToAttach);
+            mascota.setHospitalizacionList(attachedHospitalizacionList);
+            List<AgendaDetalle> attachedAgendaDetalleList = new ArrayList<AgendaDetalle>();
+            for (AgendaDetalle agendaDetalleListAgendaDetalleToAttach : mascota.getAgendaDetalleList()) {
+                agendaDetalleListAgendaDetalleToAttach = em.getReference(agendaDetalleListAgendaDetalleToAttach.getClass(), agendaDetalleListAgendaDetalleToAttach.getIdDetalle());
+                attachedAgendaDetalleList.add(agendaDetalleListAgendaDetalleToAttach);
             }
-            mascota.setAnamnesisCollection(attachedAnamnesisCollection);
-            Collection<Patologias> attachedPatologiasCollection = new ArrayList<Patologias>();
-            for (Patologias patologiasCollectionPatologiasToAttach : mascota.getPatologiasCollection()) {
-                patologiasCollectionPatologiasToAttach = em.getReference(patologiasCollectionPatologiasToAttach.getClass(), patologiasCollectionPatologiasToAttach.getIdPatologia());
-                attachedPatologiasCollection.add(patologiasCollectionPatologiasToAttach);
+            mascota.setAgendaDetalleList(attachedAgendaDetalleList);
+            List<Anamnesis> attachedAnamnesisList = new ArrayList<Anamnesis>();
+            for (Anamnesis anamnesisListAnamnesisToAttach : mascota.getAnamnesisList()) {
+                anamnesisListAnamnesisToAttach = em.getReference(anamnesisListAnamnesisToAttach.getClass(), anamnesisListAnamnesisToAttach.getIdAnamnesis());
+                attachedAnamnesisList.add(anamnesisListAnamnesisToAttach);
             }
-            mascota.setPatologiasCollection(attachedPatologiasCollection);
+            mascota.setAnamnesisList(attachedAnamnesisList);
+            List<Patologias> attachedPatologiasList = new ArrayList<Patologias>();
+            for (Patologias patologiasListPatologiasToAttach : mascota.getPatologiasList()) {
+                patologiasListPatologiasToAttach = em.getReference(patologiasListPatologiasToAttach.getClass(), patologiasListPatologiasToAttach.getIdPatologia());
+                attachedPatologiasList.add(patologiasListPatologiasToAttach);
+            }
+            mascota.setPatologiasList(attachedPatologiasList);
             em.persist(mascota);
+            if (caracter != null) {
+                caracter.getMascotaList().add(mascota);
+                caracter = em.merge(caracter);
+            }
             if (habitad != null) {
-                habitad.getMascotaCollection().add(mascota);
+                habitad.getMascotaList().add(mascota);
                 habitad = em.merge(habitad);
             }
             if (madre != null) {
-                madre.getMascotaCollection().add(mascota);
+                madre.getMascotaList().add(mascota);
                 madre = em.merge(madre);
             }
             if (padre != null) {
-                padre.getMascotaCollection().add(mascota);
+                padre.getMascotaList().add(mascota);
                 padre = em.merge(padre);
             }
             if (propietario != null) {
-                propietario.getMascotaCollection().add(mascota);
+                propietario.getMascotaList().add(mascota);
                 propietario = em.merge(propietario);
             }
             if (raza != null) {
-                raza.getMascotaCollection().add(mascota);
+                raza.getMascotaList().add(mascota);
                 raza = em.merge(raza);
             }
-            for (Examenes examenesCollectionExamenes : mascota.getExamenesCollection()) {
-                Mascota oldMascotaOfExamenesCollectionExamenes = examenesCollectionExamenes.getMascota();
-                examenesCollectionExamenes.setMascota(mascota);
-                examenesCollectionExamenes = em.merge(examenesCollectionExamenes);
-                if (oldMascotaOfExamenesCollectionExamenes != null) {
-                    oldMascotaOfExamenesCollectionExamenes.getExamenesCollection().remove(examenesCollectionExamenes);
-                    oldMascotaOfExamenesCollectionExamenes = em.merge(oldMascotaOfExamenesCollectionExamenes);
+            for (Examenes examenesListExamenes : mascota.getExamenesList()) {
+                Mascota oldMascotaOfExamenesListExamenes = examenesListExamenes.getMascota();
+                examenesListExamenes.setMascota(mascota);
+                examenesListExamenes = em.merge(examenesListExamenes);
+                if (oldMascotaOfExamenesListExamenes != null) {
+                    oldMascotaOfExamenesListExamenes.getExamenesList().remove(examenesListExamenes);
+                    oldMascotaOfExamenesListExamenes = em.merge(oldMascotaOfExamenesListExamenes);
                 }
             }
-            for (Historialvacunas historialvacunasCollectionHistorialvacunas : mascota.getHistorialvacunasCollection()) {
-                Mascota oldMascotaOfHistorialvacunasCollectionHistorialvacunas = historialvacunasCollectionHistorialvacunas.getMascota();
-                historialvacunasCollectionHistorialvacunas.setMascota(mascota);
-                historialvacunasCollectionHistorialvacunas = em.merge(historialvacunasCollectionHistorialvacunas);
-                if (oldMascotaOfHistorialvacunasCollectionHistorialvacunas != null) {
-                    oldMascotaOfHistorialvacunasCollectionHistorialvacunas.getHistorialvacunasCollection().remove(historialvacunasCollectionHistorialvacunas);
-                    oldMascotaOfHistorialvacunasCollectionHistorialvacunas = em.merge(oldMascotaOfHistorialvacunasCollectionHistorialvacunas);
+            for (Historialvacunas historialvacunasListHistorialvacunas : mascota.getHistorialvacunasList()) {
+                Mascota oldMascotaOfHistorialvacunasListHistorialvacunas = historialvacunasListHistorialvacunas.getMascota();
+                historialvacunasListHistorialvacunas.setMascota(mascota);
+                historialvacunasListHistorialvacunas = em.merge(historialvacunasListHistorialvacunas);
+                if (oldMascotaOfHistorialvacunasListHistorialvacunas != null) {
+                    oldMascotaOfHistorialvacunasListHistorialvacunas.getHistorialvacunasList().remove(historialvacunasListHistorialvacunas);
+                    oldMascotaOfHistorialvacunasListHistorialvacunas = em.merge(oldMascotaOfHistorialvacunasListHistorialvacunas);
                 }
             }
-            for (Contraindicaciones contraindicacionesCollectionContraindicaciones : mascota.getContraindicacionesCollection()) {
-                Mascota oldMascotaOfContraindicacionesCollectionContraindicaciones = contraindicacionesCollectionContraindicaciones.getMascota();
-                contraindicacionesCollectionContraindicaciones.setMascota(mascota);
-                contraindicacionesCollectionContraindicaciones = em.merge(contraindicacionesCollectionContraindicaciones);
-                if (oldMascotaOfContraindicacionesCollectionContraindicaciones != null) {
-                    oldMascotaOfContraindicacionesCollectionContraindicaciones.getContraindicacionesCollection().remove(contraindicacionesCollectionContraindicaciones);
-                    oldMascotaOfContraindicacionesCollectionContraindicaciones = em.merge(oldMascotaOfContraindicacionesCollectionContraindicaciones);
+            for (Contraindicaciones contraindicacionesListContraindicaciones : mascota.getContraindicacionesList()) {
+                Mascota oldMascotaOfContraindicacionesListContraindicaciones = contraindicacionesListContraindicaciones.getMascota();
+                contraindicacionesListContraindicaciones.setMascota(mascota);
+                contraindicacionesListContraindicaciones = em.merge(contraindicacionesListContraindicaciones);
+                if (oldMascotaOfContraindicacionesListContraindicaciones != null) {
+                    oldMascotaOfContraindicacionesListContraindicaciones.getContraindicacionesList().remove(contraindicacionesListContraindicaciones);
+                    oldMascotaOfContraindicacionesListContraindicaciones = em.merge(oldMascotaOfContraindicacionesListContraindicaciones);
                 }
             }
-            for (Desparacitaciones desparacitacionesCollectionDesparacitaciones : mascota.getDesparacitacionesCollection()) {
-                Mascota oldMascotaOfDesparacitacionesCollectionDesparacitaciones = desparacitacionesCollectionDesparacitaciones.getMascota();
-                desparacitacionesCollectionDesparacitaciones.setMascota(mascota);
-                desparacitacionesCollectionDesparacitaciones = em.merge(desparacitacionesCollectionDesparacitaciones);
-                if (oldMascotaOfDesparacitacionesCollectionDesparacitaciones != null) {
-                    oldMascotaOfDesparacitacionesCollectionDesparacitaciones.getDesparacitacionesCollection().remove(desparacitacionesCollectionDesparacitaciones);
-                    oldMascotaOfDesparacitacionesCollectionDesparacitaciones = em.merge(oldMascotaOfDesparacitacionesCollectionDesparacitaciones);
+            for (Desparacitaciones desparacitacionesListDesparacitaciones : mascota.getDesparacitacionesList()) {
+                Mascota oldMascotaOfDesparacitacionesListDesparacitaciones = desparacitacionesListDesparacitaciones.getMascota();
+                desparacitacionesListDesparacitaciones.setMascota(mascota);
+                desparacitacionesListDesparacitaciones = em.merge(desparacitacionesListDesparacitaciones);
+                if (oldMascotaOfDesparacitacionesListDesparacitaciones != null) {
+                    oldMascotaOfDesparacitacionesListDesparacitaciones.getDesparacitacionesList().remove(desparacitacionesListDesparacitaciones);
+                    oldMascotaOfDesparacitacionesListDesparacitaciones = em.merge(oldMascotaOfDesparacitacionesListDesparacitaciones);
                 }
             }
-            for (Alergias alergiasCollectionAlergias : mascota.getAlergiasCollection()) {
-                Mascota oldMascotaOfAlergiasCollectionAlergias = alergiasCollectionAlergias.getMascota();
-                alergiasCollectionAlergias.setMascota(mascota);
-                alergiasCollectionAlergias = em.merge(alergiasCollectionAlergias);
-                if (oldMascotaOfAlergiasCollectionAlergias != null) {
-                    oldMascotaOfAlergiasCollectionAlergias.getAlergiasCollection().remove(alergiasCollectionAlergias);
-                    oldMascotaOfAlergiasCollectionAlergias = em.merge(oldMascotaOfAlergiasCollectionAlergias);
+            for (Alergias alergiasListAlergias : mascota.getAlergiasList()) {
+                Mascota oldMascotaOfAlergiasListAlergias = alergiasListAlergias.getMascota();
+                alergiasListAlergias.setMascota(mascota);
+                alergiasListAlergias = em.merge(alergiasListAlergias);
+                if (oldMascotaOfAlergiasListAlergias != null) {
+                    oldMascotaOfAlergiasListAlergias.getAlergiasList().remove(alergiasListAlergias);
+                    oldMascotaOfAlergiasListAlergias = em.merge(oldMascotaOfAlergiasListAlergias);
                 }
             }
-            for (Mascota mascotaCollectionMascota : mascota.getMascotaCollection()) {
-                Mascota oldMadreOfMascotaCollectionMascota = mascotaCollectionMascota.getMadre();
-                mascotaCollectionMascota.setMadre(mascota);
-                mascotaCollectionMascota = em.merge(mascotaCollectionMascota);
-                if (oldMadreOfMascotaCollectionMascota != null) {
-                    oldMadreOfMascotaCollectionMascota.getMascotaCollection().remove(mascotaCollectionMascota);
-                    oldMadreOfMascotaCollectionMascota = em.merge(oldMadreOfMascotaCollectionMascota);
+            for (Mascota mascotaListMascota : mascota.getMascotaList()) {
+                Mascota oldMadreOfMascotaListMascota = mascotaListMascota.getMadre();
+                mascotaListMascota.setMadre(mascota);
+                mascotaListMascota = em.merge(mascotaListMascota);
+                if (oldMadreOfMascotaListMascota != null) {
+                    oldMadreOfMascotaListMascota.getMascotaList().remove(mascotaListMascota);
+                    oldMadreOfMascotaListMascota = em.merge(oldMadreOfMascotaListMascota);
                 }
             }
-            for (Mascota mascotaCollection1Mascota : mascota.getMascotaCollection1()) {
-                Mascota oldPadreOfMascotaCollection1Mascota = mascotaCollection1Mascota.getPadre();
-                mascotaCollection1Mascota.setPadre(mascota);
-                mascotaCollection1Mascota = em.merge(mascotaCollection1Mascota);
-                if (oldPadreOfMascotaCollection1Mascota != null) {
-                    oldPadreOfMascotaCollection1Mascota.getMascotaCollection1().remove(mascotaCollection1Mascota);
-                    oldPadreOfMascotaCollection1Mascota = em.merge(oldPadreOfMascotaCollection1Mascota);
+            for (Mascota mascotaList1Mascota : mascota.getMascotaList1()) {
+                Mascota oldPadreOfMascotaList1Mascota = mascotaList1Mascota.getPadre();
+                mascotaList1Mascota.setPadre(mascota);
+                mascotaList1Mascota = em.merge(mascotaList1Mascota);
+                if (oldPadreOfMascotaList1Mascota != null) {
+                    oldPadreOfMascotaList1Mascota.getMascotaList1().remove(mascotaList1Mascota);
+                    oldPadreOfMascotaList1Mascota = em.merge(oldPadreOfMascotaList1Mascota);
                 }
             }
-            for (Farmacos farmacosCollectionFarmacos : mascota.getFarmacosCollection()) {
-                Mascota oldMascotaOfFarmacosCollectionFarmacos = farmacosCollectionFarmacos.getMascota();
-                farmacosCollectionFarmacos.setMascota(mascota);
-                farmacosCollectionFarmacos = em.merge(farmacosCollectionFarmacos);
-                if (oldMascotaOfFarmacosCollectionFarmacos != null) {
-                    oldMascotaOfFarmacosCollectionFarmacos.getFarmacosCollection().remove(farmacosCollectionFarmacos);
-                    oldMascotaOfFarmacosCollectionFarmacos = em.merge(oldMascotaOfFarmacosCollectionFarmacos);
+            for (Farmacos farmacosListFarmacos : mascota.getFarmacosList()) {
+                Mascota oldMascotaOfFarmacosListFarmacos = farmacosListFarmacos.getMascota();
+                farmacosListFarmacos.setMascota(mascota);
+                farmacosListFarmacos = em.merge(farmacosListFarmacos);
+                if (oldMascotaOfFarmacosListFarmacos != null) {
+                    oldMascotaOfFarmacosListFarmacos.getFarmacosList().remove(farmacosListFarmacos);
+                    oldMascotaOfFarmacosListFarmacos = em.merge(oldMascotaOfFarmacosListFarmacos);
                 }
             }
-            for (Hospitalizacion hospitalizacionCollectionHospitalizacion : mascota.getHospitalizacionCollection()) {
-                Mascota oldMascotaOfHospitalizacionCollectionHospitalizacion = hospitalizacionCollectionHospitalizacion.getMascota();
-                hospitalizacionCollectionHospitalizacion.setMascota(mascota);
-                hospitalizacionCollectionHospitalizacion = em.merge(hospitalizacionCollectionHospitalizacion);
-                if (oldMascotaOfHospitalizacionCollectionHospitalizacion != null) {
-                    oldMascotaOfHospitalizacionCollectionHospitalizacion.getHospitalizacionCollection().remove(hospitalizacionCollectionHospitalizacion);
-                    oldMascotaOfHospitalizacionCollectionHospitalizacion = em.merge(oldMascotaOfHospitalizacionCollectionHospitalizacion);
+            for (Procedimientos procedimientosListProcedimientos : mascota.getProcedimientosList()) {
+                Mascota oldMascotaOfProcedimientosListProcedimientos = procedimientosListProcedimientos.getMascota();
+                procedimientosListProcedimientos.setMascota(mascota);
+                procedimientosListProcedimientos = em.merge(procedimientosListProcedimientos);
+                if (oldMascotaOfProcedimientosListProcedimientos != null) {
+                    oldMascotaOfProcedimientosListProcedimientos.getProcedimientosList().remove(procedimientosListProcedimientos);
+                    oldMascotaOfProcedimientosListProcedimientos = em.merge(oldMascotaOfProcedimientosListProcedimientos);
                 }
             }
-            for (AgendaDetalle agendaDetalleCollectionAgendaDetalle : mascota.getAgendaDetalleCollection()) {
-                Mascota oldMascotaOfAgendaDetalleCollectionAgendaDetalle = agendaDetalleCollectionAgendaDetalle.getMascota();
-                agendaDetalleCollectionAgendaDetalle.setMascota(mascota);
-                agendaDetalleCollectionAgendaDetalle = em.merge(agendaDetalleCollectionAgendaDetalle);
-                if (oldMascotaOfAgendaDetalleCollectionAgendaDetalle != null) {
-                    oldMascotaOfAgendaDetalleCollectionAgendaDetalle.getAgendaDetalleCollection().remove(agendaDetalleCollectionAgendaDetalle);
-                    oldMascotaOfAgendaDetalleCollectionAgendaDetalle = em.merge(oldMascotaOfAgendaDetalleCollectionAgendaDetalle);
+            for (Hospitalizacion hospitalizacionListHospitalizacion : mascota.getHospitalizacionList()) {
+                Mascota oldMascotaOfHospitalizacionListHospitalizacion = hospitalizacionListHospitalizacion.getMascota();
+                hospitalizacionListHospitalizacion.setMascota(mascota);
+                hospitalizacionListHospitalizacion = em.merge(hospitalizacionListHospitalizacion);
+                if (oldMascotaOfHospitalizacionListHospitalizacion != null) {
+                    oldMascotaOfHospitalizacionListHospitalizacion.getHospitalizacionList().remove(hospitalizacionListHospitalizacion);
+                    oldMascotaOfHospitalizacionListHospitalizacion = em.merge(oldMascotaOfHospitalizacionListHospitalizacion);
                 }
             }
-            for (Anamnesis anamnesisCollectionAnamnesis : mascota.getAnamnesisCollection()) {
-                Mascota oldMascotaOfAnamnesisCollectionAnamnesis = anamnesisCollectionAnamnesis.getMascota();
-                anamnesisCollectionAnamnesis.setMascota(mascota);
-                anamnesisCollectionAnamnesis = em.merge(anamnesisCollectionAnamnesis);
-                if (oldMascotaOfAnamnesisCollectionAnamnesis != null) {
-                    oldMascotaOfAnamnesisCollectionAnamnesis.getAnamnesisCollection().remove(anamnesisCollectionAnamnesis);
-                    oldMascotaOfAnamnesisCollectionAnamnesis = em.merge(oldMascotaOfAnamnesisCollectionAnamnesis);
+            for (AgendaDetalle agendaDetalleListAgendaDetalle : mascota.getAgendaDetalleList()) {
+                Mascota oldMascotaOfAgendaDetalleListAgendaDetalle = agendaDetalleListAgendaDetalle.getMascota();
+                agendaDetalleListAgendaDetalle.setMascota(mascota);
+                agendaDetalleListAgendaDetalle = em.merge(agendaDetalleListAgendaDetalle);
+                if (oldMascotaOfAgendaDetalleListAgendaDetalle != null) {
+                    oldMascotaOfAgendaDetalleListAgendaDetalle.getAgendaDetalleList().remove(agendaDetalleListAgendaDetalle);
+                    oldMascotaOfAgendaDetalleListAgendaDetalle = em.merge(oldMascotaOfAgendaDetalleListAgendaDetalle);
                 }
             }
-            for (Patologias patologiasCollectionPatologias : mascota.getPatologiasCollection()) {
-                Mascota oldMascotaOfPatologiasCollectionPatologias = patologiasCollectionPatologias.getMascota();
-                patologiasCollectionPatologias.setMascota(mascota);
-                patologiasCollectionPatologias = em.merge(patologiasCollectionPatologias);
-                if (oldMascotaOfPatologiasCollectionPatologias != null) {
-                    oldMascotaOfPatologiasCollectionPatologias.getPatologiasCollection().remove(patologiasCollectionPatologias);
-                    oldMascotaOfPatologiasCollectionPatologias = em.merge(oldMascotaOfPatologiasCollectionPatologias);
+            for (Anamnesis anamnesisListAnamnesis : mascota.getAnamnesisList()) {
+                Mascota oldMascotaOfAnamnesisListAnamnesis = anamnesisListAnamnesis.getMascota();
+                anamnesisListAnamnesis.setMascota(mascota);
+                anamnesisListAnamnesis = em.merge(anamnesisListAnamnesis);
+                if (oldMascotaOfAnamnesisListAnamnesis != null) {
+                    oldMascotaOfAnamnesisListAnamnesis.getAnamnesisList().remove(anamnesisListAnamnesis);
+                    oldMascotaOfAnamnesisListAnamnesis = em.merge(oldMascotaOfAnamnesisListAnamnesis);
+                }
+            }
+            for (Patologias patologiasListPatologias : mascota.getPatologiasList()) {
+                Mascota oldMascotaOfPatologiasListPatologias = patologiasListPatologias.getMascota();
+                patologiasListPatologias.setMascota(mascota);
+                patologiasListPatologias = em.merge(patologiasListPatologias);
+                if (oldMascotaOfPatologiasListPatologias != null) {
+                    oldMascotaOfPatologiasListPatologias.getPatologiasList().remove(patologiasListPatologias);
+                    oldMascotaOfPatologiasListPatologias = em.merge(oldMascotaOfPatologiasListPatologias);
                 }
             }
             em.getTransaction().commit();
@@ -334,6 +362,8 @@ public class MascotaJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Mascota persistentMascota = em.find(Mascota.class, mascota.getIdMascota());
+            Caracter caracterOld = persistentMascota.getCaracter();
+            Caracter caracterNew = mascota.getCaracter();
             Habitad habitadOld = persistentMascota.getHabitad();
             Habitad habitadNew = mascota.getHabitad();
             Mascota madreOld = persistentMascota.getMadre();
@@ -344,113 +374,127 @@ public class MascotaJpaController implements Serializable {
             Propietario propietarioNew = mascota.getPropietario();
             Raza razaOld = persistentMascota.getRaza();
             Raza razaNew = mascota.getRaza();
-            Collection<Examenes> examenesCollectionOld = persistentMascota.getExamenesCollection();
-            Collection<Examenes> examenesCollectionNew = mascota.getExamenesCollection();
-            Collection<Historialvacunas> historialvacunasCollectionOld = persistentMascota.getHistorialvacunasCollection();
-            Collection<Historialvacunas> historialvacunasCollectionNew = mascota.getHistorialvacunasCollection();
-            Collection<Contraindicaciones> contraindicacionesCollectionOld = persistentMascota.getContraindicacionesCollection();
-            Collection<Contraindicaciones> contraindicacionesCollectionNew = mascota.getContraindicacionesCollection();
-            Collection<Desparacitaciones> desparacitacionesCollectionOld = persistentMascota.getDesparacitacionesCollection();
-            Collection<Desparacitaciones> desparacitacionesCollectionNew = mascota.getDesparacitacionesCollection();
-            Collection<Alergias> alergiasCollectionOld = persistentMascota.getAlergiasCollection();
-            Collection<Alergias> alergiasCollectionNew = mascota.getAlergiasCollection();
-            Collection<Mascota> mascotaCollectionOld = persistentMascota.getMascotaCollection();
-            Collection<Mascota> mascotaCollectionNew = mascota.getMascotaCollection();
-            Collection<Mascota> mascotaCollection1Old = persistentMascota.getMascotaCollection1();
-            Collection<Mascota> mascotaCollection1New = mascota.getMascotaCollection1();
-            Collection<Farmacos> farmacosCollectionOld = persistentMascota.getFarmacosCollection();
-            Collection<Farmacos> farmacosCollectionNew = mascota.getFarmacosCollection();
-            Collection<Hospitalizacion> hospitalizacionCollectionOld = persistentMascota.getHospitalizacionCollection();
-            Collection<Hospitalizacion> hospitalizacionCollectionNew = mascota.getHospitalizacionCollection();
-            Collection<AgendaDetalle> agendaDetalleCollectionOld = persistentMascota.getAgendaDetalleCollection();
-            Collection<AgendaDetalle> agendaDetalleCollectionNew = mascota.getAgendaDetalleCollection();
-            Collection<Anamnesis> anamnesisCollectionOld = persistentMascota.getAnamnesisCollection();
-            Collection<Anamnesis> anamnesisCollectionNew = mascota.getAnamnesisCollection();
-            Collection<Patologias> patologiasCollectionOld = persistentMascota.getPatologiasCollection();
-            Collection<Patologias> patologiasCollectionNew = mascota.getPatologiasCollection();
+            List<Examenes> examenesListOld = persistentMascota.getExamenesList();
+            List<Examenes> examenesListNew = mascota.getExamenesList();
+            List<Historialvacunas> historialvacunasListOld = persistentMascota.getHistorialvacunasList();
+            List<Historialvacunas> historialvacunasListNew = mascota.getHistorialvacunasList();
+            List<Contraindicaciones> contraindicacionesListOld = persistentMascota.getContraindicacionesList();
+            List<Contraindicaciones> contraindicacionesListNew = mascota.getContraindicacionesList();
+            List<Desparacitaciones> desparacitacionesListOld = persistentMascota.getDesparacitacionesList();
+            List<Desparacitaciones> desparacitacionesListNew = mascota.getDesparacitacionesList();
+            List<Alergias> alergiasListOld = persistentMascota.getAlergiasList();
+            List<Alergias> alergiasListNew = mascota.getAlergiasList();
+            List<Mascota> mascotaListOld = persistentMascota.getMascotaList();
+            List<Mascota> mascotaListNew = mascota.getMascotaList();
+            List<Mascota> mascotaList1Old = persistentMascota.getMascotaList1();
+            List<Mascota> mascotaList1New = mascota.getMascotaList1();
+            List<Farmacos> farmacosListOld = persistentMascota.getFarmacosList();
+            List<Farmacos> farmacosListNew = mascota.getFarmacosList();
+            List<Procedimientos> procedimientosListOld = persistentMascota.getProcedimientosList();
+            List<Procedimientos> procedimientosListNew = mascota.getProcedimientosList();
+            List<Hospitalizacion> hospitalizacionListOld = persistentMascota.getHospitalizacionList();
+            List<Hospitalizacion> hospitalizacionListNew = mascota.getHospitalizacionList();
+            List<AgendaDetalle> agendaDetalleListOld = persistentMascota.getAgendaDetalleList();
+            List<AgendaDetalle> agendaDetalleListNew = mascota.getAgendaDetalleList();
+            List<Anamnesis> anamnesisListOld = persistentMascota.getAnamnesisList();
+            List<Anamnesis> anamnesisListNew = mascota.getAnamnesisList();
+            List<Patologias> patologiasListOld = persistentMascota.getPatologiasList();
+            List<Patologias> patologiasListNew = mascota.getPatologiasList();
             List<String> illegalOrphanMessages = null;
-            for (Examenes examenesCollectionOldExamenes : examenesCollectionOld) {
-                if (!examenesCollectionNew.contains(examenesCollectionOldExamenes)) {
+            for (Examenes examenesListOldExamenes : examenesListOld) {
+                if (!examenesListNew.contains(examenesListOldExamenes)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Examenes " + examenesCollectionOldExamenes + " since its mascota field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Examenes " + examenesListOldExamenes + " since its mascota field is not nullable.");
                 }
             }
-            for (Historialvacunas historialvacunasCollectionOldHistorialvacunas : historialvacunasCollectionOld) {
-                if (!historialvacunasCollectionNew.contains(historialvacunasCollectionOldHistorialvacunas)) {
+            for (Historialvacunas historialvacunasListOldHistorialvacunas : historialvacunasListOld) {
+                if (!historialvacunasListNew.contains(historialvacunasListOldHistorialvacunas)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Historialvacunas " + historialvacunasCollectionOldHistorialvacunas + " since its mascota field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Historialvacunas " + historialvacunasListOldHistorialvacunas + " since its mascota field is not nullable.");
                 }
             }
-            for (Contraindicaciones contraindicacionesCollectionOldContraindicaciones : contraindicacionesCollectionOld) {
-                if (!contraindicacionesCollectionNew.contains(contraindicacionesCollectionOldContraindicaciones)) {
+            for (Contraindicaciones contraindicacionesListOldContraindicaciones : contraindicacionesListOld) {
+                if (!contraindicacionesListNew.contains(contraindicacionesListOldContraindicaciones)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Contraindicaciones " + contraindicacionesCollectionOldContraindicaciones + " since its mascota field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Contraindicaciones " + contraindicacionesListOldContraindicaciones + " since its mascota field is not nullable.");
                 }
             }
-            for (Desparacitaciones desparacitacionesCollectionOldDesparacitaciones : desparacitacionesCollectionOld) {
-                if (!desparacitacionesCollectionNew.contains(desparacitacionesCollectionOldDesparacitaciones)) {
+            for (Desparacitaciones desparacitacionesListOldDesparacitaciones : desparacitacionesListOld) {
+                if (!desparacitacionesListNew.contains(desparacitacionesListOldDesparacitaciones)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Desparacitaciones " + desparacitacionesCollectionOldDesparacitaciones + " since its mascota field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Desparacitaciones " + desparacitacionesListOldDesparacitaciones + " since its mascota field is not nullable.");
                 }
             }
-            for (Alergias alergiasCollectionOldAlergias : alergiasCollectionOld) {
-                if (!alergiasCollectionNew.contains(alergiasCollectionOldAlergias)) {
+            for (Alergias alergiasListOldAlergias : alergiasListOld) {
+                if (!alergiasListNew.contains(alergiasListOldAlergias)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Alergias " + alergiasCollectionOldAlergias + " since its mascota field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Alergias " + alergiasListOldAlergias + " since its mascota field is not nullable.");
                 }
             }
-            for (Farmacos farmacosCollectionOldFarmacos : farmacosCollectionOld) {
-                if (!farmacosCollectionNew.contains(farmacosCollectionOldFarmacos)) {
+            for (Farmacos farmacosListOldFarmacos : farmacosListOld) {
+                if (!farmacosListNew.contains(farmacosListOldFarmacos)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Farmacos " + farmacosCollectionOldFarmacos + " since its mascota field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Farmacos " + farmacosListOldFarmacos + " since its mascota field is not nullable.");
                 }
             }
-            for (Hospitalizacion hospitalizacionCollectionOldHospitalizacion : hospitalizacionCollectionOld) {
-                if (!hospitalizacionCollectionNew.contains(hospitalizacionCollectionOldHospitalizacion)) {
+            for (Procedimientos procedimientosListOldProcedimientos : procedimientosListOld) {
+                if (!procedimientosListNew.contains(procedimientosListOldProcedimientos)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Hospitalizacion " + hospitalizacionCollectionOldHospitalizacion + " since its mascota field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Procedimientos " + procedimientosListOldProcedimientos + " since its mascota field is not nullable.");
                 }
             }
-            for (AgendaDetalle agendaDetalleCollectionOldAgendaDetalle : agendaDetalleCollectionOld) {
-                if (!agendaDetalleCollectionNew.contains(agendaDetalleCollectionOldAgendaDetalle)) {
+            for (Hospitalizacion hospitalizacionListOldHospitalizacion : hospitalizacionListOld) {
+                if (!hospitalizacionListNew.contains(hospitalizacionListOldHospitalizacion)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain AgendaDetalle " + agendaDetalleCollectionOldAgendaDetalle + " since its mascota field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Hospitalizacion " + hospitalizacionListOldHospitalizacion + " since its mascota field is not nullable.");
                 }
             }
-            for (Anamnesis anamnesisCollectionOldAnamnesis : anamnesisCollectionOld) {
-                if (!anamnesisCollectionNew.contains(anamnesisCollectionOldAnamnesis)) {
+            for (AgendaDetalle agendaDetalleListOldAgendaDetalle : agendaDetalleListOld) {
+                if (!agendaDetalleListNew.contains(agendaDetalleListOldAgendaDetalle)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Anamnesis " + anamnesisCollectionOldAnamnesis + " since its mascota field is not nullable.");
+                    illegalOrphanMessages.add("You must retain AgendaDetalle " + agendaDetalleListOldAgendaDetalle + " since its mascota field is not nullable.");
                 }
             }
-            for (Patologias patologiasCollectionOldPatologias : patologiasCollectionOld) {
-                if (!patologiasCollectionNew.contains(patologiasCollectionOldPatologias)) {
+            for (Anamnesis anamnesisListOldAnamnesis : anamnesisListOld) {
+                if (!anamnesisListNew.contains(anamnesisListOldAnamnesis)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Patologias " + patologiasCollectionOldPatologias + " since its mascota field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Anamnesis " + anamnesisListOldAnamnesis + " since its mascota field is not nullable.");
+                }
+            }
+            for (Patologias patologiasListOldPatologias : patologiasListOld) {
+                if (!patologiasListNew.contains(patologiasListOldPatologias)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Patologias " + patologiasListOldPatologias + " since its mascota field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            if (caracterNew != null) {
+                caracterNew = em.getReference(caracterNew.getClass(), caracterNew.getIdCaracter());
+                mascota.setCaracter(caracterNew);
             }
             if (habitadNew != null) {
                 habitadNew = em.getReference(habitadNew.getClass(), habitadNew.getIdHabitad());
@@ -472,272 +516,298 @@ public class MascotaJpaController implements Serializable {
                 razaNew = em.getReference(razaNew.getClass(), razaNew.getIdRaza());
                 mascota.setRaza(razaNew);
             }
-            Collection<Examenes> attachedExamenesCollectionNew = new ArrayList<Examenes>();
-            for (Examenes examenesCollectionNewExamenesToAttach : examenesCollectionNew) {
-                examenesCollectionNewExamenesToAttach = em.getReference(examenesCollectionNewExamenesToAttach.getClass(), examenesCollectionNewExamenesToAttach.getIdExamen());
-                attachedExamenesCollectionNew.add(examenesCollectionNewExamenesToAttach);
+            List<Examenes> attachedExamenesListNew = new ArrayList<Examenes>();
+            for (Examenes examenesListNewExamenesToAttach : examenesListNew) {
+                examenesListNewExamenesToAttach = em.getReference(examenesListNewExamenesToAttach.getClass(), examenesListNewExamenesToAttach.getIdExamen());
+                attachedExamenesListNew.add(examenesListNewExamenesToAttach);
             }
-            examenesCollectionNew = attachedExamenesCollectionNew;
-            mascota.setExamenesCollection(examenesCollectionNew);
-            Collection<Historialvacunas> attachedHistorialvacunasCollectionNew = new ArrayList<Historialvacunas>();
-            for (Historialvacunas historialvacunasCollectionNewHistorialvacunasToAttach : historialvacunasCollectionNew) {
-                historialvacunasCollectionNewHistorialvacunasToAttach = em.getReference(historialvacunasCollectionNewHistorialvacunasToAttach.getClass(), historialvacunasCollectionNewHistorialvacunasToAttach.getIdEvento());
-                attachedHistorialvacunasCollectionNew.add(historialvacunasCollectionNewHistorialvacunasToAttach);
+            examenesListNew = attachedExamenesListNew;
+            mascota.setExamenesList(examenesListNew);
+            List<Historialvacunas> attachedHistorialvacunasListNew = new ArrayList<Historialvacunas>();
+            for (Historialvacunas historialvacunasListNewHistorialvacunasToAttach : historialvacunasListNew) {
+                historialvacunasListNewHistorialvacunasToAttach = em.getReference(historialvacunasListNewHistorialvacunasToAttach.getClass(), historialvacunasListNewHistorialvacunasToAttach.getIdEvento());
+                attachedHistorialvacunasListNew.add(historialvacunasListNewHistorialvacunasToAttach);
             }
-            historialvacunasCollectionNew = attachedHistorialvacunasCollectionNew;
-            mascota.setHistorialvacunasCollection(historialvacunasCollectionNew);
-            Collection<Contraindicaciones> attachedContraindicacionesCollectionNew = new ArrayList<Contraindicaciones>();
-            for (Contraindicaciones contraindicacionesCollectionNewContraindicacionesToAttach : contraindicacionesCollectionNew) {
-                contraindicacionesCollectionNewContraindicacionesToAttach = em.getReference(contraindicacionesCollectionNewContraindicacionesToAttach.getClass(), contraindicacionesCollectionNewContraindicacionesToAttach.getIdContraindicacion());
-                attachedContraindicacionesCollectionNew.add(contraindicacionesCollectionNewContraindicacionesToAttach);
+            historialvacunasListNew = attachedHistorialvacunasListNew;
+            mascota.setHistorialvacunasList(historialvacunasListNew);
+            List<Contraindicaciones> attachedContraindicacionesListNew = new ArrayList<Contraindicaciones>();
+            for (Contraindicaciones contraindicacionesListNewContraindicacionesToAttach : contraindicacionesListNew) {
+                contraindicacionesListNewContraindicacionesToAttach = em.getReference(contraindicacionesListNewContraindicacionesToAttach.getClass(), contraindicacionesListNewContraindicacionesToAttach.getIdContraindicacion());
+                attachedContraindicacionesListNew.add(contraindicacionesListNewContraindicacionesToAttach);
             }
-            contraindicacionesCollectionNew = attachedContraindicacionesCollectionNew;
-            mascota.setContraindicacionesCollection(contraindicacionesCollectionNew);
-            Collection<Desparacitaciones> attachedDesparacitacionesCollectionNew = new ArrayList<Desparacitaciones>();
-            for (Desparacitaciones desparacitacionesCollectionNewDesparacitacionesToAttach : desparacitacionesCollectionNew) {
-                desparacitacionesCollectionNewDesparacitacionesToAttach = em.getReference(desparacitacionesCollectionNewDesparacitacionesToAttach.getClass(), desparacitacionesCollectionNewDesparacitacionesToAttach.getIdDesparacitacion());
-                attachedDesparacitacionesCollectionNew.add(desparacitacionesCollectionNewDesparacitacionesToAttach);
+            contraindicacionesListNew = attachedContraindicacionesListNew;
+            mascota.setContraindicacionesList(contraindicacionesListNew);
+            List<Desparacitaciones> attachedDesparacitacionesListNew = new ArrayList<Desparacitaciones>();
+            for (Desparacitaciones desparacitacionesListNewDesparacitacionesToAttach : desparacitacionesListNew) {
+                desparacitacionesListNewDesparacitacionesToAttach = em.getReference(desparacitacionesListNewDesparacitacionesToAttach.getClass(), desparacitacionesListNewDesparacitacionesToAttach.getIdDesparacitacion());
+                attachedDesparacitacionesListNew.add(desparacitacionesListNewDesparacitacionesToAttach);
             }
-            desparacitacionesCollectionNew = attachedDesparacitacionesCollectionNew;
-            mascota.setDesparacitacionesCollection(desparacitacionesCollectionNew);
-            Collection<Alergias> attachedAlergiasCollectionNew = new ArrayList<Alergias>();
-            for (Alergias alergiasCollectionNewAlergiasToAttach : alergiasCollectionNew) {
-                alergiasCollectionNewAlergiasToAttach = em.getReference(alergiasCollectionNewAlergiasToAttach.getClass(), alergiasCollectionNewAlergiasToAttach.getIdAlergia());
-                attachedAlergiasCollectionNew.add(alergiasCollectionNewAlergiasToAttach);
+            desparacitacionesListNew = attachedDesparacitacionesListNew;
+            mascota.setDesparacitacionesList(desparacitacionesListNew);
+            List<Alergias> attachedAlergiasListNew = new ArrayList<Alergias>();
+            for (Alergias alergiasListNewAlergiasToAttach : alergiasListNew) {
+                alergiasListNewAlergiasToAttach = em.getReference(alergiasListNewAlergiasToAttach.getClass(), alergiasListNewAlergiasToAttach.getIdAlergia());
+                attachedAlergiasListNew.add(alergiasListNewAlergiasToAttach);
             }
-            alergiasCollectionNew = attachedAlergiasCollectionNew;
-            mascota.setAlergiasCollection(alergiasCollectionNew);
-            Collection<Mascota> attachedMascotaCollectionNew = new ArrayList<Mascota>();
-            for (Mascota mascotaCollectionNewMascotaToAttach : mascotaCollectionNew) {
-                mascotaCollectionNewMascotaToAttach = em.getReference(mascotaCollectionNewMascotaToAttach.getClass(), mascotaCollectionNewMascotaToAttach.getIdMascota());
-                attachedMascotaCollectionNew.add(mascotaCollectionNewMascotaToAttach);
+            alergiasListNew = attachedAlergiasListNew;
+            mascota.setAlergiasList(alergiasListNew);
+            List<Mascota> attachedMascotaListNew = new ArrayList<Mascota>();
+            for (Mascota mascotaListNewMascotaToAttach : mascotaListNew) {
+                mascotaListNewMascotaToAttach = em.getReference(mascotaListNewMascotaToAttach.getClass(), mascotaListNewMascotaToAttach.getIdMascota());
+                attachedMascotaListNew.add(mascotaListNewMascotaToAttach);
             }
-            mascotaCollectionNew = attachedMascotaCollectionNew;
-            mascota.setMascotaCollection(mascotaCollectionNew);
-            Collection<Mascota> attachedMascotaCollection1New = new ArrayList<Mascota>();
-            for (Mascota mascotaCollection1NewMascotaToAttach : mascotaCollection1New) {
-                mascotaCollection1NewMascotaToAttach = em.getReference(mascotaCollection1NewMascotaToAttach.getClass(), mascotaCollection1NewMascotaToAttach.getIdMascota());
-                attachedMascotaCollection1New.add(mascotaCollection1NewMascotaToAttach);
+            mascotaListNew = attachedMascotaListNew;
+            mascota.setMascotaList(mascotaListNew);
+            List<Mascota> attachedMascotaList1New = new ArrayList<Mascota>();
+            for (Mascota mascotaList1NewMascotaToAttach : mascotaList1New) {
+                mascotaList1NewMascotaToAttach = em.getReference(mascotaList1NewMascotaToAttach.getClass(), mascotaList1NewMascotaToAttach.getIdMascota());
+                attachedMascotaList1New.add(mascotaList1NewMascotaToAttach);
             }
-            mascotaCollection1New = attachedMascotaCollection1New;
-            mascota.setMascotaCollection1(mascotaCollection1New);
-            Collection<Farmacos> attachedFarmacosCollectionNew = new ArrayList<Farmacos>();
-            for (Farmacos farmacosCollectionNewFarmacosToAttach : farmacosCollectionNew) {
-                farmacosCollectionNewFarmacosToAttach = em.getReference(farmacosCollectionNewFarmacosToAttach.getClass(), farmacosCollectionNewFarmacosToAttach.getIdFarmaco());
-                attachedFarmacosCollectionNew.add(farmacosCollectionNewFarmacosToAttach);
+            mascotaList1New = attachedMascotaList1New;
+            mascota.setMascotaList1(mascotaList1New);
+            List<Farmacos> attachedFarmacosListNew = new ArrayList<Farmacos>();
+            for (Farmacos farmacosListNewFarmacosToAttach : farmacosListNew) {
+                farmacosListNewFarmacosToAttach = em.getReference(farmacosListNewFarmacosToAttach.getClass(), farmacosListNewFarmacosToAttach.getIdFarmaco());
+                attachedFarmacosListNew.add(farmacosListNewFarmacosToAttach);
             }
-            farmacosCollectionNew = attachedFarmacosCollectionNew;
-            mascota.setFarmacosCollection(farmacosCollectionNew);
-            Collection<Hospitalizacion> attachedHospitalizacionCollectionNew = new ArrayList<Hospitalizacion>();
-            for (Hospitalizacion hospitalizacionCollectionNewHospitalizacionToAttach : hospitalizacionCollectionNew) {
-                hospitalizacionCollectionNewHospitalizacionToAttach = em.getReference(hospitalizacionCollectionNewHospitalizacionToAttach.getClass(), hospitalizacionCollectionNewHospitalizacionToAttach.getIdHospitalizacion());
-                attachedHospitalizacionCollectionNew.add(hospitalizacionCollectionNewHospitalizacionToAttach);
+            farmacosListNew = attachedFarmacosListNew;
+            mascota.setFarmacosList(farmacosListNew);
+            List<Procedimientos> attachedProcedimientosListNew = new ArrayList<Procedimientos>();
+            for (Procedimientos procedimientosListNewProcedimientosToAttach : procedimientosListNew) {
+                procedimientosListNewProcedimientosToAttach = em.getReference(procedimientosListNewProcedimientosToAttach.getClass(), procedimientosListNewProcedimientosToAttach.getIdProcedimiento());
+                attachedProcedimientosListNew.add(procedimientosListNewProcedimientosToAttach);
             }
-            hospitalizacionCollectionNew = attachedHospitalizacionCollectionNew;
-            mascota.setHospitalizacionCollection(hospitalizacionCollectionNew);
-            Collection<AgendaDetalle> attachedAgendaDetalleCollectionNew = new ArrayList<AgendaDetalle>();
-            for (AgendaDetalle agendaDetalleCollectionNewAgendaDetalleToAttach : agendaDetalleCollectionNew) {
-                agendaDetalleCollectionNewAgendaDetalleToAttach = em.getReference(agendaDetalleCollectionNewAgendaDetalleToAttach.getClass(), agendaDetalleCollectionNewAgendaDetalleToAttach.getIdDetalle());
-                attachedAgendaDetalleCollectionNew.add(agendaDetalleCollectionNewAgendaDetalleToAttach);
+            procedimientosListNew = attachedProcedimientosListNew;
+            mascota.setProcedimientosList(procedimientosListNew);
+            List<Hospitalizacion> attachedHospitalizacionListNew = new ArrayList<Hospitalizacion>();
+            for (Hospitalizacion hospitalizacionListNewHospitalizacionToAttach : hospitalizacionListNew) {
+                hospitalizacionListNewHospitalizacionToAttach = em.getReference(hospitalizacionListNewHospitalizacionToAttach.getClass(), hospitalizacionListNewHospitalizacionToAttach.getIdHospitalizacion());
+                attachedHospitalizacionListNew.add(hospitalizacionListNewHospitalizacionToAttach);
             }
-            agendaDetalleCollectionNew = attachedAgendaDetalleCollectionNew;
-            mascota.setAgendaDetalleCollection(agendaDetalleCollectionNew);
-            Collection<Anamnesis> attachedAnamnesisCollectionNew = new ArrayList<Anamnesis>();
-            for (Anamnesis anamnesisCollectionNewAnamnesisToAttach : anamnesisCollectionNew) {
-                anamnesisCollectionNewAnamnesisToAttach = em.getReference(anamnesisCollectionNewAnamnesisToAttach.getClass(), anamnesisCollectionNewAnamnesisToAttach.getIdAnamnesis());
-                attachedAnamnesisCollectionNew.add(anamnesisCollectionNewAnamnesisToAttach);
+            hospitalizacionListNew = attachedHospitalizacionListNew;
+            mascota.setHospitalizacionList(hospitalizacionListNew);
+            List<AgendaDetalle> attachedAgendaDetalleListNew = new ArrayList<AgendaDetalle>();
+            for (AgendaDetalle agendaDetalleListNewAgendaDetalleToAttach : agendaDetalleListNew) {
+                agendaDetalleListNewAgendaDetalleToAttach = em.getReference(agendaDetalleListNewAgendaDetalleToAttach.getClass(), agendaDetalleListNewAgendaDetalleToAttach.getIdDetalle());
+                attachedAgendaDetalleListNew.add(agendaDetalleListNewAgendaDetalleToAttach);
             }
-            anamnesisCollectionNew = attachedAnamnesisCollectionNew;
-            mascota.setAnamnesisCollection(anamnesisCollectionNew);
-            Collection<Patologias> attachedPatologiasCollectionNew = new ArrayList<Patologias>();
-            for (Patologias patologiasCollectionNewPatologiasToAttach : patologiasCollectionNew) {
-                patologiasCollectionNewPatologiasToAttach = em.getReference(patologiasCollectionNewPatologiasToAttach.getClass(), patologiasCollectionNewPatologiasToAttach.getIdPatologia());
-                attachedPatologiasCollectionNew.add(patologiasCollectionNewPatologiasToAttach);
+            agendaDetalleListNew = attachedAgendaDetalleListNew;
+            mascota.setAgendaDetalleList(agendaDetalleListNew);
+            List<Anamnesis> attachedAnamnesisListNew = new ArrayList<Anamnesis>();
+            for (Anamnesis anamnesisListNewAnamnesisToAttach : anamnesisListNew) {
+                anamnesisListNewAnamnesisToAttach = em.getReference(anamnesisListNewAnamnesisToAttach.getClass(), anamnesisListNewAnamnesisToAttach.getIdAnamnesis());
+                attachedAnamnesisListNew.add(anamnesisListNewAnamnesisToAttach);
             }
-            patologiasCollectionNew = attachedPatologiasCollectionNew;
-            mascota.setPatologiasCollection(patologiasCollectionNew);
+            anamnesisListNew = attachedAnamnesisListNew;
+            mascota.setAnamnesisList(anamnesisListNew);
+            List<Patologias> attachedPatologiasListNew = new ArrayList<Patologias>();
+            for (Patologias patologiasListNewPatologiasToAttach : patologiasListNew) {
+                patologiasListNewPatologiasToAttach = em.getReference(patologiasListNewPatologiasToAttach.getClass(), patologiasListNewPatologiasToAttach.getIdPatologia());
+                attachedPatologiasListNew.add(patologiasListNewPatologiasToAttach);
+            }
+            patologiasListNew = attachedPatologiasListNew;
+            mascota.setPatologiasList(patologiasListNew);
             mascota = em.merge(mascota);
+            if (caracterOld != null && !caracterOld.equals(caracterNew)) {
+                caracterOld.getMascotaList().remove(mascota);
+                caracterOld = em.merge(caracterOld);
+            }
+            if (caracterNew != null && !caracterNew.equals(caracterOld)) {
+                caracterNew.getMascotaList().add(mascota);
+                caracterNew = em.merge(caracterNew);
+            }
             if (habitadOld != null && !habitadOld.equals(habitadNew)) {
-                habitadOld.getMascotaCollection().remove(mascota);
+                habitadOld.getMascotaList().remove(mascota);
                 habitadOld = em.merge(habitadOld);
             }
             if (habitadNew != null && !habitadNew.equals(habitadOld)) {
-                habitadNew.getMascotaCollection().add(mascota);
+                habitadNew.getMascotaList().add(mascota);
                 habitadNew = em.merge(habitadNew);
             }
             if (madreOld != null && !madreOld.equals(madreNew)) {
-                madreOld.getMascotaCollection().remove(mascota);
+                madreOld.getMascotaList().remove(mascota);
                 madreOld = em.merge(madreOld);
             }
             if (madreNew != null && !madreNew.equals(madreOld)) {
-                madreNew.getMascotaCollection().add(mascota);
+                madreNew.getMascotaList().add(mascota);
                 madreNew = em.merge(madreNew);
             }
             if (padreOld != null && !padreOld.equals(padreNew)) {
-                padreOld.getMascotaCollection().remove(mascota);
+                padreOld.getMascotaList().remove(mascota);
                 padreOld = em.merge(padreOld);
             }
             if (padreNew != null && !padreNew.equals(padreOld)) {
-                padreNew.getMascotaCollection().add(mascota);
+                padreNew.getMascotaList().add(mascota);
                 padreNew = em.merge(padreNew);
             }
             if (propietarioOld != null && !propietarioOld.equals(propietarioNew)) {
-                propietarioOld.getMascotaCollection().remove(mascota);
+                propietarioOld.getMascotaList().remove(mascota);
                 propietarioOld = em.merge(propietarioOld);
             }
             if (propietarioNew != null && !propietarioNew.equals(propietarioOld)) {
-                propietarioNew.getMascotaCollection().add(mascota);
+                propietarioNew.getMascotaList().add(mascota);
                 propietarioNew = em.merge(propietarioNew);
             }
             if (razaOld != null && !razaOld.equals(razaNew)) {
-                razaOld.getMascotaCollection().remove(mascota);
+                razaOld.getMascotaList().remove(mascota);
                 razaOld = em.merge(razaOld);
             }
             if (razaNew != null && !razaNew.equals(razaOld)) {
-                razaNew.getMascotaCollection().add(mascota);
+                razaNew.getMascotaList().add(mascota);
                 razaNew = em.merge(razaNew);
             }
-            for (Examenes examenesCollectionNewExamenes : examenesCollectionNew) {
-                if (!examenesCollectionOld.contains(examenesCollectionNewExamenes)) {
-                    Mascota oldMascotaOfExamenesCollectionNewExamenes = examenesCollectionNewExamenes.getMascota();
-                    examenesCollectionNewExamenes.setMascota(mascota);
-                    examenesCollectionNewExamenes = em.merge(examenesCollectionNewExamenes);
-                    if (oldMascotaOfExamenesCollectionNewExamenes != null && !oldMascotaOfExamenesCollectionNewExamenes.equals(mascota)) {
-                        oldMascotaOfExamenesCollectionNewExamenes.getExamenesCollection().remove(examenesCollectionNewExamenes);
-                        oldMascotaOfExamenesCollectionNewExamenes = em.merge(oldMascotaOfExamenesCollectionNewExamenes);
+            for (Examenes examenesListNewExamenes : examenesListNew) {
+                if (!examenesListOld.contains(examenesListNewExamenes)) {
+                    Mascota oldMascotaOfExamenesListNewExamenes = examenesListNewExamenes.getMascota();
+                    examenesListNewExamenes.setMascota(mascota);
+                    examenesListNewExamenes = em.merge(examenesListNewExamenes);
+                    if (oldMascotaOfExamenesListNewExamenes != null && !oldMascotaOfExamenesListNewExamenes.equals(mascota)) {
+                        oldMascotaOfExamenesListNewExamenes.getExamenesList().remove(examenesListNewExamenes);
+                        oldMascotaOfExamenesListNewExamenes = em.merge(oldMascotaOfExamenesListNewExamenes);
                     }
                 }
             }
-            for (Historialvacunas historialvacunasCollectionNewHistorialvacunas : historialvacunasCollectionNew) {
-                if (!historialvacunasCollectionOld.contains(historialvacunasCollectionNewHistorialvacunas)) {
-                    Mascota oldMascotaOfHistorialvacunasCollectionNewHistorialvacunas = historialvacunasCollectionNewHistorialvacunas.getMascota();
-                    historialvacunasCollectionNewHistorialvacunas.setMascota(mascota);
-                    historialvacunasCollectionNewHistorialvacunas = em.merge(historialvacunasCollectionNewHistorialvacunas);
-                    if (oldMascotaOfHistorialvacunasCollectionNewHistorialvacunas != null && !oldMascotaOfHistorialvacunasCollectionNewHistorialvacunas.equals(mascota)) {
-                        oldMascotaOfHistorialvacunasCollectionNewHistorialvacunas.getHistorialvacunasCollection().remove(historialvacunasCollectionNewHistorialvacunas);
-                        oldMascotaOfHistorialvacunasCollectionNewHistorialvacunas = em.merge(oldMascotaOfHistorialvacunasCollectionNewHistorialvacunas);
+            for (Historialvacunas historialvacunasListNewHistorialvacunas : historialvacunasListNew) {
+                if (!historialvacunasListOld.contains(historialvacunasListNewHistorialvacunas)) {
+                    Mascota oldMascotaOfHistorialvacunasListNewHistorialvacunas = historialvacunasListNewHistorialvacunas.getMascota();
+                    historialvacunasListNewHistorialvacunas.setMascota(mascota);
+                    historialvacunasListNewHistorialvacunas = em.merge(historialvacunasListNewHistorialvacunas);
+                    if (oldMascotaOfHistorialvacunasListNewHistorialvacunas != null && !oldMascotaOfHistorialvacunasListNewHistorialvacunas.equals(mascota)) {
+                        oldMascotaOfHistorialvacunasListNewHistorialvacunas.getHistorialvacunasList().remove(historialvacunasListNewHistorialvacunas);
+                        oldMascotaOfHistorialvacunasListNewHistorialvacunas = em.merge(oldMascotaOfHistorialvacunasListNewHistorialvacunas);
                     }
                 }
             }
-            for (Contraindicaciones contraindicacionesCollectionNewContraindicaciones : contraindicacionesCollectionNew) {
-                if (!contraindicacionesCollectionOld.contains(contraindicacionesCollectionNewContraindicaciones)) {
-                    Mascota oldMascotaOfContraindicacionesCollectionNewContraindicaciones = contraindicacionesCollectionNewContraindicaciones.getMascota();
-                    contraindicacionesCollectionNewContraindicaciones.setMascota(mascota);
-                    contraindicacionesCollectionNewContraindicaciones = em.merge(contraindicacionesCollectionNewContraindicaciones);
-                    if (oldMascotaOfContraindicacionesCollectionNewContraindicaciones != null && !oldMascotaOfContraindicacionesCollectionNewContraindicaciones.equals(mascota)) {
-                        oldMascotaOfContraindicacionesCollectionNewContraindicaciones.getContraindicacionesCollection().remove(contraindicacionesCollectionNewContraindicaciones);
-                        oldMascotaOfContraindicacionesCollectionNewContraindicaciones = em.merge(oldMascotaOfContraindicacionesCollectionNewContraindicaciones);
+            for (Contraindicaciones contraindicacionesListNewContraindicaciones : contraindicacionesListNew) {
+                if (!contraindicacionesListOld.contains(contraindicacionesListNewContraindicaciones)) {
+                    Mascota oldMascotaOfContraindicacionesListNewContraindicaciones = contraindicacionesListNewContraindicaciones.getMascota();
+                    contraindicacionesListNewContraindicaciones.setMascota(mascota);
+                    contraindicacionesListNewContraindicaciones = em.merge(contraindicacionesListNewContraindicaciones);
+                    if (oldMascotaOfContraindicacionesListNewContraindicaciones != null && !oldMascotaOfContraindicacionesListNewContraindicaciones.equals(mascota)) {
+                        oldMascotaOfContraindicacionesListNewContraindicaciones.getContraindicacionesList().remove(contraindicacionesListNewContraindicaciones);
+                        oldMascotaOfContraindicacionesListNewContraindicaciones = em.merge(oldMascotaOfContraindicacionesListNewContraindicaciones);
                     }
                 }
             }
-            for (Desparacitaciones desparacitacionesCollectionNewDesparacitaciones : desparacitacionesCollectionNew) {
-                if (!desparacitacionesCollectionOld.contains(desparacitacionesCollectionNewDesparacitaciones)) {
-                    Mascota oldMascotaOfDesparacitacionesCollectionNewDesparacitaciones = desparacitacionesCollectionNewDesparacitaciones.getMascota();
-                    desparacitacionesCollectionNewDesparacitaciones.setMascota(mascota);
-                    desparacitacionesCollectionNewDesparacitaciones = em.merge(desparacitacionesCollectionNewDesparacitaciones);
-                    if (oldMascotaOfDesparacitacionesCollectionNewDesparacitaciones != null && !oldMascotaOfDesparacitacionesCollectionNewDesparacitaciones.equals(mascota)) {
-                        oldMascotaOfDesparacitacionesCollectionNewDesparacitaciones.getDesparacitacionesCollection().remove(desparacitacionesCollectionNewDesparacitaciones);
-                        oldMascotaOfDesparacitacionesCollectionNewDesparacitaciones = em.merge(oldMascotaOfDesparacitacionesCollectionNewDesparacitaciones);
+            for (Desparacitaciones desparacitacionesListNewDesparacitaciones : desparacitacionesListNew) {
+                if (!desparacitacionesListOld.contains(desparacitacionesListNewDesparacitaciones)) {
+                    Mascota oldMascotaOfDesparacitacionesListNewDesparacitaciones = desparacitacionesListNewDesparacitaciones.getMascota();
+                    desparacitacionesListNewDesparacitaciones.setMascota(mascota);
+                    desparacitacionesListNewDesparacitaciones = em.merge(desparacitacionesListNewDesparacitaciones);
+                    if (oldMascotaOfDesparacitacionesListNewDesparacitaciones != null && !oldMascotaOfDesparacitacionesListNewDesparacitaciones.equals(mascota)) {
+                        oldMascotaOfDesparacitacionesListNewDesparacitaciones.getDesparacitacionesList().remove(desparacitacionesListNewDesparacitaciones);
+                        oldMascotaOfDesparacitacionesListNewDesparacitaciones = em.merge(oldMascotaOfDesparacitacionesListNewDesparacitaciones);
                     }
                 }
             }
-            for (Alergias alergiasCollectionNewAlergias : alergiasCollectionNew) {
-                if (!alergiasCollectionOld.contains(alergiasCollectionNewAlergias)) {
-                    Mascota oldMascotaOfAlergiasCollectionNewAlergias = alergiasCollectionNewAlergias.getMascota();
-                    alergiasCollectionNewAlergias.setMascota(mascota);
-                    alergiasCollectionNewAlergias = em.merge(alergiasCollectionNewAlergias);
-                    if (oldMascotaOfAlergiasCollectionNewAlergias != null && !oldMascotaOfAlergiasCollectionNewAlergias.equals(mascota)) {
-                        oldMascotaOfAlergiasCollectionNewAlergias.getAlergiasCollection().remove(alergiasCollectionNewAlergias);
-                        oldMascotaOfAlergiasCollectionNewAlergias = em.merge(oldMascotaOfAlergiasCollectionNewAlergias);
+            for (Alergias alergiasListNewAlergias : alergiasListNew) {
+                if (!alergiasListOld.contains(alergiasListNewAlergias)) {
+                    Mascota oldMascotaOfAlergiasListNewAlergias = alergiasListNewAlergias.getMascota();
+                    alergiasListNewAlergias.setMascota(mascota);
+                    alergiasListNewAlergias = em.merge(alergiasListNewAlergias);
+                    if (oldMascotaOfAlergiasListNewAlergias != null && !oldMascotaOfAlergiasListNewAlergias.equals(mascota)) {
+                        oldMascotaOfAlergiasListNewAlergias.getAlergiasList().remove(alergiasListNewAlergias);
+                        oldMascotaOfAlergiasListNewAlergias = em.merge(oldMascotaOfAlergiasListNewAlergias);
                     }
                 }
             }
-            for (Mascota mascotaCollectionOldMascota : mascotaCollectionOld) {
-                if (!mascotaCollectionNew.contains(mascotaCollectionOldMascota)) {
-                    mascotaCollectionOldMascota.setMadre(null);
-                    mascotaCollectionOldMascota = em.merge(mascotaCollectionOldMascota);
+            for (Mascota mascotaListOldMascota : mascotaListOld) {
+                if (!mascotaListNew.contains(mascotaListOldMascota)) {
+                    mascotaListOldMascota.setMadre(null);
+                    mascotaListOldMascota = em.merge(mascotaListOldMascota);
                 }
             }
-            for (Mascota mascotaCollectionNewMascota : mascotaCollectionNew) {
-                if (!mascotaCollectionOld.contains(mascotaCollectionNewMascota)) {
-                    Mascota oldMadreOfMascotaCollectionNewMascota = mascotaCollectionNewMascota.getMadre();
-                    mascotaCollectionNewMascota.setMadre(mascota);
-                    mascotaCollectionNewMascota = em.merge(mascotaCollectionNewMascota);
-                    if (oldMadreOfMascotaCollectionNewMascota != null && !oldMadreOfMascotaCollectionNewMascota.equals(mascota)) {
-                        oldMadreOfMascotaCollectionNewMascota.getMascotaCollection().remove(mascotaCollectionNewMascota);
-                        oldMadreOfMascotaCollectionNewMascota = em.merge(oldMadreOfMascotaCollectionNewMascota);
+            for (Mascota mascotaListNewMascota : mascotaListNew) {
+                if (!mascotaListOld.contains(mascotaListNewMascota)) {
+                    Mascota oldMadreOfMascotaListNewMascota = mascotaListNewMascota.getMadre();
+                    mascotaListNewMascota.setMadre(mascota);
+                    mascotaListNewMascota = em.merge(mascotaListNewMascota);
+                    if (oldMadreOfMascotaListNewMascota != null && !oldMadreOfMascotaListNewMascota.equals(mascota)) {
+                        oldMadreOfMascotaListNewMascota.getMascotaList().remove(mascotaListNewMascota);
+                        oldMadreOfMascotaListNewMascota = em.merge(oldMadreOfMascotaListNewMascota);
                     }
                 }
             }
-            for (Mascota mascotaCollection1OldMascota : mascotaCollection1Old) {
-                if (!mascotaCollection1New.contains(mascotaCollection1OldMascota)) {
-                    mascotaCollection1OldMascota.setPadre(null);
-                    mascotaCollection1OldMascota = em.merge(mascotaCollection1OldMascota);
+            for (Mascota mascotaList1OldMascota : mascotaList1Old) {
+                if (!mascotaList1New.contains(mascotaList1OldMascota)) {
+                    mascotaList1OldMascota.setPadre(null);
+                    mascotaList1OldMascota = em.merge(mascotaList1OldMascota);
                 }
             }
-            for (Mascota mascotaCollection1NewMascota : mascotaCollection1New) {
-                if (!mascotaCollection1Old.contains(mascotaCollection1NewMascota)) {
-                    Mascota oldPadreOfMascotaCollection1NewMascota = mascotaCollection1NewMascota.getPadre();
-                    mascotaCollection1NewMascota.setPadre(mascota);
-                    mascotaCollection1NewMascota = em.merge(mascotaCollection1NewMascota);
-                    if (oldPadreOfMascotaCollection1NewMascota != null && !oldPadreOfMascotaCollection1NewMascota.equals(mascota)) {
-                        oldPadreOfMascotaCollection1NewMascota.getMascotaCollection1().remove(mascotaCollection1NewMascota);
-                        oldPadreOfMascotaCollection1NewMascota = em.merge(oldPadreOfMascotaCollection1NewMascota);
+            for (Mascota mascotaList1NewMascota : mascotaList1New) {
+                if (!mascotaList1Old.contains(mascotaList1NewMascota)) {
+                    Mascota oldPadreOfMascotaList1NewMascota = mascotaList1NewMascota.getPadre();
+                    mascotaList1NewMascota.setPadre(mascota);
+                    mascotaList1NewMascota = em.merge(mascotaList1NewMascota);
+                    if (oldPadreOfMascotaList1NewMascota != null && !oldPadreOfMascotaList1NewMascota.equals(mascota)) {
+                        oldPadreOfMascotaList1NewMascota.getMascotaList1().remove(mascotaList1NewMascota);
+                        oldPadreOfMascotaList1NewMascota = em.merge(oldPadreOfMascotaList1NewMascota);
                     }
                 }
             }
-            for (Farmacos farmacosCollectionNewFarmacos : farmacosCollectionNew) {
-                if (!farmacosCollectionOld.contains(farmacosCollectionNewFarmacos)) {
-                    Mascota oldMascotaOfFarmacosCollectionNewFarmacos = farmacosCollectionNewFarmacos.getMascota();
-                    farmacosCollectionNewFarmacos.setMascota(mascota);
-                    farmacosCollectionNewFarmacos = em.merge(farmacosCollectionNewFarmacos);
-                    if (oldMascotaOfFarmacosCollectionNewFarmacos != null && !oldMascotaOfFarmacosCollectionNewFarmacos.equals(mascota)) {
-                        oldMascotaOfFarmacosCollectionNewFarmacos.getFarmacosCollection().remove(farmacosCollectionNewFarmacos);
-                        oldMascotaOfFarmacosCollectionNewFarmacos = em.merge(oldMascotaOfFarmacosCollectionNewFarmacos);
+            for (Farmacos farmacosListNewFarmacos : farmacosListNew) {
+                if (!farmacosListOld.contains(farmacosListNewFarmacos)) {
+                    Mascota oldMascotaOfFarmacosListNewFarmacos = farmacosListNewFarmacos.getMascota();
+                    farmacosListNewFarmacos.setMascota(mascota);
+                    farmacosListNewFarmacos = em.merge(farmacosListNewFarmacos);
+                    if (oldMascotaOfFarmacosListNewFarmacos != null && !oldMascotaOfFarmacosListNewFarmacos.equals(mascota)) {
+                        oldMascotaOfFarmacosListNewFarmacos.getFarmacosList().remove(farmacosListNewFarmacos);
+                        oldMascotaOfFarmacosListNewFarmacos = em.merge(oldMascotaOfFarmacosListNewFarmacos);
                     }
                 }
             }
-            for (Hospitalizacion hospitalizacionCollectionNewHospitalizacion : hospitalizacionCollectionNew) {
-                if (!hospitalizacionCollectionOld.contains(hospitalizacionCollectionNewHospitalizacion)) {
-                    Mascota oldMascotaOfHospitalizacionCollectionNewHospitalizacion = hospitalizacionCollectionNewHospitalizacion.getMascota();
-                    hospitalizacionCollectionNewHospitalizacion.setMascota(mascota);
-                    hospitalizacionCollectionNewHospitalizacion = em.merge(hospitalizacionCollectionNewHospitalizacion);
-                    if (oldMascotaOfHospitalizacionCollectionNewHospitalizacion != null && !oldMascotaOfHospitalizacionCollectionNewHospitalizacion.equals(mascota)) {
-                        oldMascotaOfHospitalizacionCollectionNewHospitalizacion.getHospitalizacionCollection().remove(hospitalizacionCollectionNewHospitalizacion);
-                        oldMascotaOfHospitalizacionCollectionNewHospitalizacion = em.merge(oldMascotaOfHospitalizacionCollectionNewHospitalizacion);
+            for (Procedimientos procedimientosListNewProcedimientos : procedimientosListNew) {
+                if (!procedimientosListOld.contains(procedimientosListNewProcedimientos)) {
+                    Mascota oldMascotaOfProcedimientosListNewProcedimientos = procedimientosListNewProcedimientos.getMascota();
+                    procedimientosListNewProcedimientos.setMascota(mascota);
+                    procedimientosListNewProcedimientos = em.merge(procedimientosListNewProcedimientos);
+                    if (oldMascotaOfProcedimientosListNewProcedimientos != null && !oldMascotaOfProcedimientosListNewProcedimientos.equals(mascota)) {
+                        oldMascotaOfProcedimientosListNewProcedimientos.getProcedimientosList().remove(procedimientosListNewProcedimientos);
+                        oldMascotaOfProcedimientosListNewProcedimientos = em.merge(oldMascotaOfProcedimientosListNewProcedimientos);
                     }
                 }
             }
-            for (AgendaDetalle agendaDetalleCollectionNewAgendaDetalle : agendaDetalleCollectionNew) {
-                if (!agendaDetalleCollectionOld.contains(agendaDetalleCollectionNewAgendaDetalle)) {
-                    Mascota oldMascotaOfAgendaDetalleCollectionNewAgendaDetalle = agendaDetalleCollectionNewAgendaDetalle.getMascota();
-                    agendaDetalleCollectionNewAgendaDetalle.setMascota(mascota);
-                    agendaDetalleCollectionNewAgendaDetalle = em.merge(agendaDetalleCollectionNewAgendaDetalle);
-                    if (oldMascotaOfAgendaDetalleCollectionNewAgendaDetalle != null && !oldMascotaOfAgendaDetalleCollectionNewAgendaDetalle.equals(mascota)) {
-                        oldMascotaOfAgendaDetalleCollectionNewAgendaDetalle.getAgendaDetalleCollection().remove(agendaDetalleCollectionNewAgendaDetalle);
-                        oldMascotaOfAgendaDetalleCollectionNewAgendaDetalle = em.merge(oldMascotaOfAgendaDetalleCollectionNewAgendaDetalle);
+            for (Hospitalizacion hospitalizacionListNewHospitalizacion : hospitalizacionListNew) {
+                if (!hospitalizacionListOld.contains(hospitalizacionListNewHospitalizacion)) {
+                    Mascota oldMascotaOfHospitalizacionListNewHospitalizacion = hospitalizacionListNewHospitalizacion.getMascota();
+                    hospitalizacionListNewHospitalizacion.setMascota(mascota);
+                    hospitalizacionListNewHospitalizacion = em.merge(hospitalizacionListNewHospitalizacion);
+                    if (oldMascotaOfHospitalizacionListNewHospitalizacion != null && !oldMascotaOfHospitalizacionListNewHospitalizacion.equals(mascota)) {
+                        oldMascotaOfHospitalizacionListNewHospitalizacion.getHospitalizacionList().remove(hospitalizacionListNewHospitalizacion);
+                        oldMascotaOfHospitalizacionListNewHospitalizacion = em.merge(oldMascotaOfHospitalizacionListNewHospitalizacion);
                     }
                 }
             }
-            for (Anamnesis anamnesisCollectionNewAnamnesis : anamnesisCollectionNew) {
-                if (!anamnesisCollectionOld.contains(anamnesisCollectionNewAnamnesis)) {
-                    Mascota oldMascotaOfAnamnesisCollectionNewAnamnesis = anamnesisCollectionNewAnamnesis.getMascota();
-                    anamnesisCollectionNewAnamnesis.setMascota(mascota);
-                    anamnesisCollectionNewAnamnesis = em.merge(anamnesisCollectionNewAnamnesis);
-                    if (oldMascotaOfAnamnesisCollectionNewAnamnesis != null && !oldMascotaOfAnamnesisCollectionNewAnamnesis.equals(mascota)) {
-                        oldMascotaOfAnamnesisCollectionNewAnamnesis.getAnamnesisCollection().remove(anamnesisCollectionNewAnamnesis);
-                        oldMascotaOfAnamnesisCollectionNewAnamnesis = em.merge(oldMascotaOfAnamnesisCollectionNewAnamnesis);
+            for (AgendaDetalle agendaDetalleListNewAgendaDetalle : agendaDetalleListNew) {
+                if (!agendaDetalleListOld.contains(agendaDetalleListNewAgendaDetalle)) {
+                    Mascota oldMascotaOfAgendaDetalleListNewAgendaDetalle = agendaDetalleListNewAgendaDetalle.getMascota();
+                    agendaDetalleListNewAgendaDetalle.setMascota(mascota);
+                    agendaDetalleListNewAgendaDetalle = em.merge(agendaDetalleListNewAgendaDetalle);
+                    if (oldMascotaOfAgendaDetalleListNewAgendaDetalle != null && !oldMascotaOfAgendaDetalleListNewAgendaDetalle.equals(mascota)) {
+                        oldMascotaOfAgendaDetalleListNewAgendaDetalle.getAgendaDetalleList().remove(agendaDetalleListNewAgendaDetalle);
+                        oldMascotaOfAgendaDetalleListNewAgendaDetalle = em.merge(oldMascotaOfAgendaDetalleListNewAgendaDetalle);
                     }
                 }
             }
-            for (Patologias patologiasCollectionNewPatologias : patologiasCollectionNew) {
-                if (!patologiasCollectionOld.contains(patologiasCollectionNewPatologias)) {
-                    Mascota oldMascotaOfPatologiasCollectionNewPatologias = patologiasCollectionNewPatologias.getMascota();
-                    patologiasCollectionNewPatologias.setMascota(mascota);
-                    patologiasCollectionNewPatologias = em.merge(patologiasCollectionNewPatologias);
-                    if (oldMascotaOfPatologiasCollectionNewPatologias != null && !oldMascotaOfPatologiasCollectionNewPatologias.equals(mascota)) {
-                        oldMascotaOfPatologiasCollectionNewPatologias.getPatologiasCollection().remove(patologiasCollectionNewPatologias);
-                        oldMascotaOfPatologiasCollectionNewPatologias = em.merge(oldMascotaOfPatologiasCollectionNewPatologias);
+            for (Anamnesis anamnesisListNewAnamnesis : anamnesisListNew) {
+                if (!anamnesisListOld.contains(anamnesisListNewAnamnesis)) {
+                    Mascota oldMascotaOfAnamnesisListNewAnamnesis = anamnesisListNewAnamnesis.getMascota();
+                    anamnesisListNewAnamnesis.setMascota(mascota);
+                    anamnesisListNewAnamnesis = em.merge(anamnesisListNewAnamnesis);
+                    if (oldMascotaOfAnamnesisListNewAnamnesis != null && !oldMascotaOfAnamnesisListNewAnamnesis.equals(mascota)) {
+                        oldMascotaOfAnamnesisListNewAnamnesis.getAnamnesisList().remove(anamnesisListNewAnamnesis);
+                        oldMascotaOfAnamnesisListNewAnamnesis = em.merge(oldMascotaOfAnamnesisListNewAnamnesis);
+                    }
+                }
+            }
+            for (Patologias patologiasListNewPatologias : patologiasListNew) {
+                if (!patologiasListOld.contains(patologiasListNewPatologias)) {
+                    Mascota oldMascotaOfPatologiasListNewPatologias = patologiasListNewPatologias.getMascota();
+                    patologiasListNewPatologias.setMascota(mascota);
+                    patologiasListNewPatologias = em.merge(patologiasListNewPatologias);
+                    if (oldMascotaOfPatologiasListNewPatologias != null && !oldMascotaOfPatologiasListNewPatologias.equals(mascota)) {
+                        oldMascotaOfPatologiasListNewPatologias.getPatologiasList().remove(patologiasListNewPatologias);
+                        oldMascotaOfPatologiasListNewPatologias = em.merge(oldMascotaOfPatologiasListNewPatologias);
                     }
                 }
             }
@@ -771,113 +841,125 @@ public class MascotaJpaController implements Serializable {
                 throw new NonexistentEntityException("The mascota with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Examenes> examenesCollectionOrphanCheck = mascota.getExamenesCollection();
-            for (Examenes examenesCollectionOrphanCheckExamenes : examenesCollectionOrphanCheck) {
+            List<Examenes> examenesListOrphanCheck = mascota.getExamenesList();
+            for (Examenes examenesListOrphanCheckExamenes : examenesListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Examenes " + examenesCollectionOrphanCheckExamenes + " in its examenesCollection field has a non-nullable mascota field.");
+                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Examenes " + examenesListOrphanCheckExamenes + " in its examenesList field has a non-nullable mascota field.");
             }
-            Collection<Historialvacunas> historialvacunasCollectionOrphanCheck = mascota.getHistorialvacunasCollection();
-            for (Historialvacunas historialvacunasCollectionOrphanCheckHistorialvacunas : historialvacunasCollectionOrphanCheck) {
+            List<Historialvacunas> historialvacunasListOrphanCheck = mascota.getHistorialvacunasList();
+            for (Historialvacunas historialvacunasListOrphanCheckHistorialvacunas : historialvacunasListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Historialvacunas " + historialvacunasCollectionOrphanCheckHistorialvacunas + " in its historialvacunasCollection field has a non-nullable mascota field.");
+                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Historialvacunas " + historialvacunasListOrphanCheckHistorialvacunas + " in its historialvacunasList field has a non-nullable mascota field.");
             }
-            Collection<Contraindicaciones> contraindicacionesCollectionOrphanCheck = mascota.getContraindicacionesCollection();
-            for (Contraindicaciones contraindicacionesCollectionOrphanCheckContraindicaciones : contraindicacionesCollectionOrphanCheck) {
+            List<Contraindicaciones> contraindicacionesListOrphanCheck = mascota.getContraindicacionesList();
+            for (Contraindicaciones contraindicacionesListOrphanCheckContraindicaciones : contraindicacionesListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Contraindicaciones " + contraindicacionesCollectionOrphanCheckContraindicaciones + " in its contraindicacionesCollection field has a non-nullable mascota field.");
+                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Contraindicaciones " + contraindicacionesListOrphanCheckContraindicaciones + " in its contraindicacionesList field has a non-nullable mascota field.");
             }
-            Collection<Desparacitaciones> desparacitacionesCollectionOrphanCheck = mascota.getDesparacitacionesCollection();
-            for (Desparacitaciones desparacitacionesCollectionOrphanCheckDesparacitaciones : desparacitacionesCollectionOrphanCheck) {
+            List<Desparacitaciones> desparacitacionesListOrphanCheck = mascota.getDesparacitacionesList();
+            for (Desparacitaciones desparacitacionesListOrphanCheckDesparacitaciones : desparacitacionesListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Desparacitaciones " + desparacitacionesCollectionOrphanCheckDesparacitaciones + " in its desparacitacionesCollection field has a non-nullable mascota field.");
+                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Desparacitaciones " + desparacitacionesListOrphanCheckDesparacitaciones + " in its desparacitacionesList field has a non-nullable mascota field.");
             }
-            Collection<Alergias> alergiasCollectionOrphanCheck = mascota.getAlergiasCollection();
-            for (Alergias alergiasCollectionOrphanCheckAlergias : alergiasCollectionOrphanCheck) {
+            List<Alergias> alergiasListOrphanCheck = mascota.getAlergiasList();
+            for (Alergias alergiasListOrphanCheckAlergias : alergiasListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Alergias " + alergiasCollectionOrphanCheckAlergias + " in its alergiasCollection field has a non-nullable mascota field.");
+                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Alergias " + alergiasListOrphanCheckAlergias + " in its alergiasList field has a non-nullable mascota field.");
             }
-            Collection<Farmacos> farmacosCollectionOrphanCheck = mascota.getFarmacosCollection();
-            for (Farmacos farmacosCollectionOrphanCheckFarmacos : farmacosCollectionOrphanCheck) {
+            List<Farmacos> farmacosListOrphanCheck = mascota.getFarmacosList();
+            for (Farmacos farmacosListOrphanCheckFarmacos : farmacosListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Farmacos " + farmacosCollectionOrphanCheckFarmacos + " in its farmacosCollection field has a non-nullable mascota field.");
+                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Farmacos " + farmacosListOrphanCheckFarmacos + " in its farmacosList field has a non-nullable mascota field.");
             }
-            Collection<Hospitalizacion> hospitalizacionCollectionOrphanCheck = mascota.getHospitalizacionCollection();
-            for (Hospitalizacion hospitalizacionCollectionOrphanCheckHospitalizacion : hospitalizacionCollectionOrphanCheck) {
+            List<Procedimientos> procedimientosListOrphanCheck = mascota.getProcedimientosList();
+            for (Procedimientos procedimientosListOrphanCheckProcedimientos : procedimientosListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Hospitalizacion " + hospitalizacionCollectionOrphanCheckHospitalizacion + " in its hospitalizacionCollection field has a non-nullable mascota field.");
+                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Procedimientos " + procedimientosListOrphanCheckProcedimientos + " in its procedimientosList field has a non-nullable mascota field.");
             }
-            Collection<AgendaDetalle> agendaDetalleCollectionOrphanCheck = mascota.getAgendaDetalleCollection();
-            for (AgendaDetalle agendaDetalleCollectionOrphanCheckAgendaDetalle : agendaDetalleCollectionOrphanCheck) {
+            List<Hospitalizacion> hospitalizacionListOrphanCheck = mascota.getHospitalizacionList();
+            for (Hospitalizacion hospitalizacionListOrphanCheckHospitalizacion : hospitalizacionListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the AgendaDetalle " + agendaDetalleCollectionOrphanCheckAgendaDetalle + " in its agendaDetalleCollection field has a non-nullable mascota field.");
+                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Hospitalizacion " + hospitalizacionListOrphanCheckHospitalizacion + " in its hospitalizacionList field has a non-nullable mascota field.");
             }
-            Collection<Anamnesis> anamnesisCollectionOrphanCheck = mascota.getAnamnesisCollection();
-            for (Anamnesis anamnesisCollectionOrphanCheckAnamnesis : anamnesisCollectionOrphanCheck) {
+            List<AgendaDetalle> agendaDetalleListOrphanCheck = mascota.getAgendaDetalleList();
+            for (AgendaDetalle agendaDetalleListOrphanCheckAgendaDetalle : agendaDetalleListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Anamnesis " + anamnesisCollectionOrphanCheckAnamnesis + " in its anamnesisCollection field has a non-nullable mascota field.");
+                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the AgendaDetalle " + agendaDetalleListOrphanCheckAgendaDetalle + " in its agendaDetalleList field has a non-nullable mascota field.");
             }
-            Collection<Patologias> patologiasCollectionOrphanCheck = mascota.getPatologiasCollection();
-            for (Patologias patologiasCollectionOrphanCheckPatologias : patologiasCollectionOrphanCheck) {
+            List<Anamnesis> anamnesisListOrphanCheck = mascota.getAnamnesisList();
+            for (Anamnesis anamnesisListOrphanCheckAnamnesis : anamnesisListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Patologias " + patologiasCollectionOrphanCheckPatologias + " in its patologiasCollection field has a non-nullable mascota field.");
+                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Anamnesis " + anamnesisListOrphanCheckAnamnesis + " in its anamnesisList field has a non-nullable mascota field.");
+            }
+            List<Patologias> patologiasListOrphanCheck = mascota.getPatologiasList();
+            for (Patologias patologiasListOrphanCheckPatologias : patologiasListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Mascota (" + mascota + ") cannot be destroyed since the Patologias " + patologiasListOrphanCheckPatologias + " in its patologiasList field has a non-nullable mascota field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
+            Caracter caracter = mascota.getCaracter();
+            if (caracter != null) {
+                caracter.getMascotaList().remove(mascota);
+                caracter = em.merge(caracter);
+            }
             Habitad habitad = mascota.getHabitad();
             if (habitad != null) {
-                habitad.getMascotaCollection().remove(mascota);
+                habitad.getMascotaList().remove(mascota);
                 habitad = em.merge(habitad);
             }
             Mascota madre = mascota.getMadre();
             if (madre != null) {
-                madre.getMascotaCollection().remove(mascota);
+                madre.getMascotaList().remove(mascota);
                 madre = em.merge(madre);
             }
             Mascota padre = mascota.getPadre();
             if (padre != null) {
-                padre.getMascotaCollection().remove(mascota);
+                padre.getMascotaList().remove(mascota);
                 padre = em.merge(padre);
             }
             Propietario propietario = mascota.getPropietario();
             if (propietario != null) {
-                propietario.getMascotaCollection().remove(mascota);
+                propietario.getMascotaList().remove(mascota);
                 propietario = em.merge(propietario);
             }
             Raza raza = mascota.getRaza();
             if (raza != null) {
-                raza.getMascotaCollection().remove(mascota);
+                raza.getMascotaList().remove(mascota);
                 raza = em.merge(raza);
             }
-            Collection<Mascota> mascotaCollection = mascota.getMascotaCollection();
-            for (Mascota mascotaCollectionMascota : mascotaCollection) {
-                mascotaCollectionMascota.setMadre(null);
-                mascotaCollectionMascota = em.merge(mascotaCollectionMascota);
+            List<Mascota> mascotaList = mascota.getMascotaList();
+            for (Mascota mascotaListMascota : mascotaList) {
+                mascotaListMascota.setMadre(null);
+                mascotaListMascota = em.merge(mascotaListMascota);
             }
-            Collection<Mascota> mascotaCollection1 = mascota.getMascotaCollection1();
-            for (Mascota mascotaCollection1Mascota : mascotaCollection1) {
-                mascotaCollection1Mascota.setPadre(null);
-                mascotaCollection1Mascota = em.merge(mascotaCollection1Mascota);
+            List<Mascota> mascotaList1 = mascota.getMascotaList1();
+            for (Mascota mascotaList1Mascota : mascotaList1) {
+                mascotaList1Mascota.setPadre(null);
+                mascotaList1Mascota = em.merge(mascotaList1Mascota);
             }
             em.remove(mascota);
             em.getTransaction().commit();

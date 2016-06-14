@@ -6,7 +6,7 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
 @Table(name = "Tipo_Contraindicacion", catalog = "syncpet", schema = "dbo")
@@ -32,7 +32,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TipoContraindicacion.findByNombreContraindicacion", query = "SELECT t FROM TipoContraindicacion t WHERE t.nombreContraindicacion = :nombreContraindicacion"),
     @NamedQuery(name = "TipoContraindicacion.findByTipoContraindicacion", query = "SELECT t FROM TipoContraindicacion t WHERE t.tipoContraindicacion = :tipoContraindicacion")})
 public class TipoContraindicacion implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -45,7 +44,7 @@ public class TipoContraindicacion implements Serializable {
     @Column(name = "tipo_contraindicacion", nullable = false, length = 70)
     private String tipoContraindicacion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoContraindicicacion")
-    private Collection<Contraindicaciones> contraindicacionesCollection;
+    private List<Contraindicaciones> contraindicacionesList;
 
     public TipoContraindicacion() {
     }
@@ -85,12 +84,12 @@ public class TipoContraindicacion implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Contraindicaciones> getContraindicacionesCollection() {
-        return contraindicacionesCollection;
+    public List<Contraindicaciones> getContraindicacionesList() {
+        return contraindicacionesList;
     }
 
-    public void setContraindicacionesCollection(Collection<Contraindicaciones> contraindicacionesCollection) {
-        this.contraindicacionesCollection = contraindicacionesCollection;
+    public void setContraindicacionesList(List<Contraindicaciones> contraindicacionesList) {
+        this.contraindicacionesList = contraindicacionesList;
     }
 
     @Override

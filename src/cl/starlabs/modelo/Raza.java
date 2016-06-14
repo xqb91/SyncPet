@@ -6,7 +6,7 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,30 +23,29 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Raza", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Raza.findAll", query = "SELECT r FROM Raza r"),
     @NamedQuery(name = "Raza.findByIdRaza", query = "SELECT r FROM Raza r WHERE r.idRaza = :idRaza"),
     @NamedQuery(name = "Raza.findByNombre", query = "SELECT r FROM Raza r WHERE r.nombre = :nombre")})
 public class Raza implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_raza", nullable = false)
     private Integer idRaza;
     @Basic(optional = false)
-    @Column(name = "nombre", nullable = false, length = 45)
+    @Column(nullable = false, length = 45)
     private String nombre;
     @JoinColumn(name = "especie", referencedColumnName = "id_especie", nullable = false)
     @ManyToOne(optional = false)
     private Especie especie;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "raza")
-    private Collection<Mascota> mascotaCollection;
+    private List<Mascota> mascotaList;
 
     public Raza() {
     }
@@ -85,12 +84,12 @@ public class Raza implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Mascota> getMascotaCollection() {
-        return mascotaCollection;
+    public List<Mascota> getMascotaList() {
+        return mascotaList;
     }
 
-    public void setMascotaCollection(Collection<Mascota> mascotaCollection) {
-        this.mascotaCollection = mascotaCollection;
+    public void setMascotaList(List<Mascota> mascotaList) {
+        this.mascotaList = mascotaList;
     }
 
     @Override

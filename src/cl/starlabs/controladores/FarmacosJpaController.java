@@ -23,7 +23,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class FarmacosJpaController implements Serializable {
 
@@ -63,19 +63,19 @@ public class FarmacosJpaController implements Serializable {
             }
             em.persist(farmacos);
             if (hospitalizacion != null) {
-                hospitalizacion.getFarmacosCollection().add(farmacos);
+                hospitalizacion.getFarmacosList().add(farmacos);
                 hospitalizacion = em.merge(hospitalizacion);
             }
             if (mascota != null) {
-                mascota.getFarmacosCollection().add(farmacos);
+                mascota.getFarmacosList().add(farmacos);
                 mascota = em.merge(mascota);
             }
             if (farmaco != null) {
-                farmaco.getFarmacosCollection().add(farmacos);
+                farmaco.getFarmacosList().add(farmacos);
                 farmaco = em.merge(farmaco);
             }
             if (veterinario != null) {
-                veterinario.getFarmacosCollection().add(farmacos);
+                veterinario.getFarmacosList().add(farmacos);
                 veterinario = em.merge(veterinario);
             }
             em.getTransaction().commit();
@@ -123,35 +123,35 @@ public class FarmacosJpaController implements Serializable {
             }
             farmacos = em.merge(farmacos);
             if (hospitalizacionOld != null && !hospitalizacionOld.equals(hospitalizacionNew)) {
-                hospitalizacionOld.getFarmacosCollection().remove(farmacos);
+                hospitalizacionOld.getFarmacosList().remove(farmacos);
                 hospitalizacionOld = em.merge(hospitalizacionOld);
             }
             if (hospitalizacionNew != null && !hospitalizacionNew.equals(hospitalizacionOld)) {
-                hospitalizacionNew.getFarmacosCollection().add(farmacos);
+                hospitalizacionNew.getFarmacosList().add(farmacos);
                 hospitalizacionNew = em.merge(hospitalizacionNew);
             }
             if (mascotaOld != null && !mascotaOld.equals(mascotaNew)) {
-                mascotaOld.getFarmacosCollection().remove(farmacos);
+                mascotaOld.getFarmacosList().remove(farmacos);
                 mascotaOld = em.merge(mascotaOld);
             }
             if (mascotaNew != null && !mascotaNew.equals(mascotaOld)) {
-                mascotaNew.getFarmacosCollection().add(farmacos);
+                mascotaNew.getFarmacosList().add(farmacos);
                 mascotaNew = em.merge(mascotaNew);
             }
             if (farmacoOld != null && !farmacoOld.equals(farmacoNew)) {
-                farmacoOld.getFarmacosCollection().remove(farmacos);
+                farmacoOld.getFarmacosList().remove(farmacos);
                 farmacoOld = em.merge(farmacoOld);
             }
             if (farmacoNew != null && !farmacoNew.equals(farmacoOld)) {
-                farmacoNew.getFarmacosCollection().add(farmacos);
+                farmacoNew.getFarmacosList().add(farmacos);
                 farmacoNew = em.merge(farmacoNew);
             }
             if (veterinarioOld != null && !veterinarioOld.equals(veterinarioNew)) {
-                veterinarioOld.getFarmacosCollection().remove(farmacos);
+                veterinarioOld.getFarmacosList().remove(farmacos);
                 veterinarioOld = em.merge(veterinarioOld);
             }
             if (veterinarioNew != null && !veterinarioNew.equals(veterinarioOld)) {
-                veterinarioNew.getFarmacosCollection().add(farmacos);
+                veterinarioNew.getFarmacosList().add(farmacos);
                 veterinarioNew = em.merge(veterinarioNew);
             }
             em.getTransaction().commit();
@@ -185,22 +185,22 @@ public class FarmacosJpaController implements Serializable {
             }
             Hospitalizacion hospitalizacion = farmacos.getHospitalizacion();
             if (hospitalizacion != null) {
-                hospitalizacion.getFarmacosCollection().remove(farmacos);
+                hospitalizacion.getFarmacosList().remove(farmacos);
                 hospitalizacion = em.merge(hospitalizacion);
             }
             Mascota mascota = farmacos.getMascota();
             if (mascota != null) {
-                mascota.getFarmacosCollection().remove(farmacos);
+                mascota.getFarmacosList().remove(farmacos);
                 mascota = em.merge(mascota);
             }
             TipoFarmaco farmaco = farmacos.getFarmaco();
             if (farmaco != null) {
-                farmaco.getFarmacosCollection().remove(farmacos);
+                farmaco.getFarmacosList().remove(farmacos);
                 farmaco = em.merge(farmaco);
             }
             Veterinario veterinario = farmacos.getVeterinario();
             if (veterinario != null) {
-                veterinario.getFarmacosCollection().remove(farmacos);
+                veterinario.getFarmacosList().remove(farmacos);
                 veterinario = em.merge(veterinario);
             }
             em.remove(farmacos);

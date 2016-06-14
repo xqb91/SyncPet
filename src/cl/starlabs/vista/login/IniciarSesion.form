@@ -131,13 +131,13 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="txtNombreUsuario" max="32767" attributes="0"/>
-                      <Component id="slcSucursal" pref="208" max="32767" attributes="0"/>
-                      <Component id="txtPassword" max="32767" attributes="0"/>
+                      <Component id="slcSucursal" min="-2" pref="208" max="-2" attributes="0"/>
+                      <Component id="txtNombreUsuario" pref="236" max="32767" attributes="0"/>
+                      <Component id="txtPassword" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="btnIniciarSesion" max="32767" attributes="0"/>
+                      <Component id="btnIniciarSesion" pref="120" max="32767" attributes="0"/>
                       <Component id="btnSalir" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -150,9 +150,9 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblNombreUsuario" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtNombreUsuario" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lblNombreUsuario" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtNombreUsuario" min="-2" pref="20" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -176,7 +176,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="lblNombreUsuario">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Nombre de Usuario"/>
+            <Property name="text" type="java.lang.String" value="Rut Usuario"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblPassword">
@@ -190,6 +190,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtNombreUsuario">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtNombreUsuarioFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="slcSucursal">
           <Properties>
@@ -198,17 +201,22 @@
                 <StringItem index="0" value="Seleccione..."/>
               </StringArray>
             </Property>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btnIniciarSesion">
           <Properties>
             <Property name="text" type="java.lang.String" value="Iniciar Sesi&#xf3;n"/>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btnSalir">
           <Properties>
             <Property name="text" type="java.lang.String" value="Salir"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSalirActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JPasswordField" name="txtPassword">
         </Component>

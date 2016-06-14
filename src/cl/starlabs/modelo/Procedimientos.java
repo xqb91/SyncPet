@@ -23,36 +23,34 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Procedimientos", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Procedimientos.findAll", query = "SELECT p FROM Procedimientos p"),
     @NamedQuery(name = "Procedimientos.findByIdProcedimiento", query = "SELECT p FROM Procedimientos p WHERE p.idProcedimiento = :idProcedimiento"),
-    @NamedQuery(name = "Procedimientos.findByFecha", query = "SELECT p FROM Procedimientos p WHERE p.fecha = :fecha"),
-    @NamedQuery(name = "Procedimientos.findByMascota", query = "SELECT p FROM Procedimientos p WHERE p.mascota = :mascota")})
+    @NamedQuery(name = "Procedimientos.findByFecha", query = "SELECT p FROM Procedimientos p WHERE p.fecha = :fecha")})
 public class Procedimientos implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_procedimiento", nullable = false)
     private Integer idProcedimiento;
     @Basic(optional = false)
-    @Column(name = "fecha", nullable = false)
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
     @Lob
-    @Column(name = "observaciones", length = 2147483647)
+    @Column(length = 2147483647)
     private String observaciones;
-    @Basic(optional = false)
-    @Column(name = "mascota", nullable = false)
-    private int mascota;
     @JoinColumn(name = "hospitalizacion", referencedColumnName = "id_hospitalizacion", nullable = false)
     @ManyToOne(optional = false)
     private Hospitalizacion hospitalizacion;
+    @JoinColumn(name = "mascota", referencedColumnName = "id_mascota", nullable = false)
+    @ManyToOne(optional = false)
+    private Mascota mascota;
     @JoinColumn(name = "tipo_procedimiento", referencedColumnName = "id_tipo_procedimiento", nullable = false)
     @ManyToOne(optional = false)
     private TipoProcedimiento tipoProcedimiento;
@@ -67,10 +65,9 @@ public class Procedimientos implements Serializable {
         this.idProcedimiento = idProcedimiento;
     }
 
-    public Procedimientos(Integer idProcedimiento, Date fecha, int mascota) {
+    public Procedimientos(Integer idProcedimiento, Date fecha) {
         this.idProcedimiento = idProcedimiento;
         this.fecha = fecha;
-        this.mascota = mascota;
     }
 
     public Integer getIdProcedimiento() {
@@ -97,20 +94,20 @@ public class Procedimientos implements Serializable {
         this.observaciones = observaciones;
     }
 
-    public int getMascota() {
-        return mascota;
-    }
-
-    public void setMascota(int mascota) {
-        this.mascota = mascota;
-    }
-
     public Hospitalizacion getHospitalizacion() {
         return hospitalizacion;
     }
 
     public void setHospitalizacion(Hospitalizacion hospitalizacion) {
         this.hospitalizacion = hospitalizacion;
+    }
+
+    public Mascota getMascota() {
+        return mascota;
+    }
+
+    public void setMascota(Mascota mascota) {
+        this.mascota = mascota;
     }
 
     public TipoProcedimiento getTipoProcedimiento() {

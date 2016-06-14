@@ -16,7 +16,7 @@ import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Sucursal;
 import cl.starlabs.modelo.Examenes;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import cl.starlabs.modelo.Historialvacunas;
 import cl.starlabs.modelo.Contraindicaciones;
 import cl.starlabs.modelo.Desparacitaciones;
@@ -27,13 +27,12 @@ import cl.starlabs.modelo.AgendaDetalle;
 import cl.starlabs.modelo.Anamnesis;
 import cl.starlabs.modelo.Patologias;
 import cl.starlabs.modelo.Veterinario;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class VeterinarioJpaController implements Serializable {
 
@@ -47,35 +46,35 @@ public class VeterinarioJpaController implements Serializable {
     }
 
     public void create(Veterinario veterinario) throws PreexistingEntityException, Exception {
-        if (veterinario.getExamenesCollection() == null) {
-            veterinario.setExamenesCollection(new ArrayList<Examenes>());
+        if (veterinario.getExamenesList() == null) {
+            veterinario.setExamenesList(new ArrayList<Examenes>());
         }
-        if (veterinario.getHistorialvacunasCollection() == null) {
-            veterinario.setHistorialvacunasCollection(new ArrayList<Historialvacunas>());
+        if (veterinario.getHistorialvacunasList() == null) {
+            veterinario.setHistorialvacunasList(new ArrayList<Historialvacunas>());
         }
-        if (veterinario.getContraindicacionesCollection() == null) {
-            veterinario.setContraindicacionesCollection(new ArrayList<Contraindicaciones>());
+        if (veterinario.getContraindicacionesList() == null) {
+            veterinario.setContraindicacionesList(new ArrayList<Contraindicaciones>());
         }
-        if (veterinario.getDesparacitacionesCollection() == null) {
-            veterinario.setDesparacitacionesCollection(new ArrayList<Desparacitaciones>());
+        if (veterinario.getDesparacitacionesList() == null) {
+            veterinario.setDesparacitacionesList(new ArrayList<Desparacitaciones>());
         }
-        if (veterinario.getFarmacosCollection() == null) {
-            veterinario.setFarmacosCollection(new ArrayList<Farmacos>());
+        if (veterinario.getFarmacosList() == null) {
+            veterinario.setFarmacosList(new ArrayList<Farmacos>());
         }
-        if (veterinario.getProcedimientosCollection() == null) {
-            veterinario.setProcedimientosCollection(new ArrayList<Procedimientos>());
+        if (veterinario.getProcedimientosList() == null) {
+            veterinario.setProcedimientosList(new ArrayList<Procedimientos>());
         }
-        if (veterinario.getHospitalizacionCollection() == null) {
-            veterinario.setHospitalizacionCollection(new ArrayList<Hospitalizacion>());
+        if (veterinario.getHospitalizacionList() == null) {
+            veterinario.setHospitalizacionList(new ArrayList<Hospitalizacion>());
         }
-        if (veterinario.getAgendaDetalleCollection() == null) {
-            veterinario.setAgendaDetalleCollection(new ArrayList<AgendaDetalle>());
+        if (veterinario.getAgendaDetalleList() == null) {
+            veterinario.setAgendaDetalleList(new ArrayList<AgendaDetalle>());
         }
-        if (veterinario.getAnamnesisCollection() == null) {
-            veterinario.setAnamnesisCollection(new ArrayList<Anamnesis>());
+        if (veterinario.getAnamnesisList() == null) {
+            veterinario.setAnamnesisList(new ArrayList<Anamnesis>());
         }
-        if (veterinario.getPatologiasCollection() == null) {
-            veterinario.setPatologiasCollection(new ArrayList<Patologias>());
+        if (veterinario.getPatologiasList() == null) {
+            veterinario.setPatologiasList(new ArrayList<Patologias>());
         }
         EntityManager em = null;
         try {
@@ -86,159 +85,159 @@ public class VeterinarioJpaController implements Serializable {
                 sucursal = em.getReference(sucursal.getClass(), sucursal.getIdSucursal());
                 veterinario.setSucursal(sucursal);
             }
-            Collection<Examenes> attachedExamenesCollection = new ArrayList<Examenes>();
-            for (Examenes examenesCollectionExamenesToAttach : veterinario.getExamenesCollection()) {
-                examenesCollectionExamenesToAttach = em.getReference(examenesCollectionExamenesToAttach.getClass(), examenesCollectionExamenesToAttach.getIdExamen());
-                attachedExamenesCollection.add(examenesCollectionExamenesToAttach);
+            List<Examenes> attachedExamenesList = new ArrayList<Examenes>();
+            for (Examenes examenesListExamenesToAttach : veterinario.getExamenesList()) {
+                examenesListExamenesToAttach = em.getReference(examenesListExamenesToAttach.getClass(), examenesListExamenesToAttach.getIdExamen());
+                attachedExamenesList.add(examenesListExamenesToAttach);
             }
-            veterinario.setExamenesCollection(attachedExamenesCollection);
-            Collection<Historialvacunas> attachedHistorialvacunasCollection = new ArrayList<Historialvacunas>();
-            for (Historialvacunas historialvacunasCollectionHistorialvacunasToAttach : veterinario.getHistorialvacunasCollection()) {
-                historialvacunasCollectionHistorialvacunasToAttach = em.getReference(historialvacunasCollectionHistorialvacunasToAttach.getClass(), historialvacunasCollectionHistorialvacunasToAttach.getIdEvento());
-                attachedHistorialvacunasCollection.add(historialvacunasCollectionHistorialvacunasToAttach);
+            veterinario.setExamenesList(attachedExamenesList);
+            List<Historialvacunas> attachedHistorialvacunasList = new ArrayList<Historialvacunas>();
+            for (Historialvacunas historialvacunasListHistorialvacunasToAttach : veterinario.getHistorialvacunasList()) {
+                historialvacunasListHistorialvacunasToAttach = em.getReference(historialvacunasListHistorialvacunasToAttach.getClass(), historialvacunasListHistorialvacunasToAttach.getIdEvento());
+                attachedHistorialvacunasList.add(historialvacunasListHistorialvacunasToAttach);
             }
-            veterinario.setHistorialvacunasCollection(attachedHistorialvacunasCollection);
-            Collection<Contraindicaciones> attachedContraindicacionesCollection = new ArrayList<Contraindicaciones>();
-            for (Contraindicaciones contraindicacionesCollectionContraindicacionesToAttach : veterinario.getContraindicacionesCollection()) {
-                contraindicacionesCollectionContraindicacionesToAttach = em.getReference(contraindicacionesCollectionContraindicacionesToAttach.getClass(), contraindicacionesCollectionContraindicacionesToAttach.getIdContraindicacion());
-                attachedContraindicacionesCollection.add(contraindicacionesCollectionContraindicacionesToAttach);
+            veterinario.setHistorialvacunasList(attachedHistorialvacunasList);
+            List<Contraindicaciones> attachedContraindicacionesList = new ArrayList<Contraindicaciones>();
+            for (Contraindicaciones contraindicacionesListContraindicacionesToAttach : veterinario.getContraindicacionesList()) {
+                contraindicacionesListContraindicacionesToAttach = em.getReference(contraindicacionesListContraindicacionesToAttach.getClass(), contraindicacionesListContraindicacionesToAttach.getIdContraindicacion());
+                attachedContraindicacionesList.add(contraindicacionesListContraindicacionesToAttach);
             }
-            veterinario.setContraindicacionesCollection(attachedContraindicacionesCollection);
-            Collection<Desparacitaciones> attachedDesparacitacionesCollection = new ArrayList<Desparacitaciones>();
-            for (Desparacitaciones desparacitacionesCollectionDesparacitacionesToAttach : veterinario.getDesparacitacionesCollection()) {
-                desparacitacionesCollectionDesparacitacionesToAttach = em.getReference(desparacitacionesCollectionDesparacitacionesToAttach.getClass(), desparacitacionesCollectionDesparacitacionesToAttach.getIdDesparacitacion());
-                attachedDesparacitacionesCollection.add(desparacitacionesCollectionDesparacitacionesToAttach);
+            veterinario.setContraindicacionesList(attachedContraindicacionesList);
+            List<Desparacitaciones> attachedDesparacitacionesList = new ArrayList<Desparacitaciones>();
+            for (Desparacitaciones desparacitacionesListDesparacitacionesToAttach : veterinario.getDesparacitacionesList()) {
+                desparacitacionesListDesparacitacionesToAttach = em.getReference(desparacitacionesListDesparacitacionesToAttach.getClass(), desparacitacionesListDesparacitacionesToAttach.getIdDesparacitacion());
+                attachedDesparacitacionesList.add(desparacitacionesListDesparacitacionesToAttach);
             }
-            veterinario.setDesparacitacionesCollection(attachedDesparacitacionesCollection);
-            Collection<Farmacos> attachedFarmacosCollection = new ArrayList<Farmacos>();
-            for (Farmacos farmacosCollectionFarmacosToAttach : veterinario.getFarmacosCollection()) {
-                farmacosCollectionFarmacosToAttach = em.getReference(farmacosCollectionFarmacosToAttach.getClass(), farmacosCollectionFarmacosToAttach.getIdFarmaco());
-                attachedFarmacosCollection.add(farmacosCollectionFarmacosToAttach);
+            veterinario.setDesparacitacionesList(attachedDesparacitacionesList);
+            List<Farmacos> attachedFarmacosList = new ArrayList<Farmacos>();
+            for (Farmacos farmacosListFarmacosToAttach : veterinario.getFarmacosList()) {
+                farmacosListFarmacosToAttach = em.getReference(farmacosListFarmacosToAttach.getClass(), farmacosListFarmacosToAttach.getIdFarmaco());
+                attachedFarmacosList.add(farmacosListFarmacosToAttach);
             }
-            veterinario.setFarmacosCollection(attachedFarmacosCollection);
-            Collection<Procedimientos> attachedProcedimientosCollection = new ArrayList<Procedimientos>();
-            for (Procedimientos procedimientosCollectionProcedimientosToAttach : veterinario.getProcedimientosCollection()) {
-                procedimientosCollectionProcedimientosToAttach = em.getReference(procedimientosCollectionProcedimientosToAttach.getClass(), procedimientosCollectionProcedimientosToAttach.getIdProcedimiento());
-                attachedProcedimientosCollection.add(procedimientosCollectionProcedimientosToAttach);
+            veterinario.setFarmacosList(attachedFarmacosList);
+            List<Procedimientos> attachedProcedimientosList = new ArrayList<Procedimientos>();
+            for (Procedimientos procedimientosListProcedimientosToAttach : veterinario.getProcedimientosList()) {
+                procedimientosListProcedimientosToAttach = em.getReference(procedimientosListProcedimientosToAttach.getClass(), procedimientosListProcedimientosToAttach.getIdProcedimiento());
+                attachedProcedimientosList.add(procedimientosListProcedimientosToAttach);
             }
-            veterinario.setProcedimientosCollection(attachedProcedimientosCollection);
-            Collection<Hospitalizacion> attachedHospitalizacionCollection = new ArrayList<Hospitalizacion>();
-            for (Hospitalizacion hospitalizacionCollectionHospitalizacionToAttach : veterinario.getHospitalizacionCollection()) {
-                hospitalizacionCollectionHospitalizacionToAttach = em.getReference(hospitalizacionCollectionHospitalizacionToAttach.getClass(), hospitalizacionCollectionHospitalizacionToAttach.getIdHospitalizacion());
-                attachedHospitalizacionCollection.add(hospitalizacionCollectionHospitalizacionToAttach);
+            veterinario.setProcedimientosList(attachedProcedimientosList);
+            List<Hospitalizacion> attachedHospitalizacionList = new ArrayList<Hospitalizacion>();
+            for (Hospitalizacion hospitalizacionListHospitalizacionToAttach : veterinario.getHospitalizacionList()) {
+                hospitalizacionListHospitalizacionToAttach = em.getReference(hospitalizacionListHospitalizacionToAttach.getClass(), hospitalizacionListHospitalizacionToAttach.getIdHospitalizacion());
+                attachedHospitalizacionList.add(hospitalizacionListHospitalizacionToAttach);
             }
-            veterinario.setHospitalizacionCollection(attachedHospitalizacionCollection);
-            Collection<AgendaDetalle> attachedAgendaDetalleCollection = new ArrayList<AgendaDetalle>();
-            for (AgendaDetalle agendaDetalleCollectionAgendaDetalleToAttach : veterinario.getAgendaDetalleCollection()) {
-                agendaDetalleCollectionAgendaDetalleToAttach = em.getReference(agendaDetalleCollectionAgendaDetalleToAttach.getClass(), agendaDetalleCollectionAgendaDetalleToAttach.getIdDetalle());
-                attachedAgendaDetalleCollection.add(agendaDetalleCollectionAgendaDetalleToAttach);
+            veterinario.setHospitalizacionList(attachedHospitalizacionList);
+            List<AgendaDetalle> attachedAgendaDetalleList = new ArrayList<AgendaDetalle>();
+            for (AgendaDetalle agendaDetalleListAgendaDetalleToAttach : veterinario.getAgendaDetalleList()) {
+                agendaDetalleListAgendaDetalleToAttach = em.getReference(agendaDetalleListAgendaDetalleToAttach.getClass(), agendaDetalleListAgendaDetalleToAttach.getIdDetalle());
+                attachedAgendaDetalleList.add(agendaDetalleListAgendaDetalleToAttach);
             }
-            veterinario.setAgendaDetalleCollection(attachedAgendaDetalleCollection);
-            Collection<Anamnesis> attachedAnamnesisCollection = new ArrayList<Anamnesis>();
-            for (Anamnesis anamnesisCollectionAnamnesisToAttach : veterinario.getAnamnesisCollection()) {
-                anamnesisCollectionAnamnesisToAttach = em.getReference(anamnesisCollectionAnamnesisToAttach.getClass(), anamnesisCollectionAnamnesisToAttach.getIdAnamnesis());
-                attachedAnamnesisCollection.add(anamnesisCollectionAnamnesisToAttach);
+            veterinario.setAgendaDetalleList(attachedAgendaDetalleList);
+            List<Anamnesis> attachedAnamnesisList = new ArrayList<Anamnesis>();
+            for (Anamnesis anamnesisListAnamnesisToAttach : veterinario.getAnamnesisList()) {
+                anamnesisListAnamnesisToAttach = em.getReference(anamnesisListAnamnesisToAttach.getClass(), anamnesisListAnamnesisToAttach.getIdAnamnesis());
+                attachedAnamnesisList.add(anamnesisListAnamnesisToAttach);
             }
-            veterinario.setAnamnesisCollection(attachedAnamnesisCollection);
-            Collection<Patologias> attachedPatologiasCollection = new ArrayList<Patologias>();
-            for (Patologias patologiasCollectionPatologiasToAttach : veterinario.getPatologiasCollection()) {
-                patologiasCollectionPatologiasToAttach = em.getReference(patologiasCollectionPatologiasToAttach.getClass(), patologiasCollectionPatologiasToAttach.getIdPatologia());
-                attachedPatologiasCollection.add(patologiasCollectionPatologiasToAttach);
+            veterinario.setAnamnesisList(attachedAnamnesisList);
+            List<Patologias> attachedPatologiasList = new ArrayList<Patologias>();
+            for (Patologias patologiasListPatologiasToAttach : veterinario.getPatologiasList()) {
+                patologiasListPatologiasToAttach = em.getReference(patologiasListPatologiasToAttach.getClass(), patologiasListPatologiasToAttach.getIdPatologia());
+                attachedPatologiasList.add(patologiasListPatologiasToAttach);
             }
-            veterinario.setPatologiasCollection(attachedPatologiasCollection);
+            veterinario.setPatologiasList(attachedPatologiasList);
             em.persist(veterinario);
             if (sucursal != null) {
-                sucursal.getVeterinarioCollection().add(veterinario);
+                sucursal.getVeterinarioList().add(veterinario);
                 sucursal = em.merge(sucursal);
             }
-            for (Examenes examenesCollectionExamenes : veterinario.getExamenesCollection()) {
-                Veterinario oldVeterinarioOfExamenesCollectionExamenes = examenesCollectionExamenes.getVeterinario();
-                examenesCollectionExamenes.setVeterinario(veterinario);
-                examenesCollectionExamenes = em.merge(examenesCollectionExamenes);
-                if (oldVeterinarioOfExamenesCollectionExamenes != null) {
-                    oldVeterinarioOfExamenesCollectionExamenes.getExamenesCollection().remove(examenesCollectionExamenes);
-                    oldVeterinarioOfExamenesCollectionExamenes = em.merge(oldVeterinarioOfExamenesCollectionExamenes);
+            for (Examenes examenesListExamenes : veterinario.getExamenesList()) {
+                Veterinario oldVeterinarioOfExamenesListExamenes = examenesListExamenes.getVeterinario();
+                examenesListExamenes.setVeterinario(veterinario);
+                examenesListExamenes = em.merge(examenesListExamenes);
+                if (oldVeterinarioOfExamenesListExamenes != null) {
+                    oldVeterinarioOfExamenesListExamenes.getExamenesList().remove(examenesListExamenes);
+                    oldVeterinarioOfExamenesListExamenes = em.merge(oldVeterinarioOfExamenesListExamenes);
                 }
             }
-            for (Historialvacunas historialvacunasCollectionHistorialvacunas : veterinario.getHistorialvacunasCollection()) {
-                Veterinario oldVeterinarioOfHistorialvacunasCollectionHistorialvacunas = historialvacunasCollectionHistorialvacunas.getVeterinario();
-                historialvacunasCollectionHistorialvacunas.setVeterinario(veterinario);
-                historialvacunasCollectionHistorialvacunas = em.merge(historialvacunasCollectionHistorialvacunas);
-                if (oldVeterinarioOfHistorialvacunasCollectionHistorialvacunas != null) {
-                    oldVeterinarioOfHistorialvacunasCollectionHistorialvacunas.getHistorialvacunasCollection().remove(historialvacunasCollectionHistorialvacunas);
-                    oldVeterinarioOfHistorialvacunasCollectionHistorialvacunas = em.merge(oldVeterinarioOfHistorialvacunasCollectionHistorialvacunas);
+            for (Historialvacunas historialvacunasListHistorialvacunas : veterinario.getHistorialvacunasList()) {
+                Veterinario oldVeterinarioOfHistorialvacunasListHistorialvacunas = historialvacunasListHistorialvacunas.getVeterinario();
+                historialvacunasListHistorialvacunas.setVeterinario(veterinario);
+                historialvacunasListHistorialvacunas = em.merge(historialvacunasListHistorialvacunas);
+                if (oldVeterinarioOfHistorialvacunasListHistorialvacunas != null) {
+                    oldVeterinarioOfHistorialvacunasListHistorialvacunas.getHistorialvacunasList().remove(historialvacunasListHistorialvacunas);
+                    oldVeterinarioOfHistorialvacunasListHistorialvacunas = em.merge(oldVeterinarioOfHistorialvacunasListHistorialvacunas);
                 }
             }
-            for (Contraindicaciones contraindicacionesCollectionContraindicaciones : veterinario.getContraindicacionesCollection()) {
-                Veterinario oldVeterinarioOfContraindicacionesCollectionContraindicaciones = contraindicacionesCollectionContraindicaciones.getVeterinario();
-                contraindicacionesCollectionContraindicaciones.setVeterinario(veterinario);
-                contraindicacionesCollectionContraindicaciones = em.merge(contraindicacionesCollectionContraindicaciones);
-                if (oldVeterinarioOfContraindicacionesCollectionContraindicaciones != null) {
-                    oldVeterinarioOfContraindicacionesCollectionContraindicaciones.getContraindicacionesCollection().remove(contraindicacionesCollectionContraindicaciones);
-                    oldVeterinarioOfContraindicacionesCollectionContraindicaciones = em.merge(oldVeterinarioOfContraindicacionesCollectionContraindicaciones);
+            for (Contraindicaciones contraindicacionesListContraindicaciones : veterinario.getContraindicacionesList()) {
+                Veterinario oldVeterinarioOfContraindicacionesListContraindicaciones = contraindicacionesListContraindicaciones.getVeterinario();
+                contraindicacionesListContraindicaciones.setVeterinario(veterinario);
+                contraindicacionesListContraindicaciones = em.merge(contraindicacionesListContraindicaciones);
+                if (oldVeterinarioOfContraindicacionesListContraindicaciones != null) {
+                    oldVeterinarioOfContraindicacionesListContraindicaciones.getContraindicacionesList().remove(contraindicacionesListContraindicaciones);
+                    oldVeterinarioOfContraindicacionesListContraindicaciones = em.merge(oldVeterinarioOfContraindicacionesListContraindicaciones);
                 }
             }
-            for (Desparacitaciones desparacitacionesCollectionDesparacitaciones : veterinario.getDesparacitacionesCollection()) {
-                Veterinario oldEspecialistaOfDesparacitacionesCollectionDesparacitaciones = desparacitacionesCollectionDesparacitaciones.getEspecialista();
-                desparacitacionesCollectionDesparacitaciones.setEspecialista(veterinario);
-                desparacitacionesCollectionDesparacitaciones = em.merge(desparacitacionesCollectionDesparacitaciones);
-                if (oldEspecialistaOfDesparacitacionesCollectionDesparacitaciones != null) {
-                    oldEspecialistaOfDesparacitacionesCollectionDesparacitaciones.getDesparacitacionesCollection().remove(desparacitacionesCollectionDesparacitaciones);
-                    oldEspecialistaOfDesparacitacionesCollectionDesparacitaciones = em.merge(oldEspecialistaOfDesparacitacionesCollectionDesparacitaciones);
+            for (Desparacitaciones desparacitacionesListDesparacitaciones : veterinario.getDesparacitacionesList()) {
+                Veterinario oldEspecialistaOfDesparacitacionesListDesparacitaciones = desparacitacionesListDesparacitaciones.getEspecialista();
+                desparacitacionesListDesparacitaciones.setEspecialista(veterinario);
+                desparacitacionesListDesparacitaciones = em.merge(desparacitacionesListDesparacitaciones);
+                if (oldEspecialistaOfDesparacitacionesListDesparacitaciones != null) {
+                    oldEspecialistaOfDesparacitacionesListDesparacitaciones.getDesparacitacionesList().remove(desparacitacionesListDesparacitaciones);
+                    oldEspecialistaOfDesparacitacionesListDesparacitaciones = em.merge(oldEspecialistaOfDesparacitacionesListDesparacitaciones);
                 }
             }
-            for (Farmacos farmacosCollectionFarmacos : veterinario.getFarmacosCollection()) {
-                Veterinario oldVeterinarioOfFarmacosCollectionFarmacos = farmacosCollectionFarmacos.getVeterinario();
-                farmacosCollectionFarmacos.setVeterinario(veterinario);
-                farmacosCollectionFarmacos = em.merge(farmacosCollectionFarmacos);
-                if (oldVeterinarioOfFarmacosCollectionFarmacos != null) {
-                    oldVeterinarioOfFarmacosCollectionFarmacos.getFarmacosCollection().remove(farmacosCollectionFarmacos);
-                    oldVeterinarioOfFarmacosCollectionFarmacos = em.merge(oldVeterinarioOfFarmacosCollectionFarmacos);
+            for (Farmacos farmacosListFarmacos : veterinario.getFarmacosList()) {
+                Veterinario oldVeterinarioOfFarmacosListFarmacos = farmacosListFarmacos.getVeterinario();
+                farmacosListFarmacos.setVeterinario(veterinario);
+                farmacosListFarmacos = em.merge(farmacosListFarmacos);
+                if (oldVeterinarioOfFarmacosListFarmacos != null) {
+                    oldVeterinarioOfFarmacosListFarmacos.getFarmacosList().remove(farmacosListFarmacos);
+                    oldVeterinarioOfFarmacosListFarmacos = em.merge(oldVeterinarioOfFarmacosListFarmacos);
                 }
             }
-            for (Procedimientos procedimientosCollectionProcedimientos : veterinario.getProcedimientosCollection()) {
-                Veterinario oldVeterinarioOfProcedimientosCollectionProcedimientos = procedimientosCollectionProcedimientos.getVeterinario();
-                procedimientosCollectionProcedimientos.setVeterinario(veterinario);
-                procedimientosCollectionProcedimientos = em.merge(procedimientosCollectionProcedimientos);
-                if (oldVeterinarioOfProcedimientosCollectionProcedimientos != null) {
-                    oldVeterinarioOfProcedimientosCollectionProcedimientos.getProcedimientosCollection().remove(procedimientosCollectionProcedimientos);
-                    oldVeterinarioOfProcedimientosCollectionProcedimientos = em.merge(oldVeterinarioOfProcedimientosCollectionProcedimientos);
+            for (Procedimientos procedimientosListProcedimientos : veterinario.getProcedimientosList()) {
+                Veterinario oldVeterinarioOfProcedimientosListProcedimientos = procedimientosListProcedimientos.getVeterinario();
+                procedimientosListProcedimientos.setVeterinario(veterinario);
+                procedimientosListProcedimientos = em.merge(procedimientosListProcedimientos);
+                if (oldVeterinarioOfProcedimientosListProcedimientos != null) {
+                    oldVeterinarioOfProcedimientosListProcedimientos.getProcedimientosList().remove(procedimientosListProcedimientos);
+                    oldVeterinarioOfProcedimientosListProcedimientos = em.merge(oldVeterinarioOfProcedimientosListProcedimientos);
                 }
             }
-            for (Hospitalizacion hospitalizacionCollectionHospitalizacion : veterinario.getHospitalizacionCollection()) {
-                Veterinario oldVeterinarioOfHospitalizacionCollectionHospitalizacion = hospitalizacionCollectionHospitalizacion.getVeterinario();
-                hospitalizacionCollectionHospitalizacion.setVeterinario(veterinario);
-                hospitalizacionCollectionHospitalizacion = em.merge(hospitalizacionCollectionHospitalizacion);
-                if (oldVeterinarioOfHospitalizacionCollectionHospitalizacion != null) {
-                    oldVeterinarioOfHospitalizacionCollectionHospitalizacion.getHospitalizacionCollection().remove(hospitalizacionCollectionHospitalizacion);
-                    oldVeterinarioOfHospitalizacionCollectionHospitalizacion = em.merge(oldVeterinarioOfHospitalizacionCollectionHospitalizacion);
+            for (Hospitalizacion hospitalizacionListHospitalizacion : veterinario.getHospitalizacionList()) {
+                Veterinario oldVeterinarioOfHospitalizacionListHospitalizacion = hospitalizacionListHospitalizacion.getVeterinario();
+                hospitalizacionListHospitalizacion.setVeterinario(veterinario);
+                hospitalizacionListHospitalizacion = em.merge(hospitalizacionListHospitalizacion);
+                if (oldVeterinarioOfHospitalizacionListHospitalizacion != null) {
+                    oldVeterinarioOfHospitalizacionListHospitalizacion.getHospitalizacionList().remove(hospitalizacionListHospitalizacion);
+                    oldVeterinarioOfHospitalizacionListHospitalizacion = em.merge(oldVeterinarioOfHospitalizacionListHospitalizacion);
                 }
             }
-            for (AgendaDetalle agendaDetalleCollectionAgendaDetalle : veterinario.getAgendaDetalleCollection()) {
-                Veterinario oldVeterinarioOfAgendaDetalleCollectionAgendaDetalle = agendaDetalleCollectionAgendaDetalle.getVeterinario();
-                agendaDetalleCollectionAgendaDetalle.setVeterinario(veterinario);
-                agendaDetalleCollectionAgendaDetalle = em.merge(agendaDetalleCollectionAgendaDetalle);
-                if (oldVeterinarioOfAgendaDetalleCollectionAgendaDetalle != null) {
-                    oldVeterinarioOfAgendaDetalleCollectionAgendaDetalle.getAgendaDetalleCollection().remove(agendaDetalleCollectionAgendaDetalle);
-                    oldVeterinarioOfAgendaDetalleCollectionAgendaDetalle = em.merge(oldVeterinarioOfAgendaDetalleCollectionAgendaDetalle);
+            for (AgendaDetalle agendaDetalleListAgendaDetalle : veterinario.getAgendaDetalleList()) {
+                Veterinario oldVeterinarioOfAgendaDetalleListAgendaDetalle = agendaDetalleListAgendaDetalle.getVeterinario();
+                agendaDetalleListAgendaDetalle.setVeterinario(veterinario);
+                agendaDetalleListAgendaDetalle = em.merge(agendaDetalleListAgendaDetalle);
+                if (oldVeterinarioOfAgendaDetalleListAgendaDetalle != null) {
+                    oldVeterinarioOfAgendaDetalleListAgendaDetalle.getAgendaDetalleList().remove(agendaDetalleListAgendaDetalle);
+                    oldVeterinarioOfAgendaDetalleListAgendaDetalle = em.merge(oldVeterinarioOfAgendaDetalleListAgendaDetalle);
                 }
             }
-            for (Anamnesis anamnesisCollectionAnamnesis : veterinario.getAnamnesisCollection()) {
-                Veterinario oldVeterinarioOfAnamnesisCollectionAnamnesis = anamnesisCollectionAnamnesis.getVeterinario();
-                anamnesisCollectionAnamnesis.setVeterinario(veterinario);
-                anamnesisCollectionAnamnesis = em.merge(anamnesisCollectionAnamnesis);
-                if (oldVeterinarioOfAnamnesisCollectionAnamnesis != null) {
-                    oldVeterinarioOfAnamnesisCollectionAnamnesis.getAnamnesisCollection().remove(anamnesisCollectionAnamnesis);
-                    oldVeterinarioOfAnamnesisCollectionAnamnesis = em.merge(oldVeterinarioOfAnamnesisCollectionAnamnesis);
+            for (Anamnesis anamnesisListAnamnesis : veterinario.getAnamnesisList()) {
+                Veterinario oldVeterinarioOfAnamnesisListAnamnesis = anamnesisListAnamnesis.getVeterinario();
+                anamnesisListAnamnesis.setVeterinario(veterinario);
+                anamnesisListAnamnesis = em.merge(anamnesisListAnamnesis);
+                if (oldVeterinarioOfAnamnesisListAnamnesis != null) {
+                    oldVeterinarioOfAnamnesisListAnamnesis.getAnamnesisList().remove(anamnesisListAnamnesis);
+                    oldVeterinarioOfAnamnesisListAnamnesis = em.merge(oldVeterinarioOfAnamnesisListAnamnesis);
                 }
             }
-            for (Patologias patologiasCollectionPatologias : veterinario.getPatologiasCollection()) {
-                Veterinario oldVeterinarioOfPatologiasCollectionPatologias = patologiasCollectionPatologias.getVeterinario();
-                patologiasCollectionPatologias.setVeterinario(veterinario);
-                patologiasCollectionPatologias = em.merge(patologiasCollectionPatologias);
-                if (oldVeterinarioOfPatologiasCollectionPatologias != null) {
-                    oldVeterinarioOfPatologiasCollectionPatologias.getPatologiasCollection().remove(patologiasCollectionPatologias);
-                    oldVeterinarioOfPatologiasCollectionPatologias = em.merge(oldVeterinarioOfPatologiasCollectionPatologias);
+            for (Patologias patologiasListPatologias : veterinario.getPatologiasList()) {
+                Veterinario oldVeterinarioOfPatologiasListPatologias = patologiasListPatologias.getVeterinario();
+                patologiasListPatologias.setVeterinario(veterinario);
+                patologiasListPatologias = em.merge(patologiasListPatologias);
+                if (oldVeterinarioOfPatologiasListPatologias != null) {
+                    oldVeterinarioOfPatologiasListPatologias.getPatologiasList().remove(patologiasListPatologias);
+                    oldVeterinarioOfPatologiasListPatologias = em.merge(oldVeterinarioOfPatologiasListPatologias);
                 }
             }
             em.getTransaction().commit();
@@ -262,105 +261,105 @@ public class VeterinarioJpaController implements Serializable {
             Veterinario persistentVeterinario = em.find(Veterinario.class, veterinario.getIdVeterinario());
             Sucursal sucursalOld = persistentVeterinario.getSucursal();
             Sucursal sucursalNew = veterinario.getSucursal();
-            Collection<Examenes> examenesCollectionOld = persistentVeterinario.getExamenesCollection();
-            Collection<Examenes> examenesCollectionNew = veterinario.getExamenesCollection();
-            Collection<Historialvacunas> historialvacunasCollectionOld = persistentVeterinario.getHistorialvacunasCollection();
-            Collection<Historialvacunas> historialvacunasCollectionNew = veterinario.getHistorialvacunasCollection();
-            Collection<Contraindicaciones> contraindicacionesCollectionOld = persistentVeterinario.getContraindicacionesCollection();
-            Collection<Contraindicaciones> contraindicacionesCollectionNew = veterinario.getContraindicacionesCollection();
-            Collection<Desparacitaciones> desparacitacionesCollectionOld = persistentVeterinario.getDesparacitacionesCollection();
-            Collection<Desparacitaciones> desparacitacionesCollectionNew = veterinario.getDesparacitacionesCollection();
-            Collection<Farmacos> farmacosCollectionOld = persistentVeterinario.getFarmacosCollection();
-            Collection<Farmacos> farmacosCollectionNew = veterinario.getFarmacosCollection();
-            Collection<Procedimientos> procedimientosCollectionOld = persistentVeterinario.getProcedimientosCollection();
-            Collection<Procedimientos> procedimientosCollectionNew = veterinario.getProcedimientosCollection();
-            Collection<Hospitalizacion> hospitalizacionCollectionOld = persistentVeterinario.getHospitalizacionCollection();
-            Collection<Hospitalizacion> hospitalizacionCollectionNew = veterinario.getHospitalizacionCollection();
-            Collection<AgendaDetalle> agendaDetalleCollectionOld = persistentVeterinario.getAgendaDetalleCollection();
-            Collection<AgendaDetalle> agendaDetalleCollectionNew = veterinario.getAgendaDetalleCollection();
-            Collection<Anamnesis> anamnesisCollectionOld = persistentVeterinario.getAnamnesisCollection();
-            Collection<Anamnesis> anamnesisCollectionNew = veterinario.getAnamnesisCollection();
-            Collection<Patologias> patologiasCollectionOld = persistentVeterinario.getPatologiasCollection();
-            Collection<Patologias> patologiasCollectionNew = veterinario.getPatologiasCollection();
+            List<Examenes> examenesListOld = persistentVeterinario.getExamenesList();
+            List<Examenes> examenesListNew = veterinario.getExamenesList();
+            List<Historialvacunas> historialvacunasListOld = persistentVeterinario.getHistorialvacunasList();
+            List<Historialvacunas> historialvacunasListNew = veterinario.getHistorialvacunasList();
+            List<Contraindicaciones> contraindicacionesListOld = persistentVeterinario.getContraindicacionesList();
+            List<Contraindicaciones> contraindicacionesListNew = veterinario.getContraindicacionesList();
+            List<Desparacitaciones> desparacitacionesListOld = persistentVeterinario.getDesparacitacionesList();
+            List<Desparacitaciones> desparacitacionesListNew = veterinario.getDesparacitacionesList();
+            List<Farmacos> farmacosListOld = persistentVeterinario.getFarmacosList();
+            List<Farmacos> farmacosListNew = veterinario.getFarmacosList();
+            List<Procedimientos> procedimientosListOld = persistentVeterinario.getProcedimientosList();
+            List<Procedimientos> procedimientosListNew = veterinario.getProcedimientosList();
+            List<Hospitalizacion> hospitalizacionListOld = persistentVeterinario.getHospitalizacionList();
+            List<Hospitalizacion> hospitalizacionListNew = veterinario.getHospitalizacionList();
+            List<AgendaDetalle> agendaDetalleListOld = persistentVeterinario.getAgendaDetalleList();
+            List<AgendaDetalle> agendaDetalleListNew = veterinario.getAgendaDetalleList();
+            List<Anamnesis> anamnesisListOld = persistentVeterinario.getAnamnesisList();
+            List<Anamnesis> anamnesisListNew = veterinario.getAnamnesisList();
+            List<Patologias> patologiasListOld = persistentVeterinario.getPatologiasList();
+            List<Patologias> patologiasListNew = veterinario.getPatologiasList();
             List<String> illegalOrphanMessages = null;
-            for (Examenes examenesCollectionOldExamenes : examenesCollectionOld) {
-                if (!examenesCollectionNew.contains(examenesCollectionOldExamenes)) {
+            for (Examenes examenesListOldExamenes : examenesListOld) {
+                if (!examenesListNew.contains(examenesListOldExamenes)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Examenes " + examenesCollectionOldExamenes + " since its veterinario field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Examenes " + examenesListOldExamenes + " since its veterinario field is not nullable.");
                 }
             }
-            for (Historialvacunas historialvacunasCollectionOldHistorialvacunas : historialvacunasCollectionOld) {
-                if (!historialvacunasCollectionNew.contains(historialvacunasCollectionOldHistorialvacunas)) {
+            for (Historialvacunas historialvacunasListOldHistorialvacunas : historialvacunasListOld) {
+                if (!historialvacunasListNew.contains(historialvacunasListOldHistorialvacunas)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Historialvacunas " + historialvacunasCollectionOldHistorialvacunas + " since its veterinario field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Historialvacunas " + historialvacunasListOldHistorialvacunas + " since its veterinario field is not nullable.");
                 }
             }
-            for (Contraindicaciones contraindicacionesCollectionOldContraindicaciones : contraindicacionesCollectionOld) {
-                if (!contraindicacionesCollectionNew.contains(contraindicacionesCollectionOldContraindicaciones)) {
+            for (Contraindicaciones contraindicacionesListOldContraindicaciones : contraindicacionesListOld) {
+                if (!contraindicacionesListNew.contains(contraindicacionesListOldContraindicaciones)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Contraindicaciones " + contraindicacionesCollectionOldContraindicaciones + " since its veterinario field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Contraindicaciones " + contraindicacionesListOldContraindicaciones + " since its veterinario field is not nullable.");
                 }
             }
-            for (Desparacitaciones desparacitacionesCollectionOldDesparacitaciones : desparacitacionesCollectionOld) {
-                if (!desparacitacionesCollectionNew.contains(desparacitacionesCollectionOldDesparacitaciones)) {
+            for (Desparacitaciones desparacitacionesListOldDesparacitaciones : desparacitacionesListOld) {
+                if (!desparacitacionesListNew.contains(desparacitacionesListOldDesparacitaciones)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Desparacitaciones " + desparacitacionesCollectionOldDesparacitaciones + " since its especialista field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Desparacitaciones " + desparacitacionesListOldDesparacitaciones + " since its especialista field is not nullable.");
                 }
             }
-            for (Farmacos farmacosCollectionOldFarmacos : farmacosCollectionOld) {
-                if (!farmacosCollectionNew.contains(farmacosCollectionOldFarmacos)) {
+            for (Farmacos farmacosListOldFarmacos : farmacosListOld) {
+                if (!farmacosListNew.contains(farmacosListOldFarmacos)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Farmacos " + farmacosCollectionOldFarmacos + " since its veterinario field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Farmacos " + farmacosListOldFarmacos + " since its veterinario field is not nullable.");
                 }
             }
-            for (Procedimientos procedimientosCollectionOldProcedimientos : procedimientosCollectionOld) {
-                if (!procedimientosCollectionNew.contains(procedimientosCollectionOldProcedimientos)) {
+            for (Procedimientos procedimientosListOldProcedimientos : procedimientosListOld) {
+                if (!procedimientosListNew.contains(procedimientosListOldProcedimientos)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Procedimientos " + procedimientosCollectionOldProcedimientos + " since its veterinario field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Procedimientos " + procedimientosListOldProcedimientos + " since its veterinario field is not nullable.");
                 }
             }
-            for (Hospitalizacion hospitalizacionCollectionOldHospitalizacion : hospitalizacionCollectionOld) {
-                if (!hospitalizacionCollectionNew.contains(hospitalizacionCollectionOldHospitalizacion)) {
+            for (Hospitalizacion hospitalizacionListOldHospitalizacion : hospitalizacionListOld) {
+                if (!hospitalizacionListNew.contains(hospitalizacionListOldHospitalizacion)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Hospitalizacion " + hospitalizacionCollectionOldHospitalizacion + " since its veterinario field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Hospitalizacion " + hospitalizacionListOldHospitalizacion + " since its veterinario field is not nullable.");
                 }
             }
-            for (AgendaDetalle agendaDetalleCollectionOldAgendaDetalle : agendaDetalleCollectionOld) {
-                if (!agendaDetalleCollectionNew.contains(agendaDetalleCollectionOldAgendaDetalle)) {
+            for (AgendaDetalle agendaDetalleListOldAgendaDetalle : agendaDetalleListOld) {
+                if (!agendaDetalleListNew.contains(agendaDetalleListOldAgendaDetalle)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain AgendaDetalle " + agendaDetalleCollectionOldAgendaDetalle + " since its veterinario field is not nullable.");
+                    illegalOrphanMessages.add("You must retain AgendaDetalle " + agendaDetalleListOldAgendaDetalle + " since its veterinario field is not nullable.");
                 }
             }
-            for (Anamnesis anamnesisCollectionOldAnamnesis : anamnesisCollectionOld) {
-                if (!anamnesisCollectionNew.contains(anamnesisCollectionOldAnamnesis)) {
+            for (Anamnesis anamnesisListOldAnamnesis : anamnesisListOld) {
+                if (!anamnesisListNew.contains(anamnesisListOldAnamnesis)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Anamnesis " + anamnesisCollectionOldAnamnesis + " since its veterinario field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Anamnesis " + anamnesisListOldAnamnesis + " since its veterinario field is not nullable.");
                 }
             }
-            for (Patologias patologiasCollectionOldPatologias : patologiasCollectionOld) {
-                if (!patologiasCollectionNew.contains(patologiasCollectionOldPatologias)) {
+            for (Patologias patologiasListOldPatologias : patologiasListOld) {
+                if (!patologiasListNew.contains(patologiasListOldPatologias)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Patologias " + patologiasCollectionOldPatologias + " since its veterinario field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Patologias " + patologiasListOldPatologias + " since its veterinario field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -370,192 +369,192 @@ public class VeterinarioJpaController implements Serializable {
                 sucursalNew = em.getReference(sucursalNew.getClass(), sucursalNew.getIdSucursal());
                 veterinario.setSucursal(sucursalNew);
             }
-            Collection<Examenes> attachedExamenesCollectionNew = new ArrayList<Examenes>();
-            for (Examenes examenesCollectionNewExamenesToAttach : examenesCollectionNew) {
-                examenesCollectionNewExamenesToAttach = em.getReference(examenesCollectionNewExamenesToAttach.getClass(), examenesCollectionNewExamenesToAttach.getIdExamen());
-                attachedExamenesCollectionNew.add(examenesCollectionNewExamenesToAttach);
+            List<Examenes> attachedExamenesListNew = new ArrayList<Examenes>();
+            for (Examenes examenesListNewExamenesToAttach : examenesListNew) {
+                examenesListNewExamenesToAttach = em.getReference(examenesListNewExamenesToAttach.getClass(), examenesListNewExamenesToAttach.getIdExamen());
+                attachedExamenesListNew.add(examenesListNewExamenesToAttach);
             }
-            examenesCollectionNew = attachedExamenesCollectionNew;
-            veterinario.setExamenesCollection(examenesCollectionNew);
-            Collection<Historialvacunas> attachedHistorialvacunasCollectionNew = new ArrayList<Historialvacunas>();
-            for (Historialvacunas historialvacunasCollectionNewHistorialvacunasToAttach : historialvacunasCollectionNew) {
-                historialvacunasCollectionNewHistorialvacunasToAttach = em.getReference(historialvacunasCollectionNewHistorialvacunasToAttach.getClass(), historialvacunasCollectionNewHistorialvacunasToAttach.getIdEvento());
-                attachedHistorialvacunasCollectionNew.add(historialvacunasCollectionNewHistorialvacunasToAttach);
+            examenesListNew = attachedExamenesListNew;
+            veterinario.setExamenesList(examenesListNew);
+            List<Historialvacunas> attachedHistorialvacunasListNew = new ArrayList<Historialvacunas>();
+            for (Historialvacunas historialvacunasListNewHistorialvacunasToAttach : historialvacunasListNew) {
+                historialvacunasListNewHistorialvacunasToAttach = em.getReference(historialvacunasListNewHistorialvacunasToAttach.getClass(), historialvacunasListNewHistorialvacunasToAttach.getIdEvento());
+                attachedHistorialvacunasListNew.add(historialvacunasListNewHistorialvacunasToAttach);
             }
-            historialvacunasCollectionNew = attachedHistorialvacunasCollectionNew;
-            veterinario.setHistorialvacunasCollection(historialvacunasCollectionNew);
-            Collection<Contraindicaciones> attachedContraindicacionesCollectionNew = new ArrayList<Contraindicaciones>();
-            for (Contraindicaciones contraindicacionesCollectionNewContraindicacionesToAttach : contraindicacionesCollectionNew) {
-                contraindicacionesCollectionNewContraindicacionesToAttach = em.getReference(contraindicacionesCollectionNewContraindicacionesToAttach.getClass(), contraindicacionesCollectionNewContraindicacionesToAttach.getIdContraindicacion());
-                attachedContraindicacionesCollectionNew.add(contraindicacionesCollectionNewContraindicacionesToAttach);
+            historialvacunasListNew = attachedHistorialvacunasListNew;
+            veterinario.setHistorialvacunasList(historialvacunasListNew);
+            List<Contraindicaciones> attachedContraindicacionesListNew = new ArrayList<Contraindicaciones>();
+            for (Contraindicaciones contraindicacionesListNewContraindicacionesToAttach : contraindicacionesListNew) {
+                contraindicacionesListNewContraindicacionesToAttach = em.getReference(contraindicacionesListNewContraindicacionesToAttach.getClass(), contraindicacionesListNewContraindicacionesToAttach.getIdContraindicacion());
+                attachedContraindicacionesListNew.add(contraindicacionesListNewContraindicacionesToAttach);
             }
-            contraindicacionesCollectionNew = attachedContraindicacionesCollectionNew;
-            veterinario.setContraindicacionesCollection(contraindicacionesCollectionNew);
-            Collection<Desparacitaciones> attachedDesparacitacionesCollectionNew = new ArrayList<Desparacitaciones>();
-            for (Desparacitaciones desparacitacionesCollectionNewDesparacitacionesToAttach : desparacitacionesCollectionNew) {
-                desparacitacionesCollectionNewDesparacitacionesToAttach = em.getReference(desparacitacionesCollectionNewDesparacitacionesToAttach.getClass(), desparacitacionesCollectionNewDesparacitacionesToAttach.getIdDesparacitacion());
-                attachedDesparacitacionesCollectionNew.add(desparacitacionesCollectionNewDesparacitacionesToAttach);
+            contraindicacionesListNew = attachedContraindicacionesListNew;
+            veterinario.setContraindicacionesList(contraindicacionesListNew);
+            List<Desparacitaciones> attachedDesparacitacionesListNew = new ArrayList<Desparacitaciones>();
+            for (Desparacitaciones desparacitacionesListNewDesparacitacionesToAttach : desparacitacionesListNew) {
+                desparacitacionesListNewDesparacitacionesToAttach = em.getReference(desparacitacionesListNewDesparacitacionesToAttach.getClass(), desparacitacionesListNewDesparacitacionesToAttach.getIdDesparacitacion());
+                attachedDesparacitacionesListNew.add(desparacitacionesListNewDesparacitacionesToAttach);
             }
-            desparacitacionesCollectionNew = attachedDesparacitacionesCollectionNew;
-            veterinario.setDesparacitacionesCollection(desparacitacionesCollectionNew);
-            Collection<Farmacos> attachedFarmacosCollectionNew = new ArrayList<Farmacos>();
-            for (Farmacos farmacosCollectionNewFarmacosToAttach : farmacosCollectionNew) {
-                farmacosCollectionNewFarmacosToAttach = em.getReference(farmacosCollectionNewFarmacosToAttach.getClass(), farmacosCollectionNewFarmacosToAttach.getIdFarmaco());
-                attachedFarmacosCollectionNew.add(farmacosCollectionNewFarmacosToAttach);
+            desparacitacionesListNew = attachedDesparacitacionesListNew;
+            veterinario.setDesparacitacionesList(desparacitacionesListNew);
+            List<Farmacos> attachedFarmacosListNew = new ArrayList<Farmacos>();
+            for (Farmacos farmacosListNewFarmacosToAttach : farmacosListNew) {
+                farmacosListNewFarmacosToAttach = em.getReference(farmacosListNewFarmacosToAttach.getClass(), farmacosListNewFarmacosToAttach.getIdFarmaco());
+                attachedFarmacosListNew.add(farmacosListNewFarmacosToAttach);
             }
-            farmacosCollectionNew = attachedFarmacosCollectionNew;
-            veterinario.setFarmacosCollection(farmacosCollectionNew);
-            Collection<Procedimientos> attachedProcedimientosCollectionNew = new ArrayList<Procedimientos>();
-            for (Procedimientos procedimientosCollectionNewProcedimientosToAttach : procedimientosCollectionNew) {
-                procedimientosCollectionNewProcedimientosToAttach = em.getReference(procedimientosCollectionNewProcedimientosToAttach.getClass(), procedimientosCollectionNewProcedimientosToAttach.getIdProcedimiento());
-                attachedProcedimientosCollectionNew.add(procedimientosCollectionNewProcedimientosToAttach);
+            farmacosListNew = attachedFarmacosListNew;
+            veterinario.setFarmacosList(farmacosListNew);
+            List<Procedimientos> attachedProcedimientosListNew = new ArrayList<Procedimientos>();
+            for (Procedimientos procedimientosListNewProcedimientosToAttach : procedimientosListNew) {
+                procedimientosListNewProcedimientosToAttach = em.getReference(procedimientosListNewProcedimientosToAttach.getClass(), procedimientosListNewProcedimientosToAttach.getIdProcedimiento());
+                attachedProcedimientosListNew.add(procedimientosListNewProcedimientosToAttach);
             }
-            procedimientosCollectionNew = attachedProcedimientosCollectionNew;
-            veterinario.setProcedimientosCollection(procedimientosCollectionNew);
-            Collection<Hospitalizacion> attachedHospitalizacionCollectionNew = new ArrayList<Hospitalizacion>();
-            for (Hospitalizacion hospitalizacionCollectionNewHospitalizacionToAttach : hospitalizacionCollectionNew) {
-                hospitalizacionCollectionNewHospitalizacionToAttach = em.getReference(hospitalizacionCollectionNewHospitalizacionToAttach.getClass(), hospitalizacionCollectionNewHospitalizacionToAttach.getIdHospitalizacion());
-                attachedHospitalizacionCollectionNew.add(hospitalizacionCollectionNewHospitalizacionToAttach);
+            procedimientosListNew = attachedProcedimientosListNew;
+            veterinario.setProcedimientosList(procedimientosListNew);
+            List<Hospitalizacion> attachedHospitalizacionListNew = new ArrayList<Hospitalizacion>();
+            for (Hospitalizacion hospitalizacionListNewHospitalizacionToAttach : hospitalizacionListNew) {
+                hospitalizacionListNewHospitalizacionToAttach = em.getReference(hospitalizacionListNewHospitalizacionToAttach.getClass(), hospitalizacionListNewHospitalizacionToAttach.getIdHospitalizacion());
+                attachedHospitalizacionListNew.add(hospitalizacionListNewHospitalizacionToAttach);
             }
-            hospitalizacionCollectionNew = attachedHospitalizacionCollectionNew;
-            veterinario.setHospitalizacionCollection(hospitalizacionCollectionNew);
-            Collection<AgendaDetalle> attachedAgendaDetalleCollectionNew = new ArrayList<AgendaDetalle>();
-            for (AgendaDetalle agendaDetalleCollectionNewAgendaDetalleToAttach : agendaDetalleCollectionNew) {
-                agendaDetalleCollectionNewAgendaDetalleToAttach = em.getReference(agendaDetalleCollectionNewAgendaDetalleToAttach.getClass(), agendaDetalleCollectionNewAgendaDetalleToAttach.getIdDetalle());
-                attachedAgendaDetalleCollectionNew.add(agendaDetalleCollectionNewAgendaDetalleToAttach);
+            hospitalizacionListNew = attachedHospitalizacionListNew;
+            veterinario.setHospitalizacionList(hospitalizacionListNew);
+            List<AgendaDetalle> attachedAgendaDetalleListNew = new ArrayList<AgendaDetalle>();
+            for (AgendaDetalle agendaDetalleListNewAgendaDetalleToAttach : agendaDetalleListNew) {
+                agendaDetalleListNewAgendaDetalleToAttach = em.getReference(agendaDetalleListNewAgendaDetalleToAttach.getClass(), agendaDetalleListNewAgendaDetalleToAttach.getIdDetalle());
+                attachedAgendaDetalleListNew.add(agendaDetalleListNewAgendaDetalleToAttach);
             }
-            agendaDetalleCollectionNew = attachedAgendaDetalleCollectionNew;
-            veterinario.setAgendaDetalleCollection(agendaDetalleCollectionNew);
-            Collection<Anamnesis> attachedAnamnesisCollectionNew = new ArrayList<Anamnesis>();
-            for (Anamnesis anamnesisCollectionNewAnamnesisToAttach : anamnesisCollectionNew) {
-                anamnesisCollectionNewAnamnesisToAttach = em.getReference(anamnesisCollectionNewAnamnesisToAttach.getClass(), anamnesisCollectionNewAnamnesisToAttach.getIdAnamnesis());
-                attachedAnamnesisCollectionNew.add(anamnesisCollectionNewAnamnesisToAttach);
+            agendaDetalleListNew = attachedAgendaDetalleListNew;
+            veterinario.setAgendaDetalleList(agendaDetalleListNew);
+            List<Anamnesis> attachedAnamnesisListNew = new ArrayList<Anamnesis>();
+            for (Anamnesis anamnesisListNewAnamnesisToAttach : anamnesisListNew) {
+                anamnesisListNewAnamnesisToAttach = em.getReference(anamnesisListNewAnamnesisToAttach.getClass(), anamnesisListNewAnamnesisToAttach.getIdAnamnesis());
+                attachedAnamnesisListNew.add(anamnesisListNewAnamnesisToAttach);
             }
-            anamnesisCollectionNew = attachedAnamnesisCollectionNew;
-            veterinario.setAnamnesisCollection(anamnesisCollectionNew);
-            Collection<Patologias> attachedPatologiasCollectionNew = new ArrayList<Patologias>();
-            for (Patologias patologiasCollectionNewPatologiasToAttach : patologiasCollectionNew) {
-                patologiasCollectionNewPatologiasToAttach = em.getReference(patologiasCollectionNewPatologiasToAttach.getClass(), patologiasCollectionNewPatologiasToAttach.getIdPatologia());
-                attachedPatologiasCollectionNew.add(patologiasCollectionNewPatologiasToAttach);
+            anamnesisListNew = attachedAnamnesisListNew;
+            veterinario.setAnamnesisList(anamnesisListNew);
+            List<Patologias> attachedPatologiasListNew = new ArrayList<Patologias>();
+            for (Patologias patologiasListNewPatologiasToAttach : patologiasListNew) {
+                patologiasListNewPatologiasToAttach = em.getReference(patologiasListNewPatologiasToAttach.getClass(), patologiasListNewPatologiasToAttach.getIdPatologia());
+                attachedPatologiasListNew.add(patologiasListNewPatologiasToAttach);
             }
-            patologiasCollectionNew = attachedPatologiasCollectionNew;
-            veterinario.setPatologiasCollection(patologiasCollectionNew);
+            patologiasListNew = attachedPatologiasListNew;
+            veterinario.setPatologiasList(patologiasListNew);
             veterinario = em.merge(veterinario);
             if (sucursalOld != null && !sucursalOld.equals(sucursalNew)) {
-                sucursalOld.getVeterinarioCollection().remove(veterinario);
+                sucursalOld.getVeterinarioList().remove(veterinario);
                 sucursalOld = em.merge(sucursalOld);
             }
             if (sucursalNew != null && !sucursalNew.equals(sucursalOld)) {
-                sucursalNew.getVeterinarioCollection().add(veterinario);
+                sucursalNew.getVeterinarioList().add(veterinario);
                 sucursalNew = em.merge(sucursalNew);
             }
-            for (Examenes examenesCollectionNewExamenes : examenesCollectionNew) {
-                if (!examenesCollectionOld.contains(examenesCollectionNewExamenes)) {
-                    Veterinario oldVeterinarioOfExamenesCollectionNewExamenes = examenesCollectionNewExamenes.getVeterinario();
-                    examenesCollectionNewExamenes.setVeterinario(veterinario);
-                    examenesCollectionNewExamenes = em.merge(examenesCollectionNewExamenes);
-                    if (oldVeterinarioOfExamenesCollectionNewExamenes != null && !oldVeterinarioOfExamenesCollectionNewExamenes.equals(veterinario)) {
-                        oldVeterinarioOfExamenesCollectionNewExamenes.getExamenesCollection().remove(examenesCollectionNewExamenes);
-                        oldVeterinarioOfExamenesCollectionNewExamenes = em.merge(oldVeterinarioOfExamenesCollectionNewExamenes);
+            for (Examenes examenesListNewExamenes : examenesListNew) {
+                if (!examenesListOld.contains(examenesListNewExamenes)) {
+                    Veterinario oldVeterinarioOfExamenesListNewExamenes = examenesListNewExamenes.getVeterinario();
+                    examenesListNewExamenes.setVeterinario(veterinario);
+                    examenesListNewExamenes = em.merge(examenesListNewExamenes);
+                    if (oldVeterinarioOfExamenesListNewExamenes != null && !oldVeterinarioOfExamenesListNewExamenes.equals(veterinario)) {
+                        oldVeterinarioOfExamenesListNewExamenes.getExamenesList().remove(examenesListNewExamenes);
+                        oldVeterinarioOfExamenesListNewExamenes = em.merge(oldVeterinarioOfExamenesListNewExamenes);
                     }
                 }
             }
-            for (Historialvacunas historialvacunasCollectionNewHistorialvacunas : historialvacunasCollectionNew) {
-                if (!historialvacunasCollectionOld.contains(historialvacunasCollectionNewHistorialvacunas)) {
-                    Veterinario oldVeterinarioOfHistorialvacunasCollectionNewHistorialvacunas = historialvacunasCollectionNewHistorialvacunas.getVeterinario();
-                    historialvacunasCollectionNewHistorialvacunas.setVeterinario(veterinario);
-                    historialvacunasCollectionNewHistorialvacunas = em.merge(historialvacunasCollectionNewHistorialvacunas);
-                    if (oldVeterinarioOfHistorialvacunasCollectionNewHistorialvacunas != null && !oldVeterinarioOfHistorialvacunasCollectionNewHistorialvacunas.equals(veterinario)) {
-                        oldVeterinarioOfHistorialvacunasCollectionNewHistorialvacunas.getHistorialvacunasCollection().remove(historialvacunasCollectionNewHistorialvacunas);
-                        oldVeterinarioOfHistorialvacunasCollectionNewHistorialvacunas = em.merge(oldVeterinarioOfHistorialvacunasCollectionNewHistorialvacunas);
+            for (Historialvacunas historialvacunasListNewHistorialvacunas : historialvacunasListNew) {
+                if (!historialvacunasListOld.contains(historialvacunasListNewHistorialvacunas)) {
+                    Veterinario oldVeterinarioOfHistorialvacunasListNewHistorialvacunas = historialvacunasListNewHistorialvacunas.getVeterinario();
+                    historialvacunasListNewHistorialvacunas.setVeterinario(veterinario);
+                    historialvacunasListNewHistorialvacunas = em.merge(historialvacunasListNewHistorialvacunas);
+                    if (oldVeterinarioOfHistorialvacunasListNewHistorialvacunas != null && !oldVeterinarioOfHistorialvacunasListNewHistorialvacunas.equals(veterinario)) {
+                        oldVeterinarioOfHistorialvacunasListNewHistorialvacunas.getHistorialvacunasList().remove(historialvacunasListNewHistorialvacunas);
+                        oldVeterinarioOfHistorialvacunasListNewHistorialvacunas = em.merge(oldVeterinarioOfHistorialvacunasListNewHistorialvacunas);
                     }
                 }
             }
-            for (Contraindicaciones contraindicacionesCollectionNewContraindicaciones : contraindicacionesCollectionNew) {
-                if (!contraindicacionesCollectionOld.contains(contraindicacionesCollectionNewContraindicaciones)) {
-                    Veterinario oldVeterinarioOfContraindicacionesCollectionNewContraindicaciones = contraindicacionesCollectionNewContraindicaciones.getVeterinario();
-                    contraindicacionesCollectionNewContraindicaciones.setVeterinario(veterinario);
-                    contraindicacionesCollectionNewContraindicaciones = em.merge(contraindicacionesCollectionNewContraindicaciones);
-                    if (oldVeterinarioOfContraindicacionesCollectionNewContraindicaciones != null && !oldVeterinarioOfContraindicacionesCollectionNewContraindicaciones.equals(veterinario)) {
-                        oldVeterinarioOfContraindicacionesCollectionNewContraindicaciones.getContraindicacionesCollection().remove(contraindicacionesCollectionNewContraindicaciones);
-                        oldVeterinarioOfContraindicacionesCollectionNewContraindicaciones = em.merge(oldVeterinarioOfContraindicacionesCollectionNewContraindicaciones);
+            for (Contraindicaciones contraindicacionesListNewContraindicaciones : contraindicacionesListNew) {
+                if (!contraindicacionesListOld.contains(contraindicacionesListNewContraindicaciones)) {
+                    Veterinario oldVeterinarioOfContraindicacionesListNewContraindicaciones = contraindicacionesListNewContraindicaciones.getVeterinario();
+                    contraindicacionesListNewContraindicaciones.setVeterinario(veterinario);
+                    contraindicacionesListNewContraindicaciones = em.merge(contraindicacionesListNewContraindicaciones);
+                    if (oldVeterinarioOfContraindicacionesListNewContraindicaciones != null && !oldVeterinarioOfContraindicacionesListNewContraindicaciones.equals(veterinario)) {
+                        oldVeterinarioOfContraindicacionesListNewContraindicaciones.getContraindicacionesList().remove(contraindicacionesListNewContraindicaciones);
+                        oldVeterinarioOfContraindicacionesListNewContraindicaciones = em.merge(oldVeterinarioOfContraindicacionesListNewContraindicaciones);
                     }
                 }
             }
-            for (Desparacitaciones desparacitacionesCollectionNewDesparacitaciones : desparacitacionesCollectionNew) {
-                if (!desparacitacionesCollectionOld.contains(desparacitacionesCollectionNewDesparacitaciones)) {
-                    Veterinario oldEspecialistaOfDesparacitacionesCollectionNewDesparacitaciones = desparacitacionesCollectionNewDesparacitaciones.getEspecialista();
-                    desparacitacionesCollectionNewDesparacitaciones.setEspecialista(veterinario);
-                    desparacitacionesCollectionNewDesparacitaciones = em.merge(desparacitacionesCollectionNewDesparacitaciones);
-                    if (oldEspecialistaOfDesparacitacionesCollectionNewDesparacitaciones != null && !oldEspecialistaOfDesparacitacionesCollectionNewDesparacitaciones.equals(veterinario)) {
-                        oldEspecialistaOfDesparacitacionesCollectionNewDesparacitaciones.getDesparacitacionesCollection().remove(desparacitacionesCollectionNewDesparacitaciones);
-                        oldEspecialistaOfDesparacitacionesCollectionNewDesparacitaciones = em.merge(oldEspecialistaOfDesparacitacionesCollectionNewDesparacitaciones);
+            for (Desparacitaciones desparacitacionesListNewDesparacitaciones : desparacitacionesListNew) {
+                if (!desparacitacionesListOld.contains(desparacitacionesListNewDesparacitaciones)) {
+                    Veterinario oldEspecialistaOfDesparacitacionesListNewDesparacitaciones = desparacitacionesListNewDesparacitaciones.getEspecialista();
+                    desparacitacionesListNewDesparacitaciones.setEspecialista(veterinario);
+                    desparacitacionesListNewDesparacitaciones = em.merge(desparacitacionesListNewDesparacitaciones);
+                    if (oldEspecialistaOfDesparacitacionesListNewDesparacitaciones != null && !oldEspecialistaOfDesparacitacionesListNewDesparacitaciones.equals(veterinario)) {
+                        oldEspecialistaOfDesparacitacionesListNewDesparacitaciones.getDesparacitacionesList().remove(desparacitacionesListNewDesparacitaciones);
+                        oldEspecialistaOfDesparacitacionesListNewDesparacitaciones = em.merge(oldEspecialistaOfDesparacitacionesListNewDesparacitaciones);
                     }
                 }
             }
-            for (Farmacos farmacosCollectionNewFarmacos : farmacosCollectionNew) {
-                if (!farmacosCollectionOld.contains(farmacosCollectionNewFarmacos)) {
-                    Veterinario oldVeterinarioOfFarmacosCollectionNewFarmacos = farmacosCollectionNewFarmacos.getVeterinario();
-                    farmacosCollectionNewFarmacos.setVeterinario(veterinario);
-                    farmacosCollectionNewFarmacos = em.merge(farmacosCollectionNewFarmacos);
-                    if (oldVeterinarioOfFarmacosCollectionNewFarmacos != null && !oldVeterinarioOfFarmacosCollectionNewFarmacos.equals(veterinario)) {
-                        oldVeterinarioOfFarmacosCollectionNewFarmacos.getFarmacosCollection().remove(farmacosCollectionNewFarmacos);
-                        oldVeterinarioOfFarmacosCollectionNewFarmacos = em.merge(oldVeterinarioOfFarmacosCollectionNewFarmacos);
+            for (Farmacos farmacosListNewFarmacos : farmacosListNew) {
+                if (!farmacosListOld.contains(farmacosListNewFarmacos)) {
+                    Veterinario oldVeterinarioOfFarmacosListNewFarmacos = farmacosListNewFarmacos.getVeterinario();
+                    farmacosListNewFarmacos.setVeterinario(veterinario);
+                    farmacosListNewFarmacos = em.merge(farmacosListNewFarmacos);
+                    if (oldVeterinarioOfFarmacosListNewFarmacos != null && !oldVeterinarioOfFarmacosListNewFarmacos.equals(veterinario)) {
+                        oldVeterinarioOfFarmacosListNewFarmacos.getFarmacosList().remove(farmacosListNewFarmacos);
+                        oldVeterinarioOfFarmacosListNewFarmacos = em.merge(oldVeterinarioOfFarmacosListNewFarmacos);
                     }
                 }
             }
-            for (Procedimientos procedimientosCollectionNewProcedimientos : procedimientosCollectionNew) {
-                if (!procedimientosCollectionOld.contains(procedimientosCollectionNewProcedimientos)) {
-                    Veterinario oldVeterinarioOfProcedimientosCollectionNewProcedimientos = procedimientosCollectionNewProcedimientos.getVeterinario();
-                    procedimientosCollectionNewProcedimientos.setVeterinario(veterinario);
-                    procedimientosCollectionNewProcedimientos = em.merge(procedimientosCollectionNewProcedimientos);
-                    if (oldVeterinarioOfProcedimientosCollectionNewProcedimientos != null && !oldVeterinarioOfProcedimientosCollectionNewProcedimientos.equals(veterinario)) {
-                        oldVeterinarioOfProcedimientosCollectionNewProcedimientos.getProcedimientosCollection().remove(procedimientosCollectionNewProcedimientos);
-                        oldVeterinarioOfProcedimientosCollectionNewProcedimientos = em.merge(oldVeterinarioOfProcedimientosCollectionNewProcedimientos);
+            for (Procedimientos procedimientosListNewProcedimientos : procedimientosListNew) {
+                if (!procedimientosListOld.contains(procedimientosListNewProcedimientos)) {
+                    Veterinario oldVeterinarioOfProcedimientosListNewProcedimientos = procedimientosListNewProcedimientos.getVeterinario();
+                    procedimientosListNewProcedimientos.setVeterinario(veterinario);
+                    procedimientosListNewProcedimientos = em.merge(procedimientosListNewProcedimientos);
+                    if (oldVeterinarioOfProcedimientosListNewProcedimientos != null && !oldVeterinarioOfProcedimientosListNewProcedimientos.equals(veterinario)) {
+                        oldVeterinarioOfProcedimientosListNewProcedimientos.getProcedimientosList().remove(procedimientosListNewProcedimientos);
+                        oldVeterinarioOfProcedimientosListNewProcedimientos = em.merge(oldVeterinarioOfProcedimientosListNewProcedimientos);
                     }
                 }
             }
-            for (Hospitalizacion hospitalizacionCollectionNewHospitalizacion : hospitalizacionCollectionNew) {
-                if (!hospitalizacionCollectionOld.contains(hospitalizacionCollectionNewHospitalizacion)) {
-                    Veterinario oldVeterinarioOfHospitalizacionCollectionNewHospitalizacion = hospitalizacionCollectionNewHospitalizacion.getVeterinario();
-                    hospitalizacionCollectionNewHospitalizacion.setVeterinario(veterinario);
-                    hospitalizacionCollectionNewHospitalizacion = em.merge(hospitalizacionCollectionNewHospitalizacion);
-                    if (oldVeterinarioOfHospitalizacionCollectionNewHospitalizacion != null && !oldVeterinarioOfHospitalizacionCollectionNewHospitalizacion.equals(veterinario)) {
-                        oldVeterinarioOfHospitalizacionCollectionNewHospitalizacion.getHospitalizacionCollection().remove(hospitalizacionCollectionNewHospitalizacion);
-                        oldVeterinarioOfHospitalizacionCollectionNewHospitalizacion = em.merge(oldVeterinarioOfHospitalizacionCollectionNewHospitalizacion);
+            for (Hospitalizacion hospitalizacionListNewHospitalizacion : hospitalizacionListNew) {
+                if (!hospitalizacionListOld.contains(hospitalizacionListNewHospitalizacion)) {
+                    Veterinario oldVeterinarioOfHospitalizacionListNewHospitalizacion = hospitalizacionListNewHospitalizacion.getVeterinario();
+                    hospitalizacionListNewHospitalizacion.setVeterinario(veterinario);
+                    hospitalizacionListNewHospitalizacion = em.merge(hospitalizacionListNewHospitalizacion);
+                    if (oldVeterinarioOfHospitalizacionListNewHospitalizacion != null && !oldVeterinarioOfHospitalizacionListNewHospitalizacion.equals(veterinario)) {
+                        oldVeterinarioOfHospitalizacionListNewHospitalizacion.getHospitalizacionList().remove(hospitalizacionListNewHospitalizacion);
+                        oldVeterinarioOfHospitalizacionListNewHospitalizacion = em.merge(oldVeterinarioOfHospitalizacionListNewHospitalizacion);
                     }
                 }
             }
-            for (AgendaDetalle agendaDetalleCollectionNewAgendaDetalle : agendaDetalleCollectionNew) {
-                if (!agendaDetalleCollectionOld.contains(agendaDetalleCollectionNewAgendaDetalle)) {
-                    Veterinario oldVeterinarioOfAgendaDetalleCollectionNewAgendaDetalle = agendaDetalleCollectionNewAgendaDetalle.getVeterinario();
-                    agendaDetalleCollectionNewAgendaDetalle.setVeterinario(veterinario);
-                    agendaDetalleCollectionNewAgendaDetalle = em.merge(agendaDetalleCollectionNewAgendaDetalle);
-                    if (oldVeterinarioOfAgendaDetalleCollectionNewAgendaDetalle != null && !oldVeterinarioOfAgendaDetalleCollectionNewAgendaDetalle.equals(veterinario)) {
-                        oldVeterinarioOfAgendaDetalleCollectionNewAgendaDetalle.getAgendaDetalleCollection().remove(agendaDetalleCollectionNewAgendaDetalle);
-                        oldVeterinarioOfAgendaDetalleCollectionNewAgendaDetalle = em.merge(oldVeterinarioOfAgendaDetalleCollectionNewAgendaDetalle);
+            for (AgendaDetalle agendaDetalleListNewAgendaDetalle : agendaDetalleListNew) {
+                if (!agendaDetalleListOld.contains(agendaDetalleListNewAgendaDetalle)) {
+                    Veterinario oldVeterinarioOfAgendaDetalleListNewAgendaDetalle = agendaDetalleListNewAgendaDetalle.getVeterinario();
+                    agendaDetalleListNewAgendaDetalle.setVeterinario(veterinario);
+                    agendaDetalleListNewAgendaDetalle = em.merge(agendaDetalleListNewAgendaDetalle);
+                    if (oldVeterinarioOfAgendaDetalleListNewAgendaDetalle != null && !oldVeterinarioOfAgendaDetalleListNewAgendaDetalle.equals(veterinario)) {
+                        oldVeterinarioOfAgendaDetalleListNewAgendaDetalle.getAgendaDetalleList().remove(agendaDetalleListNewAgendaDetalle);
+                        oldVeterinarioOfAgendaDetalleListNewAgendaDetalle = em.merge(oldVeterinarioOfAgendaDetalleListNewAgendaDetalle);
                     }
                 }
             }
-            for (Anamnesis anamnesisCollectionNewAnamnesis : anamnesisCollectionNew) {
-                if (!anamnesisCollectionOld.contains(anamnesisCollectionNewAnamnesis)) {
-                    Veterinario oldVeterinarioOfAnamnesisCollectionNewAnamnesis = anamnesisCollectionNewAnamnesis.getVeterinario();
-                    anamnesisCollectionNewAnamnesis.setVeterinario(veterinario);
-                    anamnesisCollectionNewAnamnesis = em.merge(anamnesisCollectionNewAnamnesis);
-                    if (oldVeterinarioOfAnamnesisCollectionNewAnamnesis != null && !oldVeterinarioOfAnamnesisCollectionNewAnamnesis.equals(veterinario)) {
-                        oldVeterinarioOfAnamnesisCollectionNewAnamnesis.getAnamnesisCollection().remove(anamnesisCollectionNewAnamnesis);
-                        oldVeterinarioOfAnamnesisCollectionNewAnamnesis = em.merge(oldVeterinarioOfAnamnesisCollectionNewAnamnesis);
+            for (Anamnesis anamnesisListNewAnamnesis : anamnesisListNew) {
+                if (!anamnesisListOld.contains(anamnesisListNewAnamnesis)) {
+                    Veterinario oldVeterinarioOfAnamnesisListNewAnamnesis = anamnesisListNewAnamnesis.getVeterinario();
+                    anamnesisListNewAnamnesis.setVeterinario(veterinario);
+                    anamnesisListNewAnamnesis = em.merge(anamnesisListNewAnamnesis);
+                    if (oldVeterinarioOfAnamnesisListNewAnamnesis != null && !oldVeterinarioOfAnamnesisListNewAnamnesis.equals(veterinario)) {
+                        oldVeterinarioOfAnamnesisListNewAnamnesis.getAnamnesisList().remove(anamnesisListNewAnamnesis);
+                        oldVeterinarioOfAnamnesisListNewAnamnesis = em.merge(oldVeterinarioOfAnamnesisListNewAnamnesis);
                     }
                 }
             }
-            for (Patologias patologiasCollectionNewPatologias : patologiasCollectionNew) {
-                if (!patologiasCollectionOld.contains(patologiasCollectionNewPatologias)) {
-                    Veterinario oldVeterinarioOfPatologiasCollectionNewPatologias = patologiasCollectionNewPatologias.getVeterinario();
-                    patologiasCollectionNewPatologias.setVeterinario(veterinario);
-                    patologiasCollectionNewPatologias = em.merge(patologiasCollectionNewPatologias);
-                    if (oldVeterinarioOfPatologiasCollectionNewPatologias != null && !oldVeterinarioOfPatologiasCollectionNewPatologias.equals(veterinario)) {
-                        oldVeterinarioOfPatologiasCollectionNewPatologias.getPatologiasCollection().remove(patologiasCollectionNewPatologias);
-                        oldVeterinarioOfPatologiasCollectionNewPatologias = em.merge(oldVeterinarioOfPatologiasCollectionNewPatologias);
+            for (Patologias patologiasListNewPatologias : patologiasListNew) {
+                if (!patologiasListOld.contains(patologiasListNewPatologias)) {
+                    Veterinario oldVeterinarioOfPatologiasListNewPatologias = patologiasListNewPatologias.getVeterinario();
+                    patologiasListNewPatologias.setVeterinario(veterinario);
+                    patologiasListNewPatologias = em.merge(patologiasListNewPatologias);
+                    if (oldVeterinarioOfPatologiasListNewPatologias != null && !oldVeterinarioOfPatologiasListNewPatologias.equals(veterinario)) {
+                        oldVeterinarioOfPatologiasListNewPatologias.getPatologiasList().remove(patologiasListNewPatologias);
+                        oldVeterinarioOfPatologiasListNewPatologias = em.merge(oldVeterinarioOfPatologiasListNewPatologias);
                     }
                 }
             }
@@ -589,82 +588,82 @@ public class VeterinarioJpaController implements Serializable {
                 throw new NonexistentEntityException("The veterinario with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Examenes> examenesCollectionOrphanCheck = veterinario.getExamenesCollection();
-            for (Examenes examenesCollectionOrphanCheckExamenes : examenesCollectionOrphanCheck) {
+            List<Examenes> examenesListOrphanCheck = veterinario.getExamenesList();
+            for (Examenes examenesListOrphanCheckExamenes : examenesListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Examenes " + examenesCollectionOrphanCheckExamenes + " in its examenesCollection field has a non-nullable veterinario field.");
+                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Examenes " + examenesListOrphanCheckExamenes + " in its examenesList field has a non-nullable veterinario field.");
             }
-            Collection<Historialvacunas> historialvacunasCollectionOrphanCheck = veterinario.getHistorialvacunasCollection();
-            for (Historialvacunas historialvacunasCollectionOrphanCheckHistorialvacunas : historialvacunasCollectionOrphanCheck) {
+            List<Historialvacunas> historialvacunasListOrphanCheck = veterinario.getHistorialvacunasList();
+            for (Historialvacunas historialvacunasListOrphanCheckHistorialvacunas : historialvacunasListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Historialvacunas " + historialvacunasCollectionOrphanCheckHistorialvacunas + " in its historialvacunasCollection field has a non-nullable veterinario field.");
+                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Historialvacunas " + historialvacunasListOrphanCheckHistorialvacunas + " in its historialvacunasList field has a non-nullable veterinario field.");
             }
-            Collection<Contraindicaciones> contraindicacionesCollectionOrphanCheck = veterinario.getContraindicacionesCollection();
-            for (Contraindicaciones contraindicacionesCollectionOrphanCheckContraindicaciones : contraindicacionesCollectionOrphanCheck) {
+            List<Contraindicaciones> contraindicacionesListOrphanCheck = veterinario.getContraindicacionesList();
+            for (Contraindicaciones contraindicacionesListOrphanCheckContraindicaciones : contraindicacionesListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Contraindicaciones " + contraindicacionesCollectionOrphanCheckContraindicaciones + " in its contraindicacionesCollection field has a non-nullable veterinario field.");
+                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Contraindicaciones " + contraindicacionesListOrphanCheckContraindicaciones + " in its contraindicacionesList field has a non-nullable veterinario field.");
             }
-            Collection<Desparacitaciones> desparacitacionesCollectionOrphanCheck = veterinario.getDesparacitacionesCollection();
-            for (Desparacitaciones desparacitacionesCollectionOrphanCheckDesparacitaciones : desparacitacionesCollectionOrphanCheck) {
+            List<Desparacitaciones> desparacitacionesListOrphanCheck = veterinario.getDesparacitacionesList();
+            for (Desparacitaciones desparacitacionesListOrphanCheckDesparacitaciones : desparacitacionesListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Desparacitaciones " + desparacitacionesCollectionOrphanCheckDesparacitaciones + " in its desparacitacionesCollection field has a non-nullable especialista field.");
+                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Desparacitaciones " + desparacitacionesListOrphanCheckDesparacitaciones + " in its desparacitacionesList field has a non-nullable especialista field.");
             }
-            Collection<Farmacos> farmacosCollectionOrphanCheck = veterinario.getFarmacosCollection();
-            for (Farmacos farmacosCollectionOrphanCheckFarmacos : farmacosCollectionOrphanCheck) {
+            List<Farmacos> farmacosListOrphanCheck = veterinario.getFarmacosList();
+            for (Farmacos farmacosListOrphanCheckFarmacos : farmacosListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Farmacos " + farmacosCollectionOrphanCheckFarmacos + " in its farmacosCollection field has a non-nullable veterinario field.");
+                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Farmacos " + farmacosListOrphanCheckFarmacos + " in its farmacosList field has a non-nullable veterinario field.");
             }
-            Collection<Procedimientos> procedimientosCollectionOrphanCheck = veterinario.getProcedimientosCollection();
-            for (Procedimientos procedimientosCollectionOrphanCheckProcedimientos : procedimientosCollectionOrphanCheck) {
+            List<Procedimientos> procedimientosListOrphanCheck = veterinario.getProcedimientosList();
+            for (Procedimientos procedimientosListOrphanCheckProcedimientos : procedimientosListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Procedimientos " + procedimientosCollectionOrphanCheckProcedimientos + " in its procedimientosCollection field has a non-nullable veterinario field.");
+                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Procedimientos " + procedimientosListOrphanCheckProcedimientos + " in its procedimientosList field has a non-nullable veterinario field.");
             }
-            Collection<Hospitalizacion> hospitalizacionCollectionOrphanCheck = veterinario.getHospitalizacionCollection();
-            for (Hospitalizacion hospitalizacionCollectionOrphanCheckHospitalizacion : hospitalizacionCollectionOrphanCheck) {
+            List<Hospitalizacion> hospitalizacionListOrphanCheck = veterinario.getHospitalizacionList();
+            for (Hospitalizacion hospitalizacionListOrphanCheckHospitalizacion : hospitalizacionListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Hospitalizacion " + hospitalizacionCollectionOrphanCheckHospitalizacion + " in its hospitalizacionCollection field has a non-nullable veterinario field.");
+                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Hospitalizacion " + hospitalizacionListOrphanCheckHospitalizacion + " in its hospitalizacionList field has a non-nullable veterinario field.");
             }
-            Collection<AgendaDetalle> agendaDetalleCollectionOrphanCheck = veterinario.getAgendaDetalleCollection();
-            for (AgendaDetalle agendaDetalleCollectionOrphanCheckAgendaDetalle : agendaDetalleCollectionOrphanCheck) {
+            List<AgendaDetalle> agendaDetalleListOrphanCheck = veterinario.getAgendaDetalleList();
+            for (AgendaDetalle agendaDetalleListOrphanCheckAgendaDetalle : agendaDetalleListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the AgendaDetalle " + agendaDetalleCollectionOrphanCheckAgendaDetalle + " in its agendaDetalleCollection field has a non-nullable veterinario field.");
+                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the AgendaDetalle " + agendaDetalleListOrphanCheckAgendaDetalle + " in its agendaDetalleList field has a non-nullable veterinario field.");
             }
-            Collection<Anamnesis> anamnesisCollectionOrphanCheck = veterinario.getAnamnesisCollection();
-            for (Anamnesis anamnesisCollectionOrphanCheckAnamnesis : anamnesisCollectionOrphanCheck) {
+            List<Anamnesis> anamnesisListOrphanCheck = veterinario.getAnamnesisList();
+            for (Anamnesis anamnesisListOrphanCheckAnamnesis : anamnesisListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Anamnesis " + anamnesisCollectionOrphanCheckAnamnesis + " in its anamnesisCollection field has a non-nullable veterinario field.");
+                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Anamnesis " + anamnesisListOrphanCheckAnamnesis + " in its anamnesisList field has a non-nullable veterinario field.");
             }
-            Collection<Patologias> patologiasCollectionOrphanCheck = veterinario.getPatologiasCollection();
-            for (Patologias patologiasCollectionOrphanCheckPatologias : patologiasCollectionOrphanCheck) {
+            List<Patologias> patologiasListOrphanCheck = veterinario.getPatologiasList();
+            for (Patologias patologiasListOrphanCheckPatologias : patologiasListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Patologias " + patologiasCollectionOrphanCheckPatologias + " in its patologiasCollection field has a non-nullable veterinario field.");
+                illegalOrphanMessages.add("This Veterinario (" + veterinario + ") cannot be destroyed since the Patologias " + patologiasListOrphanCheckPatologias + " in its patologiasList field has a non-nullable veterinario field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
             Sucursal sucursal = veterinario.getSucursal();
             if (sucursal != null) {
-                sucursal.getVeterinarioCollection().remove(veterinario);
+                sucursal.getVeterinarioList().remove(veterinario);
                 sucursal = em.merge(sucursal);
             }
             em.remove(veterinario);

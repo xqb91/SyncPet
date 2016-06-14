@@ -17,14 +17,13 @@ import cl.starlabs.modelo.Especie;
 import cl.starlabs.modelo.Mascota;
 import cl.starlabs.modelo.Raza;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class RazaJpaController implements Serializable {
 
@@ -38,8 +37,8 @@ public class RazaJpaController implements Serializable {
     }
 
     public void create(Raza raza) throws PreexistingEntityException, Exception {
-        if (raza.getMascotaCollection() == null) {
-            raza.setMascotaCollection(new ArrayList<Mascota>());
+        if (raza.getMascotaList() == null) {
+            raza.setMascotaList(new ArrayList<Mascota>());
         }
         EntityManager em = null;
         try {
@@ -50,24 +49,24 @@ public class RazaJpaController implements Serializable {
                 especie = em.getReference(especie.getClass(), especie.getIdEspecie());
                 raza.setEspecie(especie);
             }
-            Collection<Mascota> attachedMascotaCollection = new ArrayList<Mascota>();
-            for (Mascota mascotaCollectionMascotaToAttach : raza.getMascotaCollection()) {
-                mascotaCollectionMascotaToAttach = em.getReference(mascotaCollectionMascotaToAttach.getClass(), mascotaCollectionMascotaToAttach.getIdMascota());
-                attachedMascotaCollection.add(mascotaCollectionMascotaToAttach);
+            List<Mascota> attachedMascotaList = new ArrayList<Mascota>();
+            for (Mascota mascotaListMascotaToAttach : raza.getMascotaList()) {
+                mascotaListMascotaToAttach = em.getReference(mascotaListMascotaToAttach.getClass(), mascotaListMascotaToAttach.getIdMascota());
+                attachedMascotaList.add(mascotaListMascotaToAttach);
             }
-            raza.setMascotaCollection(attachedMascotaCollection);
+            raza.setMascotaList(attachedMascotaList);
             em.persist(raza);
             if (especie != null) {
-                especie.getRazaCollection().add(raza);
+                especie.getRazaList().add(raza);
                 especie = em.merge(especie);
             }
-            for (Mascota mascotaCollectionMascota : raza.getMascotaCollection()) {
-                Raza oldRazaOfMascotaCollectionMascota = mascotaCollectionMascota.getRaza();
-                mascotaCollectionMascota.setRaza(raza);
-                mascotaCollectionMascota = em.merge(mascotaCollectionMascota);
-                if (oldRazaOfMascotaCollectionMascota != null) {
-                    oldRazaOfMascotaCollectionMascota.getMascotaCollection().remove(mascotaCollectionMascota);
-                    oldRazaOfMascotaCollectionMascota = em.merge(oldRazaOfMascotaCollectionMascota);
+            for (Mascota mascotaListMascota : raza.getMascotaList()) {
+                Raza oldRazaOfMascotaListMascota = mascotaListMascota.getRaza();
+                mascotaListMascota.setRaza(raza);
+                mascotaListMascota = em.merge(mascotaListMascota);
+                if (oldRazaOfMascotaListMascota != null) {
+                    oldRazaOfMascotaListMascota.getMascotaList().remove(mascotaListMascota);
+                    oldRazaOfMascotaListMascota = em.merge(oldRazaOfMascotaListMascota);
                 }
             }
             em.getTransaction().commit();
@@ -91,15 +90,15 @@ public class RazaJpaController implements Serializable {
             Raza persistentRaza = em.find(Raza.class, raza.getIdRaza());
             Especie especieOld = persistentRaza.getEspecie();
             Especie especieNew = raza.getEspecie();
-            Collection<Mascota> mascotaCollectionOld = persistentRaza.getMascotaCollection();
-            Collection<Mascota> mascotaCollectionNew = raza.getMascotaCollection();
+            List<Mascota> mascotaListOld = persistentRaza.getMascotaList();
+            List<Mascota> mascotaListNew = raza.getMascotaList();
             List<String> illegalOrphanMessages = null;
-            for (Mascota mascotaCollectionOldMascota : mascotaCollectionOld) {
-                if (!mascotaCollectionNew.contains(mascotaCollectionOldMascota)) {
+            for (Mascota mascotaListOldMascota : mascotaListOld) {
+                if (!mascotaListNew.contains(mascotaListOldMascota)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Mascota " + mascotaCollectionOldMascota + " since its raza field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Mascota " + mascotaListOldMascota + " since its raza field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -109,30 +108,30 @@ public class RazaJpaController implements Serializable {
                 especieNew = em.getReference(especieNew.getClass(), especieNew.getIdEspecie());
                 raza.setEspecie(especieNew);
             }
-            Collection<Mascota> attachedMascotaCollectionNew = new ArrayList<Mascota>();
-            for (Mascota mascotaCollectionNewMascotaToAttach : mascotaCollectionNew) {
-                mascotaCollectionNewMascotaToAttach = em.getReference(mascotaCollectionNewMascotaToAttach.getClass(), mascotaCollectionNewMascotaToAttach.getIdMascota());
-                attachedMascotaCollectionNew.add(mascotaCollectionNewMascotaToAttach);
+            List<Mascota> attachedMascotaListNew = new ArrayList<Mascota>();
+            for (Mascota mascotaListNewMascotaToAttach : mascotaListNew) {
+                mascotaListNewMascotaToAttach = em.getReference(mascotaListNewMascotaToAttach.getClass(), mascotaListNewMascotaToAttach.getIdMascota());
+                attachedMascotaListNew.add(mascotaListNewMascotaToAttach);
             }
-            mascotaCollectionNew = attachedMascotaCollectionNew;
-            raza.setMascotaCollection(mascotaCollectionNew);
+            mascotaListNew = attachedMascotaListNew;
+            raza.setMascotaList(mascotaListNew);
             raza = em.merge(raza);
             if (especieOld != null && !especieOld.equals(especieNew)) {
-                especieOld.getRazaCollection().remove(raza);
+                especieOld.getRazaList().remove(raza);
                 especieOld = em.merge(especieOld);
             }
             if (especieNew != null && !especieNew.equals(especieOld)) {
-                especieNew.getRazaCollection().add(raza);
+                especieNew.getRazaList().add(raza);
                 especieNew = em.merge(especieNew);
             }
-            for (Mascota mascotaCollectionNewMascota : mascotaCollectionNew) {
-                if (!mascotaCollectionOld.contains(mascotaCollectionNewMascota)) {
-                    Raza oldRazaOfMascotaCollectionNewMascota = mascotaCollectionNewMascota.getRaza();
-                    mascotaCollectionNewMascota.setRaza(raza);
-                    mascotaCollectionNewMascota = em.merge(mascotaCollectionNewMascota);
-                    if (oldRazaOfMascotaCollectionNewMascota != null && !oldRazaOfMascotaCollectionNewMascota.equals(raza)) {
-                        oldRazaOfMascotaCollectionNewMascota.getMascotaCollection().remove(mascotaCollectionNewMascota);
-                        oldRazaOfMascotaCollectionNewMascota = em.merge(oldRazaOfMascotaCollectionNewMascota);
+            for (Mascota mascotaListNewMascota : mascotaListNew) {
+                if (!mascotaListOld.contains(mascotaListNewMascota)) {
+                    Raza oldRazaOfMascotaListNewMascota = mascotaListNewMascota.getRaza();
+                    mascotaListNewMascota.setRaza(raza);
+                    mascotaListNewMascota = em.merge(mascotaListNewMascota);
+                    if (oldRazaOfMascotaListNewMascota != null && !oldRazaOfMascotaListNewMascota.equals(raza)) {
+                        oldRazaOfMascotaListNewMascota.getMascotaList().remove(mascotaListNewMascota);
+                        oldRazaOfMascotaListNewMascota = em.merge(oldRazaOfMascotaListNewMascota);
                     }
                 }
             }
@@ -166,19 +165,19 @@ public class RazaJpaController implements Serializable {
                 throw new NonexistentEntityException("The raza with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Mascota> mascotaCollectionOrphanCheck = raza.getMascotaCollection();
-            for (Mascota mascotaCollectionOrphanCheckMascota : mascotaCollectionOrphanCheck) {
+            List<Mascota> mascotaListOrphanCheck = raza.getMascotaList();
+            for (Mascota mascotaListOrphanCheckMascota : mascotaListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Raza (" + raza + ") cannot be destroyed since the Mascota " + mascotaCollectionOrphanCheckMascota + " in its mascotaCollection field has a non-nullable raza field.");
+                illegalOrphanMessages.add("This Raza (" + raza + ") cannot be destroyed since the Mascota " + mascotaListOrphanCheckMascota + " in its mascotaList field has a non-nullable raza field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
             Especie especie = raza.getEspecie();
             if (especie != null) {
-                especie.getRazaCollection().remove(raza);
+                especie.getRazaList().remove(raza);
                 especie = em.merge(especie);
             }
             em.remove(raza);

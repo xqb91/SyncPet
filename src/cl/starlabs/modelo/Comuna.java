@@ -6,7 +6,7 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,32 +23,31 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Comuna", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Comuna.findAll", query = "SELECT c FROM Comuna c"),
+    @NamedQuery(name = "Comuna.findAll", query = "SELECT c FROM Comuna c ORDER BY c.nombre ASC"),
     @NamedQuery(name = "Comuna.findByIdComuna", query = "SELECT c FROM Comuna c WHERE c.idComuna = :idComuna"),
     @NamedQuery(name = "Comuna.findByNombre", query = "SELECT c FROM Comuna c WHERE c.nombre = :nombre")})
 public class Comuna implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_comuna", nullable = false)
     private Integer idComuna;
     @Basic(optional = false)
-    @Column(name = "nombre", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String nombre;
     @JoinColumn(name = "provincia", referencedColumnName = "id_provincia", nullable = false)
     @ManyToOne(optional = false)
     private Provincia provincia;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "comuna")
-    private Collection<Sucursal> sucursalCollection;
+    private List<Sucursal> sucursalList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "comuna")
-    private Collection<Propietario> propietarioCollection;
+    private List<Propietario> propietarioList;
 
     public Comuna() {
     }
@@ -87,21 +86,21 @@ public class Comuna implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Sucursal> getSucursalCollection() {
-        return sucursalCollection;
+    public List<Sucursal> getSucursalList() {
+        return sucursalList;
     }
 
-    public void setSucursalCollection(Collection<Sucursal> sucursalCollection) {
-        this.sucursalCollection = sucursalCollection;
+    public void setSucursalList(List<Sucursal> sucursalList) {
+        this.sucursalList = sucursalList;
     }
 
     @XmlTransient
-    public Collection<Propietario> getPropietarioCollection() {
-        return propietarioCollection;
+    public List<Propietario> getPropietarioList() {
+        return propietarioList;
     }
 
-    public void setPropietarioCollection(Collection<Propietario> propietarioCollection) {
-        this.propietarioCollection = propietarioCollection;
+    public void setPropietarioList(List<Propietario> propietarioList) {
+        this.propietarioList = propietarioList;
     }
 
     @Override

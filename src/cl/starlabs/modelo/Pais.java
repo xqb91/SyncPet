@@ -6,7 +6,7 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,10 +21,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Pais", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Pais.findAll", query = "SELECT p FROM Pais p"),
@@ -32,20 +32,19 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Pais.findByNombre", query = "SELECT p FROM Pais p WHERE p.nombre = :nombre"),
     @NamedQuery(name = "Pais.findByCodigoTelefonico", query = "SELECT p FROM Pais p WHERE p.codigoTelefonico = :codigoTelefonico")})
 public class Pais implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_pais", nullable = false)
     private Integer idPais;
     @Basic(optional = false)
-    @Column(name = "nombre", nullable = false, length = 35)
+    @Column(nullable = false, length = 35)
     private String nombre;
     @Basic(optional = false)
     @Column(name = "codigo_telefonico", nullable = false, length = 4)
     private String codigoTelefonico;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pais")
-    private Collection<Region> regionCollection;
+    private List<Region> regionList;
 
     public Pais() {
     }
@@ -85,12 +84,12 @@ public class Pais implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Region> getRegionCollection() {
-        return regionCollection;
+    public List<Region> getRegionList() {
+        return regionList;
     }
 
-    public void setRegionCollection(Collection<Region> regionCollection) {
-        this.regionCollection = regionCollection;
+    public void setRegionList(List<Region> regionList) {
+        this.regionList = regionList;
     }
 
     @Override

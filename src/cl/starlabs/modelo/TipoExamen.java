@@ -6,7 +6,7 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
 @Table(name = "Tipo_Examen", catalog = "syncpet", schema = "dbo")
@@ -33,7 +33,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TipoExamen.findByNombreExamen", query = "SELECT t FROM TipoExamen t WHERE t.nombreExamen = :nombreExamen"),
     @NamedQuery(name = "TipoExamen.findByCosto", query = "SELECT t FROM TipoExamen t WHERE t.costo = :costo")})
 public class TipoExamen implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -43,13 +42,13 @@ public class TipoExamen implements Serializable {
     @Column(name = "nombre_examen", nullable = false, length = 250)
     private String nombreExamen;
     @Lob
-    @Column(name = "descripci\u00f3m", length = 2147483647)
+    @Column(length = 2147483647)
     private String descripcióm;
     @Basic(optional = false)
-    @Column(name = "costo", nullable = false)
+    @Column(nullable = false)
     private int costo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoExamen")
-    private Collection<Examenes> examenesCollection;
+    private List<Examenes> examenesList;
 
     public TipoExamen() {
     }
@@ -97,12 +96,12 @@ public class TipoExamen implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Examenes> getExamenesCollection() {
-        return examenesCollection;
+    public List<Examenes> getExamenesList() {
+        return examenesList;
     }
 
-    public void setExamenesCollection(Collection<Examenes> examenesCollection) {
-        this.examenesCollection = examenesCollection;
+    public void setExamenesList(List<Examenes> examenesList) {
+        this.examenesList = examenesList;
     }
 
     @Override

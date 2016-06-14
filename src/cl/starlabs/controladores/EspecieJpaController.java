@@ -16,14 +16,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Raza;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 public class EspecieJpaController implements Serializable {
 
@@ -37,27 +36,27 @@ public class EspecieJpaController implements Serializable {
     }
 
     public void create(Especie especie) throws PreexistingEntityException, Exception {
-        if (especie.getRazaCollection() == null) {
-            especie.setRazaCollection(new ArrayList<Raza>());
+        if (especie.getRazaList() == null) {
+            especie.setRazaList(new ArrayList<Raza>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Collection<Raza> attachedRazaCollection = new ArrayList<Raza>();
-            for (Raza razaCollectionRazaToAttach : especie.getRazaCollection()) {
-                razaCollectionRazaToAttach = em.getReference(razaCollectionRazaToAttach.getClass(), razaCollectionRazaToAttach.getIdRaza());
-                attachedRazaCollection.add(razaCollectionRazaToAttach);
+            List<Raza> attachedRazaList = new ArrayList<Raza>();
+            for (Raza razaListRazaToAttach : especie.getRazaList()) {
+                razaListRazaToAttach = em.getReference(razaListRazaToAttach.getClass(), razaListRazaToAttach.getIdRaza());
+                attachedRazaList.add(razaListRazaToAttach);
             }
-            especie.setRazaCollection(attachedRazaCollection);
+            especie.setRazaList(attachedRazaList);
             em.persist(especie);
-            for (Raza razaCollectionRaza : especie.getRazaCollection()) {
-                Especie oldEspecieOfRazaCollectionRaza = razaCollectionRaza.getEspecie();
-                razaCollectionRaza.setEspecie(especie);
-                razaCollectionRaza = em.merge(razaCollectionRaza);
-                if (oldEspecieOfRazaCollectionRaza != null) {
-                    oldEspecieOfRazaCollectionRaza.getRazaCollection().remove(razaCollectionRaza);
-                    oldEspecieOfRazaCollectionRaza = em.merge(oldEspecieOfRazaCollectionRaza);
+            for (Raza razaListRaza : especie.getRazaList()) {
+                Especie oldEspecieOfRazaListRaza = razaListRaza.getEspecie();
+                razaListRaza.setEspecie(especie);
+                razaListRaza = em.merge(razaListRaza);
+                if (oldEspecieOfRazaListRaza != null) {
+                    oldEspecieOfRazaListRaza.getRazaList().remove(razaListRaza);
+                    oldEspecieOfRazaListRaza = em.merge(oldEspecieOfRazaListRaza);
                 }
             }
             em.getTransaction().commit();
@@ -79,36 +78,36 @@ public class EspecieJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Especie persistentEspecie = em.find(Especie.class, especie.getIdEspecie());
-            Collection<Raza> razaCollectionOld = persistentEspecie.getRazaCollection();
-            Collection<Raza> razaCollectionNew = especie.getRazaCollection();
+            List<Raza> razaListOld = persistentEspecie.getRazaList();
+            List<Raza> razaListNew = especie.getRazaList();
             List<String> illegalOrphanMessages = null;
-            for (Raza razaCollectionOldRaza : razaCollectionOld) {
-                if (!razaCollectionNew.contains(razaCollectionOldRaza)) {
+            for (Raza razaListOldRaza : razaListOld) {
+                if (!razaListNew.contains(razaListOldRaza)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Raza " + razaCollectionOldRaza + " since its especie field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Raza " + razaListOldRaza + " since its especie field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Collection<Raza> attachedRazaCollectionNew = new ArrayList<Raza>();
-            for (Raza razaCollectionNewRazaToAttach : razaCollectionNew) {
-                razaCollectionNewRazaToAttach = em.getReference(razaCollectionNewRazaToAttach.getClass(), razaCollectionNewRazaToAttach.getIdRaza());
-                attachedRazaCollectionNew.add(razaCollectionNewRazaToAttach);
+            List<Raza> attachedRazaListNew = new ArrayList<Raza>();
+            for (Raza razaListNewRazaToAttach : razaListNew) {
+                razaListNewRazaToAttach = em.getReference(razaListNewRazaToAttach.getClass(), razaListNewRazaToAttach.getIdRaza());
+                attachedRazaListNew.add(razaListNewRazaToAttach);
             }
-            razaCollectionNew = attachedRazaCollectionNew;
-            especie.setRazaCollection(razaCollectionNew);
+            razaListNew = attachedRazaListNew;
+            especie.setRazaList(razaListNew);
             especie = em.merge(especie);
-            for (Raza razaCollectionNewRaza : razaCollectionNew) {
-                if (!razaCollectionOld.contains(razaCollectionNewRaza)) {
-                    Especie oldEspecieOfRazaCollectionNewRaza = razaCollectionNewRaza.getEspecie();
-                    razaCollectionNewRaza.setEspecie(especie);
-                    razaCollectionNewRaza = em.merge(razaCollectionNewRaza);
-                    if (oldEspecieOfRazaCollectionNewRaza != null && !oldEspecieOfRazaCollectionNewRaza.equals(especie)) {
-                        oldEspecieOfRazaCollectionNewRaza.getRazaCollection().remove(razaCollectionNewRaza);
-                        oldEspecieOfRazaCollectionNewRaza = em.merge(oldEspecieOfRazaCollectionNewRaza);
+            for (Raza razaListNewRaza : razaListNew) {
+                if (!razaListOld.contains(razaListNewRaza)) {
+                    Especie oldEspecieOfRazaListNewRaza = razaListNewRaza.getEspecie();
+                    razaListNewRaza.setEspecie(especie);
+                    razaListNewRaza = em.merge(razaListNewRaza);
+                    if (oldEspecieOfRazaListNewRaza != null && !oldEspecieOfRazaListNewRaza.equals(especie)) {
+                        oldEspecieOfRazaListNewRaza.getRazaList().remove(razaListNewRaza);
+                        oldEspecieOfRazaListNewRaza = em.merge(oldEspecieOfRazaListNewRaza);
                     }
                 }
             }
@@ -142,12 +141,12 @@ public class EspecieJpaController implements Serializable {
                 throw new NonexistentEntityException("The especie with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Raza> razaCollectionOrphanCheck = especie.getRazaCollection();
-            for (Raza razaCollectionOrphanCheckRaza : razaCollectionOrphanCheck) {
+            List<Raza> razaListOrphanCheck = especie.getRazaList();
+            for (Raza razaListOrphanCheckRaza : razaListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Especie (" + especie + ") cannot be destroyed since the Raza " + razaCollectionOrphanCheckRaza + " in its razaCollection field has a non-nullable especie field.");
+                illegalOrphanMessages.add("This Especie (" + especie + ") cannot be destroyed since the Raza " + razaListOrphanCheckRaza + " in its razaList field has a non-nullable especie field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

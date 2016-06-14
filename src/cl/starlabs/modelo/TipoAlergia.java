@@ -6,8 +6,9 @@
 package cl.starlabs.modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -20,27 +21,26 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "TipoAlergia", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TipoAlergia.findAll", query = "SELECT t FROM TipoAlergia t"),
     @NamedQuery(name = "TipoAlergia.findByIdTipoAlergia", query = "SELECT t FROM TipoAlergia t WHERE t.idTipoAlergia = :idTipoAlergia"),
     @NamedQuery(name = "TipoAlergia.findByNombre", query = "SELECT t FROM TipoAlergia t WHERE t.nombre = :nombre")})
 public class TipoAlergia implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_tipo_alergia", nullable = false)
     private Integer idTipoAlergia;
     @Basic(optional = false)
-    @Column(name = "nombre", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String nombre;
-    @OneToMany(mappedBy = "idTipoAlergia")
-    private Collection<Alergias> alergiasCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTipoAlergia")
+    private List<Alergias> alergiasList;
 
     public TipoAlergia() {
     }
@@ -71,12 +71,12 @@ public class TipoAlergia implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Alergias> getAlergiasCollection() {
-        return alergiasCollection;
+    public List<Alergias> getAlergiasList() {
+        return alergiasList;
     }
 
-    public void setAlergiasCollection(Collection<Alergias> alergiasCollection) {
-        this.alergiasCollection = alergiasCollection;
+    public void setAlergiasList(List<Alergias> alergiasList) {
+        this.alergiasList = alergiasList;
     }
 
     @Override

@@ -23,17 +23,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author cetecom
+ * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Farmacos", catalog = "syncpet", schema = "dbo")
+@Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Farmacos.findAll", query = "SELECT f FROM Farmacos f"),
     @NamedQuery(name = "Farmacos.findByIdFarmaco", query = "SELECT f FROM Farmacos f WHERE f.idFarmaco = :idFarmaco"),
     @NamedQuery(name = "Farmacos.findByFechaSuministro", query = "SELECT f FROM Farmacos f WHERE f.fechaSuministro = :fechaSuministro")})
 public class Farmacos implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -44,7 +43,7 @@ public class Farmacos implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaSuministro;
     @Lob
-    @Column(name = "observacion", length = 2147483647)
+    @Column(length = 2147483647)
     private String observacion;
     @JoinColumn(name = "hospitalizacion", referencedColumnName = "id_hospitalizacion", nullable = false)
     @ManyToOne(optional = false)
