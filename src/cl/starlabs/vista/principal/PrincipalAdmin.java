@@ -5,6 +5,8 @@
  */
 package cl.starlabs.vista.principal;
 
+import cl.starlabs.modelo.Sucursal;
+import cl.starlabs.modelo.Usuarios;
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.swing.UIManager;
@@ -18,8 +20,27 @@ public class PrincipalAdmin extends javax.swing.JFrame {
     /**
      * Creates new form Principal
      */
+    Usuarios u = null;
+    Sucursal s = null;
+    
     public PrincipalAdmin() {
         initComponents();
+        //centrando ventana
+        this.setLocationRelativeTo(null);
+        //colocando icono a ventana
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/cl/starlabs/imagenes/sistema/logo_renovado.png"));
+        setIconImage(icon);
+        setVisible(true);
+    }
+    
+     public PrincipalAdmin(Usuarios u, Sucursal s) {
+        initComponents();
+        //usuario
+        this.u = u;
+        //sucursal
+        this.s = s;
+        //seteando el titulo de la ventana
+        this.setTitle("SyncPet Administrador :: Conectado como "+u.getUsuario()+" ("+s.getNombre()+")");
         //centrando ventana
         this.setLocationRelativeTo(null);
         //colocando icono a ventana
@@ -443,7 +464,10 @@ public class PrincipalAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_menAdmin_trabajadoresActionPerformed
 
     private void syncmen_logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_syncmen_logoutActionPerformed
-        // TODO add your handling code here:
+        u = null;
+        s = null;
+        new cl.starlabs.vista.login.IniciarSesion().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_syncmen_logoutActionPerformed
 
     /**

@@ -5,8 +5,14 @@
  */
 package cl.starlabs.vista.principal;
 
+import cl.starlabs.controladores.MascotaJpaController;
+import cl.starlabs.controladores.PropietarioJpaController;
+import cl.starlabs.modelo.Sucursal;
+import cl.starlabs.modelo.Usuarios;
 import java.awt.Image;
 import java.awt.Toolkit;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.swing.UIManager;
 
 /**
@@ -15,17 +21,42 @@ import javax.swing.UIManager;
  */
 public class PrincipalRecepcionista extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Principal
-     */
+    Usuarios u = null;
+    Sucursal s = null;
+    EntityManagerFactory emf = null;
+    
     public PrincipalRecepcionista() {
         initComponents();
+        //centrando ventana
+        this.setLocationRelativeTo(null);
+        //seteando EntityManagerFactory
+        emf = Persistence.createEntityManagerFactory("SyncPetPU");
+        //colocando icono a ventana
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/cl/starlabs/imagenes/sistema/logo_renovado.png"));
+        setIconImage(icon);
+        setVisible(true);
+    }
+    
+    public PrincipalRecepcionista(Usuarios u, Sucursal s) {
+        initComponents();
+        //seteando usuario
+        this.u = u;
+        //seteando sucursal
+        this.s = s;
+        //seteando el titulo de la ventana
+        this.setTitle("SyncPet Recepcionista :: Conectado como "+u.getUsuario()+" ("+s.getNombre()+")");
         //centrando ventana
         this.setLocationRelativeTo(null);
         //colocando icono a ventana
         Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/cl/starlabs/imagenes/sistema/logo_renovado.png"));
         setIconImage(icon);
         setVisible(true);
+        //seteando EntityManagerFactory
+        emf = Persistence.createEntityManagerFactory("SyncPetPU");
+        
+        //seteando estadisticas de la ventana
+        lblNumPropietarios.setText(new PropietarioJpaController(emf).findPropietarioEntities().size()+ " Propietarios");
+        lblNumPacientes.setText(new MascotaJpaController(emf).findMascotaEntities().size() +" Pacientes");
     }
 
     /**
@@ -368,7 +399,10 @@ public class PrincipalRecepcionista extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void syncmen_logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_syncmen_logoutActionPerformed
-        // TODO add your handling code here:
+        u = null;
+        s = null;
+        new cl.starlabs.vista.login.IniciarSesion().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_syncmen_logoutActionPerformed
 
     /**

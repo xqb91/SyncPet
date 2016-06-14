@@ -5,9 +5,20 @@
  */
 package cl.starlabs.vista.login;
 
+import cl.starlabs.controladores.SucursalJpaController;
+import cl.starlabs.controladores.UsuariosJpaController;
+import cl.starlabs.modelo.DetalleUsuarios;
+import cl.starlabs.modelo.Sucursal;
+import cl.starlabs.modelo.Usuarios;
+import cl.starlabs.vista.principal.PrincipalAdmin;
+import cl.starlabs.vista.principal.PrincipalMedico;
+import cl.starlabs.vista.principal.PrincipalRecepcionista;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
@@ -16,7 +27,8 @@ import javax.swing.UIManager;
  */
 public class IniciarSesion extends javax.swing.JFrame {
 
-
+    EntityManagerFactory emf = null;
+    Usuarios us = null;
     public IniciarSesion() {
         initComponents();
         //centrando ventana
@@ -25,6 +37,8 @@ public class IniciarSesion extends javax.swing.JFrame {
         Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/cl/starlabs/imagenes/sistema/logo_renovado.png"));
         setIconImage(icon);
         setVisible(true);
+        
+        emf = Persistence.createEntityManagerFactory("SyncPetPU");
 
     }
 
@@ -58,7 +72,7 @@ public class IniciarSesion extends javax.swing.JFrame {
 
         panelLogin.setBorder(javax.swing.BorderFactory.createTitledBorder("Iniciar Sesión"));
 
-        lblNombreUsuario.setText("Rut Usuario");
+        lblNombreUsuario.setText("Nombre de Usuario");
 
         lblPassword.setText("Contraseña");
 
@@ -69,17 +83,38 @@ public class IniciarSesion extends javax.swing.JFrame {
                 txtNombreUsuarioFocusLost(evt);
             }
         });
+        txtNombreUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNombreUsuarioActionPerformed(evt);
+            }
+        });
 
         slcSucursal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione..." }));
         slcSucursal.setEnabled(false);
+        slcSucursal.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                slcSucursalItemStateChanged(evt);
+            }
+        });
 
         btnIniciarSesion.setText("Iniciar Sesión");
         btnIniciarSesion.setEnabled(false);
+        btnIniciarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIniciarSesionActionPerformed(evt);
+            }
+        });
 
         btnSalir.setText("Salir");
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalirActionPerformed(evt);
+            }
+        });
+
+        txtPassword.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPasswordFocusLost(evt);
             }
         });
 
@@ -100,7 +135,7 @@ public class IniciarSesion extends javax.swing.JFrame {
                     .addComponent(txtPassword))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnIniciarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                    .addComponent(btnIniciarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -157,7 +192,7 @@ public class IniciarSesion extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(lblLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 468, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 12, Short.MAX_VALUE))
+                .addGap(0, 24, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panelLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -180,21 +215,79 @@ public class IniciarSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void txtNombreUsuarioFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreUsuarioFocusLost
-        if(!txtNombreUsuario.getText().isEmpty()) {
-            txtNombreUsuario.setText(cl.starlabs.herramientas.HerramientasRut.formatear(txtNombreUsuario.getText()));
-            if(!cl.starlabs.herramientas.HerramientasRut.validar(txtNombreUsuario.getText())) {
-                lblNombreUsuario.setForeground(Color.red);
-                txtNombreUsuario.setForeground(Color.white);
-                txtNombreUsuario.setBackground(Color.red);
-                txtNombreUsuario.selectAll();
+
+    }//GEN-LAST:event_txtNombreUsuarioFocusLost
+
+    private void txtNombreUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreUsuarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNombreUsuarioActionPerformed
+
+    private void txtPasswordFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPasswordFocusLost
+        if((!txtNombreUsuario.getText().isEmpty()) && (!txtPassword.getText().isEmpty())) {
+            //consultado por valores válidos del usuario
+            us = new UsuariosJpaController(emf).buscarUsuarioPorNickname(txtNombreUsuario.getText());
+            if(us == null) {
+                //usuario no existe
+                JOptionPane.showMessageDialog(null, "El usuario no existe");
+                txtNombreUsuario.setText("");
+                txtPassword.setText("");
                 txtNombreUsuario.requestFocus();
             }else{
-                lblNombreUsuario.setForeground(Color.black);
-                txtNombreUsuario.setForeground(Color.black);
-                txtNombreUsuario.setBackground(Color.white);
+                if(us.getContrasena().compareToIgnoreCase(txtPassword.getText()) == 0) {
+                    //usuario correcto y password correcta
+                    //habilitando campo de seleccion de sucursal
+                    slcSucursal.setEnabled(true);
+                    if(!(slcSucursal.getItemCount() >= 2)) {
+                        for(DetalleUsuarios s : us.getDetalleUsuariosList()) {
+                            slcSucursal.addItem(s.getSucursal().getIdSucursal()+": "+s.getSucursal().getNombre());
+                        }
+                    }
+                }else{
+                    //usuario correcto y password incorrecta
+                    JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
+                    txtPassword.requestFocus();
+                    txtPassword.selectAll();
+                }
             }
         }
-    }//GEN-LAST:event_txtNombreUsuarioFocusLost
+    }//GEN-LAST:event_txtPasswordFocusLost
+
+    private void slcSucursalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_slcSucursalItemStateChanged
+        if(slcSucursal.getSelectedItem().toString().compareToIgnoreCase("Seleccione...") != 0) {
+            btnIniciarSesion.setEnabled(true);
+            btnIniciarSesion.requestFocus();
+        }else{
+            btnIniciarSesion.setEnabled(false);
+            slcSucursal.requestFocus();
+        }
+    }//GEN-LAST:event_slcSucursalItemStateChanged
+
+    private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
+        if(us == null) {
+            JOptionPane.showMessageDialog(null, "Debe especificar sus datos para iniciar sesión");
+            initComponents();
+        }else{
+            if(us.getPerfil().getPerfil().compareToIgnoreCase("Administrador") == 0) {
+                Sucursal s = new SucursalJpaController(emf).findSucursal(Integer.parseInt(slcSucursal.getSelectedItem().toString().split(":")[0]));
+                new PrincipalAdmin(us, s).setVisible(true);
+                this.dispose();
+            }else{
+                if(us.getPerfil().getPerfil().compareToIgnoreCase("Médico Veterinario") == 0) {
+                    Sucursal s = new SucursalJpaController(emf).findSucursal(Integer.parseInt(slcSucursal.getSelectedItem().toString().split(":")[0]));
+                    new PrincipalMedico(us, s).setVisible(true);
+                    this.dispose();
+                }else{
+                    if(us.getPerfil().getPerfil().compareToIgnoreCase("Recepcionista") == 0) {
+                        Sucursal s = new SucursalJpaController(emf).findSucursal(Integer.parseInt(slcSucursal.getSelectedItem().toString().split(":")[0]));
+                        new PrincipalRecepcionista(us, s).setVisible(true);
+                        this.dispose();
+                    }else{
+                        JOptionPane.showMessageDialog(null, "El perfil especificado no existe... consulte a StarLabs");
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_btnIniciarSesionActionPerformed
 
     /**
      * @param args the command line arguments
