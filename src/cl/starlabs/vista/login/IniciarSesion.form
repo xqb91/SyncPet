@@ -137,11 +137,8 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-<<<<<<< HEAD
                       <Component id="btnIniciarSesion" max="32767" attributes="0"/>
-=======
                       <Component id="btnIniciarSesion" pref="100" max="32767" attributes="0"/>
->>>>>>> origin/master
                       <Component id="btnSalir" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -180,11 +177,8 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="lblNombreUsuario">
           <Properties>
-<<<<<<< HEAD
             <Property name="text" type="java.lang.String" value="Nombre de Usuario"/>
-=======
             <Property name="text" type="java.lang.String" value="Nombre Usuario"/>
->>>>>>> origin/master
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblPassword">

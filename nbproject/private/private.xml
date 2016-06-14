@@ -7,6 +7,8 @@
             <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/META-INF/persistence.xml</file>
             <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/modelo/Mascota.java</file>
             <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/controladores/MascotaJpaController.java</file>
+            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/vista/login/PantallaBloqueo.java</file>
+            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/vista/login/IniciarSesion.java</file>
         </group>
     </open-files>
 </project-private>

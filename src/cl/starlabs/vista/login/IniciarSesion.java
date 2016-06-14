@@ -72,11 +72,8 @@ public class IniciarSesion extends javax.swing.JFrame {
 
         panelLogin.setBorder(javax.swing.BorderFactory.createTitledBorder("Iniciar Sesión"));
 
-<<<<<<< HEAD
         lblNombreUsuario.setText("Nombre de Usuario");
-=======
         lblNombreUsuario.setText("Nombre Usuario");
->>>>>>> origin/master
 
         lblPassword.setText("Contraseña");
 
@@ -139,11 +136,8 @@ public class IniciarSesion extends javax.swing.JFrame {
                     .addComponent(txtPassword))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-<<<<<<< HEAD
                     .addComponent(btnIniciarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-=======
                     .addComponent(btnIniciarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
->>>>>>> origin/master
                     .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -230,7 +224,7 @@ public class IniciarSesion extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNombreUsuarioActionPerformed
 
-    private void txtPasswordFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPasswordFocusLost
+    private void txtPasswordFocusLost(java.awt.event.FocusEvent evt) {                                      
         if((!txtNombreUsuario.getText().isEmpty()) && (!txtPassword.getText().isEmpty())) {
             //consultado por valores válidos del usuario
             us = new UsuariosJpaController(emf).buscarUsuarioPorNickname(txtNombreUsuario.getText());
@@ -258,7 +252,7 @@ public class IniciarSesion extends javax.swing.JFrame {
                 }
             }
         }
-    }//GEN-LAST:event_txtPasswordFocusLost
+    }                                     
 
     private void slcSucursalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_slcSucursalItemStateChanged
         if(slcSucursal.getSelectedItem().toString().compareToIgnoreCase("Seleccione...") != 0) {
@@ -296,11 +290,6 @@ public class IniciarSesion extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnIniciarSesionActionPerformed
-
-    private void txtPasswordFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPasswordFocusLost
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_txtPasswordFocusLost
 
     /**
      * @param args the command line arguments
