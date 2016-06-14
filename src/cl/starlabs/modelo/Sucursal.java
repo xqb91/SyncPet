@@ -42,7 +42,7 @@ public class Sucursal implements Serializable {
     @Column(name = "id_sucursal", nullable = false)
     private Integer idSucursal;
     @Basic(optional = false)
-    @Column(nullable = false, length = 1)
+    @Column(nullable = false, length = 250)
     private String nombre;
     @Basic(optional = false)
     @Column(nullable = false, length = 250)
@@ -56,6 +56,8 @@ public class Sucursal implements Serializable {
     private int telefono;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sucursal")
     private List<Agenda> agendaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sucursal")
+    private List<DetalleUsuarios> detalleUsuariosList;
     @JoinColumn(name = "clinica", referencedColumnName = "id_clinica", nullable = false)
     @ManyToOne(optional = false)
     private Clinica clinica;
@@ -64,8 +66,6 @@ public class Sucursal implements Serializable {
     private Comuna comuna;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sucursal")
     private List<Propietario> propietarioList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sucursal")
-    private List<Veterinario> veterinarioList;
 
     public Sucursal() {
     }
@@ -131,6 +131,15 @@ public class Sucursal implements Serializable {
         this.agendaList = agendaList;
     }
 
+    @XmlTransient
+    public List<DetalleUsuarios> getDetalleUsuariosList() {
+        return detalleUsuariosList;
+    }
+
+    public void setDetalleUsuariosList(List<DetalleUsuarios> detalleUsuariosList) {
+        this.detalleUsuariosList = detalleUsuariosList;
+    }
+
     public Clinica getClinica() {
         return clinica;
     }
@@ -154,15 +163,6 @@ public class Sucursal implements Serializable {
 
     public void setPropietarioList(List<Propietario> propietarioList) {
         this.propietarioList = propietarioList;
-    }
-
-    @XmlTransient
-    public List<Veterinario> getVeterinarioList() {
-        return veterinarioList;
-    }
-
-    public void setVeterinarioList(List<Veterinario> veterinarioList) {
-        this.veterinarioList = veterinarioList;
     }
 
     @Override

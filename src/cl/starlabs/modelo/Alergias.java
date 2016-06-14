@@ -41,9 +41,9 @@ public class Alergias implements Serializable {
     @JoinColumn(name = "mascota", referencedColumnName = "id_mascota", nullable = false)
     @ManyToOne(optional = false)
     private Mascota mascota;
-    @JoinColumn(name = "id_tipo_alergia", referencedColumnName = "id_tipo_alergia", nullable = false)
+    @JoinColumn(name = "tipo_alergia", referencedColumnName = "id_tipo_alergia", nullable = false)
     @ManyToOne(optional = false)
-    private TipoAlergia idTipoAlergia;
+    private TipoAlergia tipoAlergia;
 
     public Alergias() {
     }
@@ -81,12 +81,12 @@ public class Alergias implements Serializable {
         this.mascota = mascota;
     }
 
-    public TipoAlergia getIdTipoAlergia() {
-        return idTipoAlergia;
+    public TipoAlergia getTipoAlergia() {
+        return tipoAlergia;
     }
 
-    public void setIdTipoAlergia(TipoAlergia idTipoAlergia) {
-        this.idTipoAlergia = idTipoAlergia;
+    public void setTipoAlergia(TipoAlergia tipoAlergia) {
+        this.tipoAlergia = tipoAlergia;
     }
 
     @Override

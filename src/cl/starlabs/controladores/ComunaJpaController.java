@@ -289,8 +289,7 @@ public class ComunaJpaController implements Serializable {
         }
     }
     
-    public List<Comuna> listar()
-    {
+    public List<Comuna> listar() {
         try {
             Query consulta = getEntityManager().createNamedQuery("Comuna.findAll");
             return consulta.getResultList();

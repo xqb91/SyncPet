@@ -39,7 +39,7 @@ public class Comuna implements Serializable {
     @Column(name = "id_comuna", nullable = false)
     private Integer idComuna;
     @Basic(optional = false)
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 200)
     private String nombre;
     @JoinColumn(name = "provincia", referencedColumnName = "id_provincia", nullable = false)
     @ManyToOne(optional = false)

@@ -51,12 +51,12 @@ public class TipoAlergiaJpaController implements Serializable {
             tipoAlergia.setAlergiasList(attachedAlergiasList);
             em.persist(tipoAlergia);
             for (Alergias alergiasListAlergias : tipoAlergia.getAlergiasList()) {
-                TipoAlergia oldIdTipoAlergiaOfAlergiasListAlergias = alergiasListAlergias.getIdTipoAlergia();
-                alergiasListAlergias.setIdTipoAlergia(tipoAlergia);
+                TipoAlergia oldTipoAlergiaOfAlergiasListAlergias = alergiasListAlergias.getTipoAlergia();
+                alergiasListAlergias.setTipoAlergia(tipoAlergia);
                 alergiasListAlergias = em.merge(alergiasListAlergias);
-                if (oldIdTipoAlergiaOfAlergiasListAlergias != null) {
-                    oldIdTipoAlergiaOfAlergiasListAlergias.getAlergiasList().remove(alergiasListAlergias);
-                    oldIdTipoAlergiaOfAlergiasListAlergias = em.merge(oldIdTipoAlergiaOfAlergiasListAlergias);
+                if (oldTipoAlergiaOfAlergiasListAlergias != null) {
+                    oldTipoAlergiaOfAlergiasListAlergias.getAlergiasList().remove(alergiasListAlergias);
+                    oldTipoAlergiaOfAlergiasListAlergias = em.merge(oldTipoAlergiaOfAlergiasListAlergias);
                 }
             }
             em.getTransaction().commit();
@@ -86,7 +86,7 @@ public class TipoAlergiaJpaController implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Alergias " + alergiasListOldAlergias + " since its idTipoAlergia field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Alergias " + alergiasListOldAlergias + " since its tipoAlergia field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -102,12 +102,12 @@ public class TipoAlergiaJpaController implements Serializable {
             tipoAlergia = em.merge(tipoAlergia);
             for (Alergias alergiasListNewAlergias : alergiasListNew) {
                 if (!alergiasListOld.contains(alergiasListNewAlergias)) {
-                    TipoAlergia oldIdTipoAlergiaOfAlergiasListNewAlergias = alergiasListNewAlergias.getIdTipoAlergia();
-                    alergiasListNewAlergias.setIdTipoAlergia(tipoAlergia);
+                    TipoAlergia oldTipoAlergiaOfAlergiasListNewAlergias = alergiasListNewAlergias.getTipoAlergia();
+                    alergiasListNewAlergias.setTipoAlergia(tipoAlergia);
                     alergiasListNewAlergias = em.merge(alergiasListNewAlergias);
-                    if (oldIdTipoAlergiaOfAlergiasListNewAlergias != null && !oldIdTipoAlergiaOfAlergiasListNewAlergias.equals(tipoAlergia)) {
-                        oldIdTipoAlergiaOfAlergiasListNewAlergias.getAlergiasList().remove(alergiasListNewAlergias);
-                        oldIdTipoAlergiaOfAlergiasListNewAlergias = em.merge(oldIdTipoAlergiaOfAlergiasListNewAlergias);
+                    if (oldTipoAlergiaOfAlergiasListNewAlergias != null && !oldTipoAlergiaOfAlergiasListNewAlergias.equals(tipoAlergia)) {
+                        oldTipoAlergiaOfAlergiasListNewAlergias.getAlergiasList().remove(alergiasListNewAlergias);
+                        oldTipoAlergiaOfAlergiasListNewAlergias = em.merge(oldTipoAlergiaOfAlergiasListNewAlergias);
                     }
                 }
             }
@@ -146,7 +146,7 @@ public class TipoAlergiaJpaController implements Serializable {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This TipoAlergia (" + tipoAlergia + ") cannot be destroyed since the Alergias " + alergiasListOrphanCheckAlergias + " in its alergiasList field has a non-nullable idTipoAlergia field.");
+                illegalOrphanMessages.add("This TipoAlergia (" + tipoAlergia + ") cannot be destroyed since the Alergias " + alergiasListOrphanCheckAlergias + " in its alergiasList field has a non-nullable tipoAlergia field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

@@ -39,7 +39,7 @@ public class Provincia implements Serializable {
     @Column(name = "id_provincia", nullable = false)
     private Integer idProvincia;
     @Basic(optional = false)
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 200)
     private String nombre;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "provincia")
     private List<Comuna> comunaList;

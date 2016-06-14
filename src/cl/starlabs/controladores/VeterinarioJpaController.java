@@ -13,7 +13,6 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import cl.starlabs.modelo.Sucursal;
 import cl.starlabs.modelo.Examenes;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +23,7 @@ import cl.starlabs.modelo.Farmacos;
 import cl.starlabs.modelo.Procedimientos;
 import cl.starlabs.modelo.Hospitalizacion;
 import cl.starlabs.modelo.AgendaDetalle;
+import cl.starlabs.modelo.DetalleUsuarios;
 import cl.starlabs.modelo.Anamnesis;
 import cl.starlabs.modelo.Patologias;
 import cl.starlabs.modelo.Veterinario;
@@ -70,6 +70,9 @@ public class VeterinarioJpaController implements Serializable {
         if (veterinario.getAgendaDetalleList() == null) {
             veterinario.setAgendaDetalleList(new ArrayList<AgendaDetalle>());
         }
+        if (veterinario.getDetalleUsuariosList() == null) {
+            veterinario.setDetalleUsuariosList(new ArrayList<DetalleUsuarios>());
+        }
         if (veterinario.getAnamnesisList() == null) {
             veterinario.setAnamnesisList(new ArrayList<Anamnesis>());
         }
@@ -80,11 +83,6 @@ public class VeterinarioJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Sucursal sucursal = veterinario.getSucursal();
-            if (sucursal != null) {
-                sucursal = em.getReference(sucursal.getClass(), sucursal.getIdSucursal());
-                veterinario.setSucursal(sucursal);
-            }
             List<Examenes> attachedExamenesList = new ArrayList<Examenes>();
             for (Examenes examenesListExamenesToAttach : veterinario.getExamenesList()) {
                 examenesListExamenesToAttach = em.getReference(examenesListExamenesToAttach.getClass(), examenesListExamenesToAttach.getIdExamen());
@@ -133,6 +131,12 @@ public class VeterinarioJpaController implements Serializable {
                 attachedAgendaDetalleList.add(agendaDetalleListAgendaDetalleToAttach);
             }
             veterinario.setAgendaDetalleList(attachedAgendaDetalleList);
+            List<DetalleUsuarios> attachedDetalleUsuariosList = new ArrayList<DetalleUsuarios>();
+            for (DetalleUsuarios detalleUsuariosListDetalleUsuariosToAttach : veterinario.getDetalleUsuariosList()) {
+                detalleUsuariosListDetalleUsuariosToAttach = em.getReference(detalleUsuariosListDetalleUsuariosToAttach.getClass(), detalleUsuariosListDetalleUsuariosToAttach.getId());
+                attachedDetalleUsuariosList.add(detalleUsuariosListDetalleUsuariosToAttach);
+            }
+            veterinario.setDetalleUsuariosList(attachedDetalleUsuariosList);
             List<Anamnesis> attachedAnamnesisList = new ArrayList<Anamnesis>();
             for (Anamnesis anamnesisListAnamnesisToAttach : veterinario.getAnamnesisList()) {
                 anamnesisListAnamnesisToAttach = em.getReference(anamnesisListAnamnesisToAttach.getClass(), anamnesisListAnamnesisToAttach.getIdAnamnesis());
@@ -146,10 +150,6 @@ public class VeterinarioJpaController implements Serializable {
             }
             veterinario.setPatologiasList(attachedPatologiasList);
             em.persist(veterinario);
-            if (sucursal != null) {
-                sucursal.getVeterinarioList().add(veterinario);
-                sucursal = em.merge(sucursal);
-            }
             for (Examenes examenesListExamenes : veterinario.getExamenesList()) {
                 Veterinario oldVeterinarioOfExamenesListExamenes = examenesListExamenes.getVeterinario();
                 examenesListExamenes.setVeterinario(veterinario);
@@ -222,6 +222,15 @@ public class VeterinarioJpaController implements Serializable {
                     oldVeterinarioOfAgendaDetalleListAgendaDetalle = em.merge(oldVeterinarioOfAgendaDetalleListAgendaDetalle);
                 }
             }
+            for (DetalleUsuarios detalleUsuariosListDetalleUsuarios : veterinario.getDetalleUsuariosList()) {
+                Veterinario oldVeterinarioOfDetalleUsuariosListDetalleUsuarios = detalleUsuariosListDetalleUsuarios.getVeterinario();
+                detalleUsuariosListDetalleUsuarios.setVeterinario(veterinario);
+                detalleUsuariosListDetalleUsuarios = em.merge(detalleUsuariosListDetalleUsuarios);
+                if (oldVeterinarioOfDetalleUsuariosListDetalleUsuarios != null) {
+                    oldVeterinarioOfDetalleUsuariosListDetalleUsuarios.getDetalleUsuariosList().remove(detalleUsuariosListDetalleUsuarios);
+                    oldVeterinarioOfDetalleUsuariosListDetalleUsuarios = em.merge(oldVeterinarioOfDetalleUsuariosListDetalleUsuarios);
+                }
+            }
             for (Anamnesis anamnesisListAnamnesis : veterinario.getAnamnesisList()) {
                 Veterinario oldVeterinarioOfAnamnesisListAnamnesis = anamnesisListAnamnesis.getVeterinario();
                 anamnesisListAnamnesis.setVeterinario(veterinario);
@@ -259,8 +268,6 @@ public class VeterinarioJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Veterinario persistentVeterinario = em.find(Veterinario.class, veterinario.getIdVeterinario());
-            Sucursal sucursalOld = persistentVeterinario.getSucursal();
-            Sucursal sucursalNew = veterinario.getSucursal();
             List<Examenes> examenesListOld = persistentVeterinario.getExamenesList();
             List<Examenes> examenesListNew = veterinario.getExamenesList();
             List<Historialvacunas> historialvacunasListOld = persistentVeterinario.getHistorialvacunasList();
@@ -277,6 +284,8 @@ public class VeterinarioJpaController implements Serializable {
             List<Hospitalizacion> hospitalizacionListNew = veterinario.getHospitalizacionList();
             List<AgendaDetalle> agendaDetalleListOld = persistentVeterinario.getAgendaDetalleList();
             List<AgendaDetalle> agendaDetalleListNew = veterinario.getAgendaDetalleList();
+            List<DetalleUsuarios> detalleUsuariosListOld = persistentVeterinario.getDetalleUsuariosList();
+            List<DetalleUsuarios> detalleUsuariosListNew = veterinario.getDetalleUsuariosList();
             List<Anamnesis> anamnesisListOld = persistentVeterinario.getAnamnesisList();
             List<Anamnesis> anamnesisListNew = veterinario.getAnamnesisList();
             List<Patologias> patologiasListOld = persistentVeterinario.getPatologiasList();
@@ -365,10 +374,6 @@ public class VeterinarioJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            if (sucursalNew != null) {
-                sucursalNew = em.getReference(sucursalNew.getClass(), sucursalNew.getIdSucursal());
-                veterinario.setSucursal(sucursalNew);
-            }
             List<Examenes> attachedExamenesListNew = new ArrayList<Examenes>();
             for (Examenes examenesListNewExamenesToAttach : examenesListNew) {
                 examenesListNewExamenesToAttach = em.getReference(examenesListNewExamenesToAttach.getClass(), examenesListNewExamenesToAttach.getIdExamen());
@@ -425,6 +430,13 @@ public class VeterinarioJpaController implements Serializable {
             }
             agendaDetalleListNew = attachedAgendaDetalleListNew;
             veterinario.setAgendaDetalleList(agendaDetalleListNew);
+            List<DetalleUsuarios> attachedDetalleUsuariosListNew = new ArrayList<DetalleUsuarios>();
+            for (DetalleUsuarios detalleUsuariosListNewDetalleUsuariosToAttach : detalleUsuariosListNew) {
+                detalleUsuariosListNewDetalleUsuariosToAttach = em.getReference(detalleUsuariosListNewDetalleUsuariosToAttach.getClass(), detalleUsuariosListNewDetalleUsuariosToAttach.getId());
+                attachedDetalleUsuariosListNew.add(detalleUsuariosListNewDetalleUsuariosToAttach);
+            }
+            detalleUsuariosListNew = attachedDetalleUsuariosListNew;
+            veterinario.setDetalleUsuariosList(detalleUsuariosListNew);
             List<Anamnesis> attachedAnamnesisListNew = new ArrayList<Anamnesis>();
             for (Anamnesis anamnesisListNewAnamnesisToAttach : anamnesisListNew) {
                 anamnesisListNewAnamnesisToAttach = em.getReference(anamnesisListNewAnamnesisToAttach.getClass(), anamnesisListNewAnamnesisToAttach.getIdAnamnesis());
@@ -440,14 +452,6 @@ public class VeterinarioJpaController implements Serializable {
             patologiasListNew = attachedPatologiasListNew;
             veterinario.setPatologiasList(patologiasListNew);
             veterinario = em.merge(veterinario);
-            if (sucursalOld != null && !sucursalOld.equals(sucursalNew)) {
-                sucursalOld.getVeterinarioList().remove(veterinario);
-                sucursalOld = em.merge(sucursalOld);
-            }
-            if (sucursalNew != null && !sucursalNew.equals(sucursalOld)) {
-                sucursalNew.getVeterinarioList().add(veterinario);
-                sucursalNew = em.merge(sucursalNew);
-            }
             for (Examenes examenesListNewExamenes : examenesListNew) {
                 if (!examenesListOld.contains(examenesListNewExamenes)) {
                     Veterinario oldVeterinarioOfExamenesListNewExamenes = examenesListNewExamenes.getVeterinario();
@@ -533,6 +537,23 @@ public class VeterinarioJpaController implements Serializable {
                     if (oldVeterinarioOfAgendaDetalleListNewAgendaDetalle != null && !oldVeterinarioOfAgendaDetalleListNewAgendaDetalle.equals(veterinario)) {
                         oldVeterinarioOfAgendaDetalleListNewAgendaDetalle.getAgendaDetalleList().remove(agendaDetalleListNewAgendaDetalle);
                         oldVeterinarioOfAgendaDetalleListNewAgendaDetalle = em.merge(oldVeterinarioOfAgendaDetalleListNewAgendaDetalle);
+                    }
+                }
+            }
+            for (DetalleUsuarios detalleUsuariosListOldDetalleUsuarios : detalleUsuariosListOld) {
+                if (!detalleUsuariosListNew.contains(detalleUsuariosListOldDetalleUsuarios)) {
+                    detalleUsuariosListOldDetalleUsuarios.setVeterinario(null);
+                    detalleUsuariosListOldDetalleUsuarios = em.merge(detalleUsuariosListOldDetalleUsuarios);
+                }
+            }
+            for (DetalleUsuarios detalleUsuariosListNewDetalleUsuarios : detalleUsuariosListNew) {
+                if (!detalleUsuariosListOld.contains(detalleUsuariosListNewDetalleUsuarios)) {
+                    Veterinario oldVeterinarioOfDetalleUsuariosListNewDetalleUsuarios = detalleUsuariosListNewDetalleUsuarios.getVeterinario();
+                    detalleUsuariosListNewDetalleUsuarios.setVeterinario(veterinario);
+                    detalleUsuariosListNewDetalleUsuarios = em.merge(detalleUsuariosListNewDetalleUsuarios);
+                    if (oldVeterinarioOfDetalleUsuariosListNewDetalleUsuarios != null && !oldVeterinarioOfDetalleUsuariosListNewDetalleUsuarios.equals(veterinario)) {
+                        oldVeterinarioOfDetalleUsuariosListNewDetalleUsuarios.getDetalleUsuariosList().remove(detalleUsuariosListNewDetalleUsuarios);
+                        oldVeterinarioOfDetalleUsuariosListNewDetalleUsuarios = em.merge(oldVeterinarioOfDetalleUsuariosListNewDetalleUsuarios);
                     }
                 }
             }
@@ -661,10 +682,10 @@ public class VeterinarioJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Sucursal sucursal = veterinario.getSucursal();
-            if (sucursal != null) {
-                sucursal.getVeterinarioList().remove(veterinario);
-                sucursal = em.merge(sucursal);
+            List<DetalleUsuarios> detalleUsuariosList = veterinario.getDetalleUsuariosList();
+            for (DetalleUsuarios detalleUsuariosListDetalleUsuarios : detalleUsuariosList) {
+                detalleUsuariosListDetalleUsuarios.setVeterinario(null);
+                detalleUsuariosListDetalleUsuarios = em.merge(detalleUsuariosListDetalleUsuarios);
             }
             em.remove(veterinario);
             em.getTransaction().commit();

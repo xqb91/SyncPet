@@ -12,8 +12,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -77,13 +75,12 @@ public class Veterinario implements Serializable {
     private List<Hospitalizacion> hospitalizacionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "veterinario")
     private List<AgendaDetalle> agendaDetalleList;
+    @OneToMany(mappedBy = "veterinario")
+    private List<DetalleUsuarios> detalleUsuariosList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "veterinario")
     private List<Anamnesis> anamnesisList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "veterinario")
     private List<Patologias> patologiasList;
-    @JoinColumn(name = "sucursal", referencedColumnName = "id_sucursal", nullable = false)
-    @ManyToOne(optional = false)
-    private Sucursal sucursal;
 
     public Veterinario() {
     }
@@ -231,6 +228,15 @@ public class Veterinario implements Serializable {
     }
 
     @XmlTransient
+    public List<DetalleUsuarios> getDetalleUsuariosList() {
+        return detalleUsuariosList;
+    }
+
+    public void setDetalleUsuariosList(List<DetalleUsuarios> detalleUsuariosList) {
+        this.detalleUsuariosList = detalleUsuariosList;
+    }
+
+    @XmlTransient
     public List<Anamnesis> getAnamnesisList() {
         return anamnesisList;
     }
@@ -246,14 +252,6 @@ public class Veterinario implements Serializable {
 
     public void setPatologiasList(List<Patologias> patologiasList) {
         this.patologiasList = patologiasList;
-    }
-
-    public Sucursal getSucursal() {
-        return sucursal;
-    }
-
-    public void setSucursal(Sucursal sucursal) {
-        this.sucursal = sucursal;
     }
 
     @Override

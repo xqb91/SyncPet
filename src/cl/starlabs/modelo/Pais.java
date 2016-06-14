@@ -29,8 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Pais.findAll", query = "SELECT p FROM Pais p"),
     @NamedQuery(name = "Pais.findByIdPais", query = "SELECT p FROM Pais p WHERE p.idPais = :idPais"),
-    @NamedQuery(name = "Pais.findByNombre", query = "SELECT p FROM Pais p WHERE p.nombre = :nombre"),
-    @NamedQuery(name = "Pais.findByCodigoTelefonico", query = "SELECT p FROM Pais p WHERE p.codigoTelefonico = :codigoTelefonico")})
+    @NamedQuery(name = "Pais.findByNombre", query = "SELECT p FROM Pais p WHERE p.nombre = :nombre")})
 public class Pais implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -40,9 +39,6 @@ public class Pais implements Serializable {
     @Basic(optional = false)
     @Column(nullable = false, length = 35)
     private String nombre;
-    @Basic(optional = false)
-    @Column(name = "codigo_telefonico", nullable = false, length = 4)
-    private String codigoTelefonico;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pais")
     private List<Region> regionList;
 
@@ -53,10 +49,9 @@ public class Pais implements Serializable {
         this.idPais = idPais;
     }
 
-    public Pais(Integer idPais, String nombre, String codigoTelefonico) {
+    public Pais(Integer idPais, String nombre) {
         this.idPais = idPais;
         this.nombre = nombre;
-        this.codigoTelefonico = codigoTelefonico;
     }
 
     public Integer getIdPais() {
@@ -73,14 +68,6 @@ public class Pais implements Serializable {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getCodigoTelefonico() {
-        return codigoTelefonico;
-    }
-
-    public void setCodigoTelefonico(String codigoTelefonico) {
-        this.codigoTelefonico = codigoTelefonico;
     }
 
     @XmlTransient

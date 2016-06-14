@@ -268,7 +268,8 @@ public class PropietarioJpaController implements Serializable {
         try {
             Query consulta = getEntityManager().createNamedQuery("Propietario.findAll");
             consulta.setMaxResults(1);
-            return ((Propietario)consulta.getSingleResult()).getIdPropietario()+1;
+            Propietario p = (Propietario)consulta.getSingleResult();
+            return p.getIdPropietario()+1;
         } catch (Exception e) {
             return 1;
         }

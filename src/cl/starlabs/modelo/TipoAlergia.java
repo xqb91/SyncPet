@@ -39,7 +39,7 @@ public class TipoAlergia implements Serializable {
     @Basic(optional = false)
     @Column(nullable = false, length = 100)
     private String nombre;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTipoAlergia")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoAlergia")
     private List<Alergias> alergiasList;
 
     public TipoAlergia() {

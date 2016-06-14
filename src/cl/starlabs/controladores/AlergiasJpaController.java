@@ -44,19 +44,19 @@ public class AlergiasJpaController implements Serializable {
                 mascota = em.getReference(mascota.getClass(), mascota.getIdMascota());
                 alergias.setMascota(mascota);
             }
-            TipoAlergia idTipoAlergia = alergias.getIdTipoAlergia();
-            if (idTipoAlergia != null) {
-                idTipoAlergia = em.getReference(idTipoAlergia.getClass(), idTipoAlergia.getIdTipoAlergia());
-                alergias.setIdTipoAlergia(idTipoAlergia);
+            TipoAlergia tipoAlergia = alergias.getTipoAlergia();
+            if (tipoAlergia != null) {
+                tipoAlergia = em.getReference(tipoAlergia.getClass(), tipoAlergia.getIdTipoAlergia());
+                alergias.setTipoAlergia(tipoAlergia);
             }
             em.persist(alergias);
             if (mascota != null) {
                 mascota.getAlergiasList().add(alergias);
                 mascota = em.merge(mascota);
             }
-            if (idTipoAlergia != null) {
-                idTipoAlergia.getAlergiasList().add(alergias);
-                idTipoAlergia = em.merge(idTipoAlergia);
+            if (tipoAlergia != null) {
+                tipoAlergia.getAlergiasList().add(alergias);
+                tipoAlergia = em.merge(tipoAlergia);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -79,15 +79,15 @@ public class AlergiasJpaController implements Serializable {
             Alergias persistentAlergias = em.find(Alergias.class, alergias.getIdAlergia());
             Mascota mascotaOld = persistentAlergias.getMascota();
             Mascota mascotaNew = alergias.getMascota();
-            TipoAlergia idTipoAlergiaOld = persistentAlergias.getIdTipoAlergia();
-            TipoAlergia idTipoAlergiaNew = alergias.getIdTipoAlergia();
+            TipoAlergia tipoAlergiaOld = persistentAlergias.getTipoAlergia();
+            TipoAlergia tipoAlergiaNew = alergias.getTipoAlergia();
             if (mascotaNew != null) {
                 mascotaNew = em.getReference(mascotaNew.getClass(), mascotaNew.getIdMascota());
                 alergias.setMascota(mascotaNew);
             }
-            if (idTipoAlergiaNew != null) {
-                idTipoAlergiaNew = em.getReference(idTipoAlergiaNew.getClass(), idTipoAlergiaNew.getIdTipoAlergia());
-                alergias.setIdTipoAlergia(idTipoAlergiaNew);
+            if (tipoAlergiaNew != null) {
+                tipoAlergiaNew = em.getReference(tipoAlergiaNew.getClass(), tipoAlergiaNew.getIdTipoAlergia());
+                alergias.setTipoAlergia(tipoAlergiaNew);
             }
             alergias = em.merge(alergias);
             if (mascotaOld != null && !mascotaOld.equals(mascotaNew)) {
@@ -98,13 +98,13 @@ public class AlergiasJpaController implements Serializable {
                 mascotaNew.getAlergiasList().add(alergias);
                 mascotaNew = em.merge(mascotaNew);
             }
-            if (idTipoAlergiaOld != null && !idTipoAlergiaOld.equals(idTipoAlergiaNew)) {
-                idTipoAlergiaOld.getAlergiasList().remove(alergias);
-                idTipoAlergiaOld = em.merge(idTipoAlergiaOld);
+            if (tipoAlergiaOld != null && !tipoAlergiaOld.equals(tipoAlergiaNew)) {
+                tipoAlergiaOld.getAlergiasList().remove(alergias);
+                tipoAlergiaOld = em.merge(tipoAlergiaOld);
             }
-            if (idTipoAlergiaNew != null && !idTipoAlergiaNew.equals(idTipoAlergiaOld)) {
-                idTipoAlergiaNew.getAlergiasList().add(alergias);
-                idTipoAlergiaNew = em.merge(idTipoAlergiaNew);
+            if (tipoAlergiaNew != null && !tipoAlergiaNew.equals(tipoAlergiaOld)) {
+                tipoAlergiaNew.getAlergiasList().add(alergias);
+                tipoAlergiaNew = em.merge(tipoAlergiaNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -140,10 +140,10 @@ public class AlergiasJpaController implements Serializable {
                 mascota.getAlergiasList().remove(alergias);
                 mascota = em.merge(mascota);
             }
-            TipoAlergia idTipoAlergia = alergias.getIdTipoAlergia();
-            if (idTipoAlergia != null) {
-                idTipoAlergia.getAlergiasList().remove(alergias);
-                idTipoAlergia = em.merge(idTipoAlergia);
+            TipoAlergia tipoAlergia = alergias.getTipoAlergia();
+            if (tipoAlergia != null) {
+                tipoAlergia.getAlergiasList().remove(alergias);
+                tipoAlergia = em.merge(tipoAlergia);
             }
             em.remove(alergias);
             em.getTransaction().commit();

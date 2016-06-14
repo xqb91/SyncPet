@@ -18,9 +18,9 @@ import cl.starlabs.modelo.Comuna;
 import cl.starlabs.modelo.Agenda;
 import java.util.ArrayList;
 import java.util.List;
+import cl.starlabs.modelo.DetalleUsuarios;
 import cl.starlabs.modelo.Propietario;
 import cl.starlabs.modelo.Sucursal;
-import cl.starlabs.modelo.Veterinario;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
@@ -43,11 +43,11 @@ public class SucursalJpaController implements Serializable {
         if (sucursal.getAgendaList() == null) {
             sucursal.setAgendaList(new ArrayList<Agenda>());
         }
+        if (sucursal.getDetalleUsuariosList() == null) {
+            sucursal.setDetalleUsuariosList(new ArrayList<DetalleUsuarios>());
+        }
         if (sucursal.getPropietarioList() == null) {
             sucursal.setPropietarioList(new ArrayList<Propietario>());
-        }
-        if (sucursal.getVeterinarioList() == null) {
-            sucursal.setVeterinarioList(new ArrayList<Veterinario>());
         }
         EntityManager em = null;
         try {
@@ -69,18 +69,18 @@ public class SucursalJpaController implements Serializable {
                 attachedAgendaList.add(agendaListAgendaToAttach);
             }
             sucursal.setAgendaList(attachedAgendaList);
+            List<DetalleUsuarios> attachedDetalleUsuariosList = new ArrayList<DetalleUsuarios>();
+            for (DetalleUsuarios detalleUsuariosListDetalleUsuariosToAttach : sucursal.getDetalleUsuariosList()) {
+                detalleUsuariosListDetalleUsuariosToAttach = em.getReference(detalleUsuariosListDetalleUsuariosToAttach.getClass(), detalleUsuariosListDetalleUsuariosToAttach.getId());
+                attachedDetalleUsuariosList.add(detalleUsuariosListDetalleUsuariosToAttach);
+            }
+            sucursal.setDetalleUsuariosList(attachedDetalleUsuariosList);
             List<Propietario> attachedPropietarioList = new ArrayList<Propietario>();
             for (Propietario propietarioListPropietarioToAttach : sucursal.getPropietarioList()) {
                 propietarioListPropietarioToAttach = em.getReference(propietarioListPropietarioToAttach.getClass(), propietarioListPropietarioToAttach.getIdPropietario());
                 attachedPropietarioList.add(propietarioListPropietarioToAttach);
             }
             sucursal.setPropietarioList(attachedPropietarioList);
-            List<Veterinario> attachedVeterinarioList = new ArrayList<Veterinario>();
-            for (Veterinario veterinarioListVeterinarioToAttach : sucursal.getVeterinarioList()) {
-                veterinarioListVeterinarioToAttach = em.getReference(veterinarioListVeterinarioToAttach.getClass(), veterinarioListVeterinarioToAttach.getIdVeterinario());
-                attachedVeterinarioList.add(veterinarioListVeterinarioToAttach);
-            }
-            sucursal.setVeterinarioList(attachedVeterinarioList);
             em.persist(sucursal);
             if (clinica != null) {
                 clinica.getSucursalList().add(sucursal);
@@ -99,6 +99,15 @@ public class SucursalJpaController implements Serializable {
                     oldSucursalOfAgendaListAgenda = em.merge(oldSucursalOfAgendaListAgenda);
                 }
             }
+            for (DetalleUsuarios detalleUsuariosListDetalleUsuarios : sucursal.getDetalleUsuariosList()) {
+                Sucursal oldSucursalOfDetalleUsuariosListDetalleUsuarios = detalleUsuariosListDetalleUsuarios.getSucursal();
+                detalleUsuariosListDetalleUsuarios.setSucursal(sucursal);
+                detalleUsuariosListDetalleUsuarios = em.merge(detalleUsuariosListDetalleUsuarios);
+                if (oldSucursalOfDetalleUsuariosListDetalleUsuarios != null) {
+                    oldSucursalOfDetalleUsuariosListDetalleUsuarios.getDetalleUsuariosList().remove(detalleUsuariosListDetalleUsuarios);
+                    oldSucursalOfDetalleUsuariosListDetalleUsuarios = em.merge(oldSucursalOfDetalleUsuariosListDetalleUsuarios);
+                }
+            }
             for (Propietario propietarioListPropietario : sucursal.getPropietarioList()) {
                 Sucursal oldSucursalOfPropietarioListPropietario = propietarioListPropietario.getSucursal();
                 propietarioListPropietario.setSucursal(sucursal);
@@ -106,15 +115,6 @@ public class SucursalJpaController implements Serializable {
                 if (oldSucursalOfPropietarioListPropietario != null) {
                     oldSucursalOfPropietarioListPropietario.getPropietarioList().remove(propietarioListPropietario);
                     oldSucursalOfPropietarioListPropietario = em.merge(oldSucursalOfPropietarioListPropietario);
-                }
-            }
-            for (Veterinario veterinarioListVeterinario : sucursal.getVeterinarioList()) {
-                Sucursal oldSucursalOfVeterinarioListVeterinario = veterinarioListVeterinario.getSucursal();
-                veterinarioListVeterinario.setSucursal(sucursal);
-                veterinarioListVeterinario = em.merge(veterinarioListVeterinario);
-                if (oldSucursalOfVeterinarioListVeterinario != null) {
-                    oldSucursalOfVeterinarioListVeterinario.getVeterinarioList().remove(veterinarioListVeterinario);
-                    oldSucursalOfVeterinarioListVeterinario = em.merge(oldSucursalOfVeterinarioListVeterinario);
                 }
             }
             em.getTransaction().commit();
@@ -142,10 +142,10 @@ public class SucursalJpaController implements Serializable {
             Comuna comunaNew = sucursal.getComuna();
             List<Agenda> agendaListOld = persistentSucursal.getAgendaList();
             List<Agenda> agendaListNew = sucursal.getAgendaList();
+            List<DetalleUsuarios> detalleUsuariosListOld = persistentSucursal.getDetalleUsuariosList();
+            List<DetalleUsuarios> detalleUsuariosListNew = sucursal.getDetalleUsuariosList();
             List<Propietario> propietarioListOld = persistentSucursal.getPropietarioList();
             List<Propietario> propietarioListNew = sucursal.getPropietarioList();
-            List<Veterinario> veterinarioListOld = persistentSucursal.getVeterinarioList();
-            List<Veterinario> veterinarioListNew = sucursal.getVeterinarioList();
             List<String> illegalOrphanMessages = null;
             for (Agenda agendaListOldAgenda : agendaListOld) {
                 if (!agendaListNew.contains(agendaListOldAgenda)) {
@@ -155,20 +155,20 @@ public class SucursalJpaController implements Serializable {
                     illegalOrphanMessages.add("You must retain Agenda " + agendaListOldAgenda + " since its sucursal field is not nullable.");
                 }
             }
+            for (DetalleUsuarios detalleUsuariosListOldDetalleUsuarios : detalleUsuariosListOld) {
+                if (!detalleUsuariosListNew.contains(detalleUsuariosListOldDetalleUsuarios)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain DetalleUsuarios " + detalleUsuariosListOldDetalleUsuarios + " since its sucursal field is not nullable.");
+                }
+            }
             for (Propietario propietarioListOldPropietario : propietarioListOld) {
                 if (!propietarioListNew.contains(propietarioListOldPropietario)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
                     illegalOrphanMessages.add("You must retain Propietario " + propietarioListOldPropietario + " since its sucursal field is not nullable.");
-                }
-            }
-            for (Veterinario veterinarioListOldVeterinario : veterinarioListOld) {
-                if (!veterinarioListNew.contains(veterinarioListOldVeterinario)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Veterinario " + veterinarioListOldVeterinario + " since its sucursal field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -189,6 +189,13 @@ public class SucursalJpaController implements Serializable {
             }
             agendaListNew = attachedAgendaListNew;
             sucursal.setAgendaList(agendaListNew);
+            List<DetalleUsuarios> attachedDetalleUsuariosListNew = new ArrayList<DetalleUsuarios>();
+            for (DetalleUsuarios detalleUsuariosListNewDetalleUsuariosToAttach : detalleUsuariosListNew) {
+                detalleUsuariosListNewDetalleUsuariosToAttach = em.getReference(detalleUsuariosListNewDetalleUsuariosToAttach.getClass(), detalleUsuariosListNewDetalleUsuariosToAttach.getId());
+                attachedDetalleUsuariosListNew.add(detalleUsuariosListNewDetalleUsuariosToAttach);
+            }
+            detalleUsuariosListNew = attachedDetalleUsuariosListNew;
+            sucursal.setDetalleUsuariosList(detalleUsuariosListNew);
             List<Propietario> attachedPropietarioListNew = new ArrayList<Propietario>();
             for (Propietario propietarioListNewPropietarioToAttach : propietarioListNew) {
                 propietarioListNewPropietarioToAttach = em.getReference(propietarioListNewPropietarioToAttach.getClass(), propietarioListNewPropietarioToAttach.getIdPropietario());
@@ -196,13 +203,6 @@ public class SucursalJpaController implements Serializable {
             }
             propietarioListNew = attachedPropietarioListNew;
             sucursal.setPropietarioList(propietarioListNew);
-            List<Veterinario> attachedVeterinarioListNew = new ArrayList<Veterinario>();
-            for (Veterinario veterinarioListNewVeterinarioToAttach : veterinarioListNew) {
-                veterinarioListNewVeterinarioToAttach = em.getReference(veterinarioListNewVeterinarioToAttach.getClass(), veterinarioListNewVeterinarioToAttach.getIdVeterinario());
-                attachedVeterinarioListNew.add(veterinarioListNewVeterinarioToAttach);
-            }
-            veterinarioListNew = attachedVeterinarioListNew;
-            sucursal.setVeterinarioList(veterinarioListNew);
             sucursal = em.merge(sucursal);
             if (clinicaOld != null && !clinicaOld.equals(clinicaNew)) {
                 clinicaOld.getSucursalList().remove(sucursal);
@@ -231,6 +231,17 @@ public class SucursalJpaController implements Serializable {
                     }
                 }
             }
+            for (DetalleUsuarios detalleUsuariosListNewDetalleUsuarios : detalleUsuariosListNew) {
+                if (!detalleUsuariosListOld.contains(detalleUsuariosListNewDetalleUsuarios)) {
+                    Sucursal oldSucursalOfDetalleUsuariosListNewDetalleUsuarios = detalleUsuariosListNewDetalleUsuarios.getSucursal();
+                    detalleUsuariosListNewDetalleUsuarios.setSucursal(sucursal);
+                    detalleUsuariosListNewDetalleUsuarios = em.merge(detalleUsuariosListNewDetalleUsuarios);
+                    if (oldSucursalOfDetalleUsuariosListNewDetalleUsuarios != null && !oldSucursalOfDetalleUsuariosListNewDetalleUsuarios.equals(sucursal)) {
+                        oldSucursalOfDetalleUsuariosListNewDetalleUsuarios.getDetalleUsuariosList().remove(detalleUsuariosListNewDetalleUsuarios);
+                        oldSucursalOfDetalleUsuariosListNewDetalleUsuarios = em.merge(oldSucursalOfDetalleUsuariosListNewDetalleUsuarios);
+                    }
+                }
+            }
             for (Propietario propietarioListNewPropietario : propietarioListNew) {
                 if (!propietarioListOld.contains(propietarioListNewPropietario)) {
                     Sucursal oldSucursalOfPropietarioListNewPropietario = propietarioListNewPropietario.getSucursal();
@@ -239,17 +250,6 @@ public class SucursalJpaController implements Serializable {
                     if (oldSucursalOfPropietarioListNewPropietario != null && !oldSucursalOfPropietarioListNewPropietario.equals(sucursal)) {
                         oldSucursalOfPropietarioListNewPropietario.getPropietarioList().remove(propietarioListNewPropietario);
                         oldSucursalOfPropietarioListNewPropietario = em.merge(oldSucursalOfPropietarioListNewPropietario);
-                    }
-                }
-            }
-            for (Veterinario veterinarioListNewVeterinario : veterinarioListNew) {
-                if (!veterinarioListOld.contains(veterinarioListNewVeterinario)) {
-                    Sucursal oldSucursalOfVeterinarioListNewVeterinario = veterinarioListNewVeterinario.getSucursal();
-                    veterinarioListNewVeterinario.setSucursal(sucursal);
-                    veterinarioListNewVeterinario = em.merge(veterinarioListNewVeterinario);
-                    if (oldSucursalOfVeterinarioListNewVeterinario != null && !oldSucursalOfVeterinarioListNewVeterinario.equals(sucursal)) {
-                        oldSucursalOfVeterinarioListNewVeterinario.getVeterinarioList().remove(veterinarioListNewVeterinario);
-                        oldSucursalOfVeterinarioListNewVeterinario = em.merge(oldSucursalOfVeterinarioListNewVeterinario);
                     }
                 }
             }
@@ -290,19 +290,19 @@ public class SucursalJpaController implements Serializable {
                 }
                 illegalOrphanMessages.add("This Sucursal (" + sucursal + ") cannot be destroyed since the Agenda " + agendaListOrphanCheckAgenda + " in its agendaList field has a non-nullable sucursal field.");
             }
+            List<DetalleUsuarios> detalleUsuariosListOrphanCheck = sucursal.getDetalleUsuariosList();
+            for (DetalleUsuarios detalleUsuariosListOrphanCheckDetalleUsuarios : detalleUsuariosListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Sucursal (" + sucursal + ") cannot be destroyed since the DetalleUsuarios " + detalleUsuariosListOrphanCheckDetalleUsuarios + " in its detalleUsuariosList field has a non-nullable sucursal field.");
+            }
             List<Propietario> propietarioListOrphanCheck = sucursal.getPropietarioList();
             for (Propietario propietarioListOrphanCheckPropietario : propietarioListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
                 illegalOrphanMessages.add("This Sucursal (" + sucursal + ") cannot be destroyed since the Propietario " + propietarioListOrphanCheckPropietario + " in its propietarioList field has a non-nullable sucursal field.");
-            }
-            List<Veterinario> veterinarioListOrphanCheck = sucursal.getVeterinarioList();
-            for (Veterinario veterinarioListOrphanCheckVeterinario : veterinarioListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Sucursal (" + sucursal + ") cannot be destroyed since the Veterinario " + veterinarioListOrphanCheckVeterinario + " in its veterinarioList field has a non-nullable sucursal field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
