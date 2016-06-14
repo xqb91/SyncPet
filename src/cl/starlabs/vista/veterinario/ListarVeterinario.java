@@ -3,18 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cl.starlabs.vista.propietario;
+package cl.starlabs.vista.veterinario;
 
 /**
  *
  * @author Janno
  */
-public class ListarPropietarios extends javax.swing.JFrame {
+public class ListarVeterinario extends javax.swing.JFrame {
 
     /**
-     * Creates new form ListarPropietarios
+     * Creates new form ListarVeterinario
      */
-    public ListarPropietarios() {
+    public ListarVeterinario() {
         initComponents();
     }
 
@@ -29,18 +29,18 @@ public class ListarPropietarios extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablaPropietarios = new javax.swing.JTable();
+        tablaVeterinarios = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
-        menuBuscarPropietario = new javax.swing.JMenu();
-        menuRegistrarPropietario = new javax.swing.JMenu();
+        menuBuscarVeterinario = new javax.swing.JMenu();
+        menuRegistrarVeterinario = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("SyncPet :: Propietarios del Sistema");
-        setResizable(false);
+        setTitle("SyncPet :: Listar Veterinario");
+        setType(java.awt.Window.Type.UTILITY);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Propietarios Registrados"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Veterinarios Registrados"));
 
-        tablaPropietarios.setModel(new javax.swing.table.DefaultTableModel(
+        tablaVeterinarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -48,28 +48,31 @@ public class ListarPropietarios extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(tablaPropietarios);
+        jScrollPane1.setViewportView(tablaVeterinarios);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 527, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        menuBuscarPropietario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/find.png"))); // NOI18N
-        menuBuscarPropietario.setText("Buscar Propietario");
-        jMenuBar1.add(menuBuscarPropietario);
+        menuBuscarVeterinario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/find.png"))); // NOI18N
+        menuBuscarVeterinario.setText("Buscar Veterinario");
+        jMenuBar1.add(menuBuscarVeterinario);
 
-        menuRegistrarPropietario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/user_add.png"))); // NOI18N
-        menuRegistrarPropietario.setText("Registrar Propietario");
-        jMenuBar1.add(menuRegistrarPropietario);
+        menuRegistrarVeterinario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/user_add.png"))); // NOI18N
+        menuRegistrarVeterinario.setText("Registrar Veterinario");
+        jMenuBar1.add(menuRegistrarVeterinario);
 
         setJMenuBar(jMenuBar1);
 
@@ -84,7 +87,7 @@ public class ListarPropietarios extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -110,20 +113,20 @@ public class ListarPropietarios extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ListarPropietarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListarVeterinario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ListarPropietarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListarVeterinario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ListarPropietarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListarVeterinario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ListarPropietarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListarVeterinario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ListarPropietarios().setVisible(true);
+                new ListarVeterinario().setVisible(true);
             }
         });
     }
@@ -132,8 +135,8 @@ public class ListarPropietarios extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JMenu menuBuscarPropietario;
-    private javax.swing.JMenu menuRegistrarPropietario;
-    private javax.swing.JTable tablaPropietarios;
+    private javax.swing.JMenu menuBuscarVeterinario;
+    private javax.swing.JMenu menuRegistrarVeterinario;
+    private javax.swing.JTable tablaVeterinarios;
     // End of variables declaration//GEN-END:variables
 }

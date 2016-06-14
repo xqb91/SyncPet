@@ -137,7 +137,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="btnIniciarSesion" pref="120" max="32767" attributes="0"/>
+                      <Component id="btnIniciarSesion" pref="100" max="32767" attributes="0"/>
                       <Component id="btnSalir" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -176,7 +176,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="lblNombreUsuario">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Rut Usuario"/>
+            <Property name="text" type="java.lang.String" value="Nombre Usuario"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblPassword">
@@ -219,6 +219,9 @@
           </Events>
         </Component>
         <Component class="javax.swing.JPasswordField" name="txtPassword">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPasswordFocusLost"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

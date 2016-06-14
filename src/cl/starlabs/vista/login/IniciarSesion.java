@@ -58,7 +58,7 @@ public class IniciarSesion extends javax.swing.JFrame {
 
         panelLogin.setBorder(javax.swing.BorderFactory.createTitledBorder("Iniciar Sesión"));
 
-        lblNombreUsuario.setText("Rut Usuario");
+        lblNombreUsuario.setText("Nombre Usuario");
 
         lblPassword.setText("Contraseña");
 
@@ -83,6 +83,12 @@ public class IniciarSesion extends javax.swing.JFrame {
             }
         });
 
+        txtPassword.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPasswordFocusLost(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelLoginLayout = new javax.swing.GroupLayout(panelLogin);
         panelLogin.setLayout(panelLoginLayout);
         panelLoginLayout.setHorizontalGroup(
@@ -100,7 +106,7 @@ public class IniciarSesion extends javax.swing.JFrame {
                     .addComponent(txtPassword))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnIniciarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                    .addComponent(btnIniciarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
                     .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -195,6 +201,11 @@ public class IniciarSesion extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_txtNombreUsuarioFocusLost
+
+    private void txtPasswordFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPasswordFocusLost
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_txtPasswordFocusLost
 
     /**
      * @param args the command line arguments
