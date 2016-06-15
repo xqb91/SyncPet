@@ -206,7 +206,7 @@ public class AdministradorPaises extends javax.swing.JFrame {
         lblNombrePais.setEnabled(true);
         btnAccion.setEnabled(true);
         btnAccion.setText("Registrar");
-        txtNombrePais.setEditable(true);
+        txtNombrePais.setEnabled(true);
         txtNombrePais.setText("");
         txtNombrePais.requestFocus();
         btnCancelar.setEnabled(true);
@@ -219,7 +219,7 @@ public class AdministradorPaises extends javax.swing.JFrame {
         lblNombrePais.setEnabled(false);
         btnAccion.setEnabled(false);
         btnAccion.setText("Actualizar");
-        txtNombrePais.setEditable(false);
+        txtNombrePais.setEnabled(false);
         txtNombrePais.requestFocus();
         btnCancelar.setEnabled(false);
         tablaListaPaises.setEnabled(true);
