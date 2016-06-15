@@ -8,6 +8,7 @@ package cl.starlabs.controladores;
 import cl.starlabs.controladores.exceptions.IllegalOrphanException;
 import cl.starlabs.controladores.exceptions.NonexistentEntityException;
 import cl.starlabs.controladores.exceptions.PreexistingEntityException;
+import cl.starlabs.modelo.Clinica;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -282,6 +283,16 @@ public class PropietarioJpaController implements Serializable {
             Query consulta = getEntityManager().createNamedQuery("Propietario.findByRut");
             consulta.setParameter("rut", Integer.parseInt(run));
             return (Propietario)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public List<Propietario> buscarPorClinica(Clinica clinica) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Propietario.findByClinica");
+            consulta.setParameter("clinica", clinica);
+            return consulta.getResultList();
         } catch (Exception e) {
             return null;
         }

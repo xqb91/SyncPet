@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Mascota.findAll", query = "SELECT m FROM Mascota m"),
+    @NamedQuery(name = "Mascota.findAll", query = "SELECT m FROM Mascota m ORDER BY m.idMascota DESC"),
     @NamedQuery(name = "Mascota.findByIdMascota", query = "SELECT m FROM Mascota m WHERE m.idMascota = :idMascota"),
     @NamedQuery(name = "Mascota.findByNombre", query = "SELECT m FROM Mascota m WHERE m.nombre = :nombre"),
     @NamedQuery(name = "Mascota.findByFechaNacimiento", query = "SELECT m FROM Mascota m WHERE m.fechaNacimiento = :fechaNacimiento"),

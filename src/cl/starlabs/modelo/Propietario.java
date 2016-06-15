@@ -39,6 +39,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Propietario.findByDv", query = "SELECT p FROM Propietario p WHERE p.dv = :dv"),
     @NamedQuery(name = "Propietario.findByDireccion", query = "SELECT p FROM Propietario p WHERE p.direccion = :direccion"),
     @NamedQuery(name = "Propietario.findByTelefono", query = "SELECT p FROM Propietario p WHERE p.telefono = :telefono"),
+    @NamedQuery(name = "Propietario.findByClinica", query = "SELECT p FROM Propietario p WHERE p.sucursal.clinica = :clinica"),
     @NamedQuery(name = "Propietario.findByCelular", query = "SELECT p FROM Propietario p WHERE p.celular = :celular")})
 public class Propietario implements Serializable {
     private static final long serialVersionUID = 1L;

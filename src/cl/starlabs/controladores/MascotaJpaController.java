@@ -1016,6 +1016,16 @@ public class MascotaJpaController implements Serializable {
         }
     }
     
+    public Integer ultimoRegistro() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Mascota.findAll");
+            consulta.setMaxResults(1);
+            return ((Mascota)consulta.getSingleResult()).getIdMascota()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
     /*public List<Mascota> mascotasCumpleanos() {
         try {
             Query consulta = getEntityManager().createNamedQuery("");

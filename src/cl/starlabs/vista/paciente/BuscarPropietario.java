@@ -12,6 +12,7 @@ import cl.starlabs.modelo.Usuarios;
 import java.awt.Color;
 import javax.persistence.EntityManagerFactory;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -201,12 +202,7 @@ public class BuscarPropietario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarActionPerformed
-        rp.m = m;
-        rp.u = u;
-        rp.p = p;
-        rp.setVisible(true);
-        //new RegistroPaciente(m, u, p).setVisible(true);
-        this.dispose();
+
     }//GEN-LAST:event_btnSeleccionarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
@@ -284,7 +280,7 @@ public class BuscarPropietario extends javax.swing.JFrame {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    javax.swing.UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                     break;
                 }
             }
