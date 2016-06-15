@@ -206,4 +206,14 @@ public class CaracterJpaController implements Serializable {
         }
     }
     
+    public Caracter buscarCaracter(String nombre) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Caracter.findByNombre");
+            consulta.setParameter("nombre", nombre);
+            return (Caracter)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
 }

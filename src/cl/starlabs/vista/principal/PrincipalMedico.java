@@ -5,6 +5,10 @@
  */
 package cl.starlabs.vista.principal;
 
+import cl.starlabs.modelo.Sucursal;
+import cl.starlabs.modelo.Usuarios;
+import cl.starlabs.vista.login.PantallaBloqueo;
+import cl.starlabs.vista.paciente.RegistroPaciente;
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.swing.UIManager;
@@ -15,9 +19,9 @@ import javax.swing.UIManager;
  */
 public class PrincipalMedico extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Principal
-     */
+    Usuarios u = null;
+    Sucursal s = null;
+        
     public PrincipalMedico() {
         initComponents();
         //centrando ventana
@@ -28,6 +32,19 @@ public class PrincipalMedico extends javax.swing.JFrame {
         setVisible(true);
     }
 
+    public PrincipalMedico(Usuarios u, Sucursal s) {
+        initComponents();
+        //seteando usuario
+        this.u = u;
+        //centrando ventana
+        this.setLocationRelativeTo(null);
+        //seteando el titulo de la ventana
+        this.setTitle("SyncPet Veterinario :: Conectado como "+u.getUsuario()+" ("+s.getNombre()+")");
+        //colocando icono a ventana
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/cl/starlabs/imagenes/sistema/logo_renovado.png"));
+        setIconImage(icon);
+        setVisible(true);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -203,6 +220,11 @@ public class PrincipalMedico extends javax.swing.JFrame {
         syncmen_lock.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         syncmen_lock.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/lock.png"))); // NOI18N
         syncmen_lock.setText("Bloquear Terminal");
+        syncmen_lock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                syncmen_lockActionPerformed(evt);
+            }
+        });
         MenSyncpet.add(syncmen_lock);
 
         syncmen_salir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
@@ -218,6 +240,11 @@ public class PrincipalMedico extends javax.swing.JFrame {
         menPacientes_add.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
         menPacientes_add.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/add.png"))); // NOI18N
         menPacientes_add.setText("Registrar Paciente");
+        menPacientes_add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menPacientes_addActionPerformed(evt);
+            }
+        });
         menPacientes.add(menPacientes_add);
 
         menPacientes_find.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_MASK));
@@ -358,8 +385,21 @@ public class PrincipalMedico extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void syncmen_logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_syncmen_logoutActionPerformed
-        // TODO add your handling code here:
+        u = null;
+        s = null;
+        new cl.starlabs.vista.login.IniciarSesion().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_syncmen_logoutActionPerformed
+
+    private void syncmen_lockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_syncmen_lockActionPerformed
+        new PantallaBloqueo(this, u).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_syncmen_lockActionPerformed
+
+    private void menPacientes_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPacientes_addActionPerformed
+        new RegistroPaciente().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_menPacientes_addActionPerformed
 
     /**
      * @param args the command line arguments

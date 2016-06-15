@@ -5,6 +5,12 @@
  */
 package cl.starlabs.vista.login;
 
+import cl.starlabs.modelo.Usuarios;
+import cl.starlabs.vista.principal.PrincipalAdmin;
+import cl.starlabs.vista.principal.PrincipalMedico;
+import cl.starlabs.vista.principal.PrincipalRecepcionista;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Janno
@@ -14,10 +20,52 @@ public class PantallaBloqueo extends javax.swing.JFrame {
     /**
      * Creates new form PantallaBloqueo
      */
+    PrincipalAdmin pa           = null;
+    PrincipalMedico pm          = null;
+    PrincipalRecepcionista pr   = null;
+    Usuarios us                 = null;
+    
     public PantallaBloqueo() {
         initComponents();
+        //centrando ventana
+        this.setLocationRelativeTo(null);
     }
-
+    
+    public PantallaBloqueo(PrincipalAdmin pa, Usuarios us) {
+        initComponents();
+        //centrando ventana
+        this.setLocationRelativeTo(null);
+        //obteniendo valores de ventana
+        this.pa = pa;
+        this.us = us;
+        //Seteando el valor del label
+        lblNombreDeUsuario.setText(us.getUsuario()+" ("+us.getNombres().split(" ")[0]+" "+us.getApaterno()+") <<"+us.getDetalleUsuariosList().get(0).getSucursal().getClinica().getNombreReal()+">>");
+    }
+    
+    
+    public PantallaBloqueo(PrincipalMedico pm, Usuarios us) {
+        initComponents();
+        //centrando ventana
+        this.setLocationRelativeTo(null);
+        //obteniendo valores de ventana
+        this.pm = pm;
+        this.us = us;
+        //Seteando el valor del label
+        lblNombreDeUsuario.setText(us.getUsuario()+" ("+us.getNombres().split(" ")[0]+" "+us.getApaterno()+") <<"+us.getDetalleUsuariosList().get(0).getSucursal().getClinica().getNombreReal()+">>");
+    }
+    
+    
+    public PantallaBloqueo(PrincipalRecepcionista pr, Usuarios us) {
+        initComponents();
+        //centrando ventana
+        this.setLocationRelativeTo(null);
+        //obteniendo valores de ventana
+        this.pr = pr;
+        this.us = us;
+        //Seteando el valor del label
+        lblNombreDeUsuario.setText(us.getUsuario()+" ("+us.getNombres().split(" ")[0]+" "+us.getApaterno()+") <<"+us.getDetalleUsuariosList().get(0).getSucursal().getClinica().getNombreReal()+">>");
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,7 +79,7 @@ public class PantallaBloqueo extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         lblNombreDeUsuario = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        txtContraseña = new javax.swing.JPasswordField();
+        txtContrasena = new javax.swing.JPasswordField();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -50,6 +98,11 @@ public class PantallaBloqueo extends javax.swing.JFrame {
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/icon_padlock.gif"))); // NOI18N
         jButton2.setText("Desbloquear");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -69,7 +122,7 @@ public class PantallaBloqueo extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton2))
                             .addComponent(lblNombreDeUsuario))))
@@ -87,13 +140,39 @@ public class PantallaBloqueo extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if(txtContrasena.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe escribir la contraseña del usuario "+us.getUsuario()+" para desbloquear el terminal");
+            txtContrasena.requestFocus();
+        }else{
+            if(txtContrasena.getText().compareTo(us.getContrasena()) == 0) {
+                if(pm != null) {
+                    pm.setVisible(true);
+                    this.dispose();
+                    pm = null;
+                }else if(pa != null) {
+                    pa.setVisible(true);
+                    this.dispose();
+                    pa = null;
+                }else if(pr != null) {
+                    pr.setVisible(true);
+                    this.dispose();
+                    pr = null;
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "Contraseña Incorrecta");
+                txtContrasena.requestFocus();
+            }
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -136,6 +215,6 @@ public class PantallaBloqueo extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel lblNombreDeUsuario;
-    private javax.swing.JPasswordField txtContraseña;
+    private javax.swing.JPasswordField txtContrasena;
     // End of variables declaration//GEN-END:variables
 }

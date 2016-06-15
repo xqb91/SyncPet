@@ -275,4 +275,16 @@ public class PropietarioJpaController implements Serializable {
         }
     }
     
+    public Propietario buscarPorRut(String rutCh) {
+        try {
+            String run = rutCh.replace(".", "");
+            run = run.split("-")[0];
+            Query consulta = getEntityManager().createNamedQuery("Propietario.findByRut");
+            consulta.setParameter("rut", Integer.parseInt(run));
+            return (Propietario)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
 }

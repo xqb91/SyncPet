@@ -1016,4 +1016,12 @@ public class MascotaJpaController implements Serializable {
         }
     }
     
+    /*public List<Mascota> mascotasCumpleanos() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("");
+        } catch (Exception e) {
+            return null;
+        }
+    }*/
+    
 }

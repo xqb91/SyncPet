@@ -235,4 +235,14 @@ public class UsuariosJpaController implements Serializable {
         }
     }
     
+    public Usuarios buscarUsuarioPorNickname(String nickname) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Usuarios.findByUsuario");
+            consulta.setParameter("usuario", nickname);
+            return (Usuarios)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
 }

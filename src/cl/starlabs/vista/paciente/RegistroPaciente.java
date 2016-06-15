@@ -5,28 +5,126 @@
  */
 package cl.starlabs.vista.paciente;
 
+import cl.starlabs.controladores.CaracterJpaController;
+import cl.starlabs.controladores.EspecieJpaController;
+import cl.starlabs.controladores.HabitadJpaController;
+import cl.starlabs.controladores.RazaJpaController;
+import cl.starlabs.modelo.Caracter;
+import cl.starlabs.modelo.Especie;
+import cl.starlabs.modelo.Habitad;
 import javax.swing.UIManager;
 import cl.starlabs.modelo.Mascota;
+import cl.starlabs.modelo.Propietario;
+import cl.starlabs.modelo.Raza;
+import cl.starlabs.modelo.Usuarios;
 import java.math.BigInteger;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 /**
  *
  * @author Victor Manuel Araya
  */
 public class RegistroPaciente extends javax.swing.JFrame {
 
-    /**
-     * Creates new form RegistroPaciente
-     */
+    public Mascota m = null;
+    public Usuarios u = null;
+    public Propietario p = null;
+
+    EntityManagerFactory emf = null;
+    
     public RegistroPaciente() {
         initComponents();
         //centrando ventana
         this.setLocationRelativeTo(null);
+        //seteando persistencia
+        emf = Persistence.createEntityManagerFactory("SyncPetPU");
+        //rellenando valores por defecto en campos
+        for(Especie e : new EspecieJpaController(emf).findEspecieEntities()) {
+            slcEspecie.addItem(e.getNombre());
+        }
+        
+        for(Caracter c : new CaracterJpaController(emf).findCaracterEntities()) {
+           slcCaracter.addItem(c.getNombre());
+        }
+        
+        for(Habitad h : new HabitadJpaController(emf).findHabitadEntities()) {
+            slcHabitad.addItem(h.getNombre());
+        }
+        if(p != null)
+        {
+            lblInfoPropietario.setText(p.getRut()+"-"+p.getDv()+" :"+p.getNombres().split(" ")[0]+" "+p.getApaterno());
+        }else{
+            lblInfoPropietario.setText("Propietario no seleccionado...");
+        }
     }
     
-    public RegistroPaciente(Mascota m) {
+    public RegistroPaciente(Mascota m, Usuarios us, Propietario p) {
         initComponents();
         //centrando ventana
         this.setLocationRelativeTo(null);
+        //seteando valores
+        this.m = m;
+        this.u = us;
+        this.p = p;
+        
+        
+        //seteando persistencia
+        emf = Persistence.createEntityManagerFactory("SyncPetPU");
+        for(Especie e : new EspecieJpaController(emf).findEspecieEntities()) {
+            slcEspecie.addItem(e.getNombre());
+        }
+        
+        for(Caracter c : new CaracterJpaController(emf).findCaracterEntities()) {
+           slcCaracter.addItem(c.getNombre());
+        }
+        
+        for(Habitad h : new HabitadJpaController(emf).findHabitadEntities()) {
+            slcHabitad.addItem(h.getNombre());
+        }
+        if(p != null)
+        {
+            lblInfoPropietario.setText(p.getRut()+"-"+p.getDv()+" :"+p.getNombres().split(" ")[0]+" "+p.getApaterno());
+        }else{
+            lblInfoPropietario.setText("Propietario no seleccionado...");
+        }
+    }
+    
+    public RegistroPaciente(Usuarios us) {
+        initComponents();
+        //centrando ventana
+        this.setLocationRelativeTo(null);
+        //seteando valores
+        this.u = us;
+        //seteando persistencia
+        emf = Persistence.createEntityManagerFactory("SyncPetPU");
+        //rellenando valores por defecto en campos
+        for(Especie e : new EspecieJpaController(emf).findEspecieEntities()) {
+            slcEspecie.addItem(e.getNombre());
+        }
+        
+        for(Caracter c : new CaracterJpaController(emf).findCaracterEntities()) {
+           slcCaracter.addItem(c.getNombre());
+        }
+        
+        for(Habitad h : new HabitadJpaController(emf).findHabitadEntities()) {
+            slcHabitad.addItem(h.getNombre());
+        }
+        
+        if(p != null)
+        {
+            lblInfoPropietario.setText(p.getRut()+"-"+p.getDv()+" :"+p.getNombres().split(" ")[0]+" "+p.getApaterno());
+        }else{
+            lblInfoPropietario.setText("Propietario no seleccionado...");
+        }
+        
+    }
+    
+    public Propietario getP() {
+        return p;
+    }
+
+    public void setP(Propietario p) {
+        this.p = p;
     }
 
     /**
@@ -42,15 +140,13 @@ public class RegistroPaciente extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         txtFechaNacimiento = new com.toedter.calendar.JDateChooser();
         slcRaza = new javax.swing.JComboBox();
         slcEspecie = new javax.swing.JComboBox();
-        slcPelaje = new javax.swing.JComboBox();
-        slcCaradcter = new javax.swing.JComboBox();
+        slcCaracter = new javax.swing.JComboBox();
         jLabel8 = new javax.swing.JLabel();
         slcSexo = new javax.swing.JComboBox();
         jLabel10 = new javax.swing.JLabel();
@@ -84,19 +180,31 @@ public class RegistroPaciente extends javax.swing.JFrame {
 
         jLabel3.setText("Especie");
 
-        jLabel4.setText("Pelaje");
-
         jLabel5.setText("Caracter");
 
         jLabel6.setText("Fecha de Nacimiento");
 
+        txtNombre.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtNombreFocusLost(evt);
+            }
+        });
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreKeyTyped(evt);
+            }
+        });
+
         slcRaza.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione..." }));
 
         slcEspecie.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione..." }));
+        slcEspecie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                slcEspecieActionPerformed(evt);
+            }
+        });
 
-        slcPelaje.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione..." }));
-
-        slcCaradcter.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione..." }));
+        slcCaracter.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione..." }));
 
         jLabel8.setText("Sexo");
 
@@ -104,13 +212,20 @@ public class RegistroPaciente extends javax.swing.JFrame {
 
         jLabel10.setText("# Chip");
 
+        txtChip.setText("0");
+        txtChip.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtChipKeyTyped(evt);
+            }
+        });
+
         jLabel11.setText("Habitad");
 
         slcHabitad.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione..." }));
 
         jLabel15.setText("Grupo Sanguíneo");
 
-        slcGrupoSanguineo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        slcGrupoSanguineo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione...", "DEA", "A", "AB", "B", "C", "D", "F", "J", "K", "L", "M", "R", "S", "T", "P", "Q", "U", "Z" }));
 
         javax.swing.GroupLayout panelDatosPacienteLayout = new javax.swing.GroupLayout(panelDatosPaciente);
         panelDatosPaciente.setLayout(panelDatosPacienteLayout);
@@ -122,8 +237,21 @@ public class RegistroPaciente extends javax.swing.JFrame {
                     .addGroup(panelDatosPacienteLayout.createSequentialGroup()
                         .addGroup(panelDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
+                            .addComponent(jLabel3))
+                        .addGap(67, 67, 67)
+                        .addGroup(panelDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(slcRaza, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(slcEspecie, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(panelDatosPacienteLayout.createSequentialGroup()
+                        .addGroup(panelDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtNombre)
+                            .addComponent(txtFechaNacimiento, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)))
+                    .addGroup(panelDatosPacienteLayout.createSequentialGroup()
+                        .addGroup(panelDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addComponent(jLabel8))
                         .addGap(61, 61, 61)
@@ -134,18 +262,7 @@ public class RegistroPaciente extends javax.swing.JFrame {
                                 .addComponent(jLabel10)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtChip, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(slcCaradcter, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(slcPelaje, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(slcEspecie, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(slcRaza, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(panelDatosPacienteLayout.createSequentialGroup()
-                        .addGroup(panelDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtNombre)
-                            .addComponent(txtFechaNacimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(slcCaracter, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(panelDatosPacienteLayout.createSequentialGroup()
                         .addGroup(panelDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel15)
@@ -168,21 +285,17 @@ public class RegistroPaciente extends javax.swing.JFrame {
                     .addComponent(jLabel6)
                     .addComponent(txtFechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(slcEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(slcRaza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(slcEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(slcPelaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(slcCaradcter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(slcCaracter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
@@ -206,9 +319,11 @@ public class RegistroPaciente extends javax.swing.JFrame {
 
         btnCargarImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/image_add.png"))); // NOI18N
         btnCargarImagen.setText("Cargar Foto");
+        btnCargarImagen.setEnabled(false);
 
         btnTomarImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/camera_add.png"))); // NOI18N
         btnTomarImagen.setText("Tomar Foto");
+        btnTomarImagen.setEnabled(false);
         btnTomarImagen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnTomarImagenActionPerformed(evt);
@@ -324,12 +439,12 @@ public class RegistroPaciente extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(panelTomaImagen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(panelInfoPropietario, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(panelDatosPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelDatosPaciente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardarPaciente)
@@ -349,12 +464,35 @@ public class RegistroPaciente extends javax.swing.JFrame {
         Mascota m = new Mascota();
         m.setNombre(txtNombre.getText());
         m.setFechaNacimiento(txtFechaNacimiento.getDate());
+        m.setRaza(new RazaJpaController(emf).buscarRaza(slcCaracter.getSelectedItem().toString()));
+        m.setCaracter(new CaracterJpaController(emf).buscarCaracter(slcCaracter.getSelectedItem().toString()));
         m.setSexo(slcSexo.getSelectedItem().toString().charAt(0));
         m.setNumeroChip(Integer.parseInt(txtChip.getText()));
+        m.setHabitad(new HabitadJpaController(emf).buscarHabitad(slcHabitad.getSelectedItem().toString()));
         m.setGrupoSanguineo(slcGrupoSanguineo.getSelectedItem().toString());
               
-        
+        new BuscarPropietario(emf, m, this, u, p).setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnBuscarPropietarioActionPerformed
+
+    private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
+
+    }//GEN-LAST:event_txtNombreKeyTyped
+
+    private void txtChipKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtChipKeyTyped
+        char c = evt.getKeyChar();
+        if(!Character.isDigit(c)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtChipKeyTyped
+
+    private void slcEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_slcEspecieActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_slcEspecieActionPerformed
+
+    private void txtNombreFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreFocusLost
+        txtNombre.setText(txtNombre.getText().toUpperCase());
+    }//GEN-LAST:event_txtNombreFocusLost
 
     /**
      * @param args the command line arguments
@@ -405,7 +543,6 @@ public class RegistroPaciente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
@@ -415,11 +552,10 @@ public class RegistroPaciente extends javax.swing.JFrame {
     private javax.swing.JPanel panelDatosPaciente;
     private javax.swing.JPanel panelInfoPropietario;
     private javax.swing.JPanel panelTomaImagen;
-    private javax.swing.JComboBox slcCaradcter;
+    private javax.swing.JComboBox slcCaracter;
     private javax.swing.JComboBox slcEspecie;
     private javax.swing.JComboBox slcGrupoSanguineo;
     private javax.swing.JComboBox slcHabitad;
-    private javax.swing.JComboBox slcPelaje;
     private javax.swing.JComboBox slcRaza;
     private javax.swing.JComboBox slcSexo;
     private javax.swing.JTextField txtChip;

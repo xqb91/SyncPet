@@ -82,7 +82,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Component id="lblLogo" min="-2" pref="468" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="12" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="24" max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
@@ -137,6 +137,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="btnIniciarSesion" max="32767" attributes="0"/>
                       <Component id="btnIniciarSesion" pref="100" max="32767" attributes="0"/>
                       <Component id="btnSalir" max="32767" attributes="0"/>
                   </Group>
@@ -176,6 +177,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="lblNombreUsuario">
           <Properties>
+            <Property name="text" type="java.lang.String" value="Nombre de Usuario"/>
             <Property name="text" type="java.lang.String" value="Nombre Usuario"/>
           </Properties>
         </Component>
@@ -192,6 +194,7 @@
         <Component class="javax.swing.JTextField" name="txtNombreUsuario">
           <Events>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtNombreUsuarioFocusLost"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtNombreUsuarioActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="slcSucursal">
@@ -203,12 +206,18 @@
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="slcSucursalItemStateChanged"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnIniciarSesion">
           <Properties>
             <Property name="text" type="java.lang.String" value="Iniciar Sesi&#xf3;n"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnIniciarSesionActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnSalir">
           <Properties>
