@@ -380,6 +380,48 @@
                 </MenuItem>
               </SubComponents>
             </Menu>
+            <Menu class="javax.swing.JMenu" name="adminMenuGeografia">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/cl/starlabs/imagenes/iconos/world_2.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Geograf&#xed;a"/>
+              </Properties>
+              <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="menAdminPais">
+                  <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/cl/starlabs/imagenes/iconos/world.png"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Administrar Paises"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="menuAdminRegiones">
+                  <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/cl/starlabs/imagenes/iconos/world.png"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Administrar Regiones"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="menuAdminProvincias">
+                  <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/cl/starlabs/imagenes/iconos/world.png"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Administrar Provincias"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="menuAdminComunas">
+                  <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/cl/starlabs/imagenes/iconos/world.png"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Administrar Comunas"/>
+                  </Properties>
+                </MenuItem>
+              </SubComponents>
+            </Menu>
           </SubComponents>
         </Menu>
       </SubComponents>

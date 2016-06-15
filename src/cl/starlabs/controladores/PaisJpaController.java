@@ -206,4 +206,14 @@ public class PaisJpaController implements Serializable {
         }
     }
     
+    public Integer ultimoPais() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Pais.findAllPorId");
+            consulta.setMaxResults(1);
+            return ((Pais)consulta.getSingleResult()).getIdPais()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
 }
