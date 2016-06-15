@@ -7,6 +7,8 @@ package cl.starlabs.vista.principal;
 
 import cl.starlabs.modelo.Sucursal;
 import cl.starlabs.modelo.Usuarios;
+import cl.starlabs.vista.login.PantallaBloqueo;
+import cl.starlabs.vista.paciente.RegistroPaciente;
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.swing.UIManager;
@@ -238,6 +240,11 @@ public class PrincipalMedico extends javax.swing.JFrame {
         menPacientes_add.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
         menPacientes_add.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/add.png"))); // NOI18N
         menPacientes_add.setText("Registrar Paciente");
+        menPacientes_add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menPacientes_addActionPerformed(evt);
+            }
+        });
         menPacientes.add(menPacientes_add);
 
         menPacientes_find.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_MASK));
@@ -385,9 +392,14 @@ public class PrincipalMedico extends javax.swing.JFrame {
     }//GEN-LAST:event_syncmen_logoutActionPerformed
 
     private void syncmen_lockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_syncmen_lockActionPerformed
-        this.setEnabled(false);
-        new cl.starlabs.vista.login.IniciarSesion().setVisible(true);
+        new PantallaBloqueo(this, u).setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_syncmen_lockActionPerformed
+
+    private void menPacientes_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPacientes_addActionPerformed
+        new RegistroPaciente().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_menPacientes_addActionPerformed
 
     /**
      * @param args the command line arguments

@@ -235,4 +235,14 @@ public class RazaJpaController implements Serializable {
         }
     }
     
+    public Raza buscarRaza(String nombre) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Raza.findByNombre");
+            consulta.setParameter("nombre", nombre);
+            return (Raza)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
 }

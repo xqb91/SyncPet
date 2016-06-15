@@ -9,6 +9,7 @@ import cl.starlabs.controladores.MascotaJpaController;
 import cl.starlabs.controladores.PropietarioJpaController;
 import cl.starlabs.modelo.Sucursal;
 import cl.starlabs.modelo.Usuarios;
+import cl.starlabs.vista.login.PantallaBloqueo;
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.persistence.EntityManagerFactory;
@@ -257,6 +258,11 @@ public class PrincipalRecepcionista extends javax.swing.JFrame {
         syncmen_lock.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         syncmen_lock.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/lock.png"))); // NOI18N
         syncmen_lock.setText("Bloquear Terminal");
+        syncmen_lock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                syncmen_lockActionPerformed(evt);
+            }
+        });
         MenSyncpet.add(syncmen_lock);
 
         syncmen_salir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
@@ -404,6 +410,11 @@ public class PrincipalRecepcionista extends javax.swing.JFrame {
         new cl.starlabs.vista.login.IniciarSesion().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_syncmen_logoutActionPerformed
+
+    private void syncmen_lockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_syncmen_lockActionPerformed
+        new PantallaBloqueo(this, u).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_syncmen_lockActionPerformed
 
     /**
      * @param args the command line arguments

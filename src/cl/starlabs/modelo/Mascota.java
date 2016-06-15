@@ -129,6 +129,18 @@ public class Mascota implements Serializable {
         this.sexo = sexo;
         this.grupoSanguineo = grupoSanguineo;
     }
+    
+    public Mascota(String nombre, Date fechaNacimiento, Raza r, Caracter c, Character sexo, Integer numeroChip, Habitad h, String grupoSanguineo, Propietario pro) {
+        this.nombre = nombre;
+        this.fechaNacimiento = fechaNacimiento;
+        this.raza = r;
+        this.caracter = c;
+        this.sexo = sexo;
+        this.numeroChip = numeroChip;
+        this.habitad = h;
+        this.grupoSanguineo = grupoSanguineo;
+        this.propietario = pro;
+    }
 
     public Integer getIdMascota() {
         return idMascota;

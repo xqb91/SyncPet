@@ -206,4 +206,14 @@ public class HabitadJpaController implements Serializable {
         }
     }
     
+    public Habitad buscarHabitad(String nombre) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Habitad.findByNombre");
+            consulta.setParameter("nombre", nombre);
+            return (Habitad)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
 }
