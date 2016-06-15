@@ -5,17 +5,82 @@
  */
 package cl.starlabs.vista.paciente;
 
+import cl.starlabs.controladores.PropietarioJpaController;
+import cl.starlabs.modelo.Mascota;
+import cl.starlabs.modelo.Propietario;
+import cl.starlabs.modelo.Sucursal;
+import cl.starlabs.modelo.Usuarios;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+
 /**
  *
  * @author Victor Manuel Araya
  */
 public class ListarPacientes extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ListarPacientes
-     */
+    Usuarios u = null;
+    Sucursal s = null;
+    EntityManagerFactory emf = null;
+    
     public ListarPacientes() {
         initComponents();
+        btnBuscar.setEnabled(false);
+        this.setLocationRelativeTo(null);
+    }
+    
+    public ListarPacientes(Usuarios u, Sucursal s) {
+        initComponents();
+        //seteando persistencia
+        emf = Persistence.createEntityManagerFactory("SyncPetPU");
+        btnBuscar.setEnabled(false);
+        this.setLocationRelativeTo(null);
+        this.u = u;
+        this.s = s;
+        
+        //rellenar la tabla
+        //Generando un modelo para añadir los datos en una columna
+        DefaultTableModel modelo = (DefaultTableModel) resultados.getModel();
+        //eliminando valores actuales//
+        for(int i = 0; i<modelo.getRowCount(); i++) {
+            modelo.removeRow(i);
+        }
+        
+        List<Propietario> lista = new PropietarioJpaController(emf).buscarPorClinica(s.getClinica());
+        if(lista != null) {
+            for(Propietario p : lista) {
+                if(p.getMascotaList() != null) {
+                    for(Mascota m : p.getMascotaList()) {
+                        //declarando arreglo para insertar los valores en la tabla
+                        Object[] fila = new Object[5];
+                        //rellenando los valores del arreglo con los valores que debe contener la tabla
+                        fila[0] = m.getIdMascota();
+                        fila[1] = m.getNombre();
+                        fila[2] = m.getRaza().getNombre();
+                        fila[3] = p.getNombres().split(" ")[0]+" "+p.getApaterno();
+                        fila[4] = "Detalles";
+                        modelo.addRow(fila);
+                    }
+                }
+            }
+        }
+        //aplicando el modelo a la tabla actual
+        resultados.setModel(modelo);
+        resultados.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+        resultados.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JTextField()));
     }
 
     /**
@@ -27,21 +92,181 @@ public class ListarPacientes extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        txtRut = new javax.swing.JTextField();
+        btnBuscar = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        resultados = new javax.swing.JTable();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("SyncPet :: Pacientes registrados");
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
+
+        jLabel1.setText("Rut Propietario");
+
+        txtRut.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtRutFocusLost(evt);
+            }
+        });
+
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/find.png"))); // NOI18N
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtRut, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(txtRut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
+
+        resultados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nombre", "Raza", "Propietario", "Acciones"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(resultados);
+        if (resultados.getColumnModel().getColumnCount() > 0) {
+            resultados.getColumnModel().getColumn(0).setMinWidth(35);
+            resultados.getColumnModel().getColumn(0).setPreferredWidth(35);
+            resultados.getColumnModel().getColumn(0).setMaxWidth(150);
+        }
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 440, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 425, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtRutFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtRutFocusLost
+        if(!txtRut.getText().isEmpty()) {
+            //formatear rut
+            txtRut.setText(cl.starlabs.herramientas.HerramientasRut.formatear(txtRut.getText()));
+            //verificando que este correcto el rut
+            if(cl.starlabs.herramientas.HerramientasRut.validar(txtRut.getText())) {
+                btnBuscar.setEnabled(true);
+                txtRut.setForeground(Color.black);
+                btnBuscar.requestFocus();
+            }else{
+                btnBuscar.setEnabled(false);
+                txtRut.setForeground(Color.red);
+                txtRut.selectAll();
+                txtRut.requestFocus();
+            }
+        }else{
+            btnBuscar.setEnabled(false);
+        }
+    }//GEN-LAST:event_txtRutFocusLost
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        //buscar datos de propietario
+        Propietario p = new PropietarioJpaController(emf).buscarPorRut(txtRut.getText());
+        if(p.getMascotaList().size() == 0) {
+            JOptionPane.showMessageDialog(null, "El propietario "+p.getNombres().split(" ")[0]+" "+p.getApaterno()+" no tiene pacientes vinculados");
+            DefaultTableModel modelo = (DefaultTableModel) resultados.getModel();
+            //eliminando valores actuales//
+            for(int i = 0; i<modelo.getRowCount(); i++) {
+                modelo.removeRow(i);
+            }
+            resultados.setModel(modelo);
+            resultados.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+            resultados.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JTextField()));
+        }else{
+            DefaultTableModel modelo = (DefaultTableModel) resultados.getModel();
+            //eliminando valores actuales//
+            for(int i = 0; i<modelo.getRowCount(); i++) {
+                modelo.removeRow(i);
+            }
+            resultados.setModel(modelo);
+            resultados.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+            resultados.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JTextField()));
+            //rellenando tabla
+            for(Mascota m : p.getMascotaList()) {
+                //declarando arreglo para insertar los valores en la tabla
+                Object[] fila = new Object[5];
+                //rellenando los valores del arreglo con los valores que debe contener la tabla
+                fila[0] = m.getIdMascota();
+                fila[1] = m.getNombre();
+                fila[2] = m.getRaza().getNombre();
+                fila[3] = p.getNombres().split(" ")[0]+" "+p.getApaterno();
+                fila[4] = "Detalles";
+                modelo.addRow(fila);
+            }
+            //aplicando el modelo a la tabla actual
+            resultados.setModel(modelo);
+            resultados.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+            resultados.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JTextField()));
+        }
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -55,7 +280,7 @@ public class ListarPacientes extends javax.swing.JFrame {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    javax.swing.UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                     break;
                 }
             }
@@ -78,6 +303,103 @@ public class ListarPacientes extends javax.swing.JFrame {
         });
     }
 
+    //BUTTON RENDERER CLASS
+    class ButtonRenderer extends JButton implements  TableCellRenderer
+    {
+
+            //CONSTRUCTOR
+            public ButtonRenderer() {
+                    //SET BUTTON PROPERTIES
+                    setOpaque(true);
+            }
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object obj,
+                            boolean selected, boolean focused, int row, int col) {
+
+                    //SET PASSED OBJECT AS BUTTON TEXT
+                            setText((obj==null) ? "":obj.toString());
+
+                    return this;
+            }
+
+    }
+
+    class ButtonEditor extends DefaultCellEditor
+    {
+            protected JButton btn;
+             private String lbl;
+             private Boolean clicked;
+
+             public ButtonEditor(JTextField txt) {
+                    super(txt);
+
+                    btn=new JButton();
+                    btn.setOpaque(true);
+
+                    //WHEN BUTTON IS CLICKED
+                    btn.addActionListener(new ActionListener() {
+
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+
+                                    fireEditingStopped();
+                            }
+                    });
+            }
+
+             //OVERRIDE A COUPLE OF METHODS
+             @Override
+            public Component getTableCellEditorComponent(JTable table, Object obj,
+                            boolean selected, int row, int col) {
+
+                            //SET TEXT TO BUTTON,SET CLICKED TO TRUE,THEN RETURN THE BTN OBJECT
+                    /*lbl=(obj==null) ? "":obj.toString();*/
+                     btn.setText(lbl);
+                     clicked=true;
+                    lbl = String.valueOf(table.getModel().getValueAt(table.getSelectedRow(), 0));
+                    return btn;
+
+            }
+
+            //IF BUTTON CELL VALUE CHNAGES,IF CLICKED THAT IS
+             @Override
+            public Object getCellEditorValue() {
+
+                     if(clicked)
+                            {
+                            //SHOW US SOME MESSAGE
+                                //JOptionPane.showMessageDialog(btn, lbl+" Clicked");
+                    
+                                ListarPacientes agcli = new ListarPacientes();
+                                emf.close();
+                                agcli.setVisible(true);
+                            }   
+                    //SET IT TO FALSE NOW THAT ITS CLICKED
+                    clicked=false;
+              return new String("Detalles");
+            }
+
+             @Override
+            public boolean stopCellEditing() {
+
+                   //SET CLICKED TO FALSE FIRST
+                            clicked=false;
+                    return super.stopCellEditing();
+            }
+
+             @Override
+            protected void fireEditingStopped() {
+                    // TODO Auto-generated method stub
+                    super.fireEditingStopped();
+            }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable resultados;
+    private javax.swing.JTextField txtRut;
     // End of variables declaration//GEN-END:variables
 }

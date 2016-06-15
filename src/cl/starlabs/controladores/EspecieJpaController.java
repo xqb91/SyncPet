@@ -206,4 +206,14 @@ public class EspecieJpaController implements Serializable {
         }
     }
     
+    public Especie buscarRaza(String especie) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Especie.findByNombre");
+            consulta.setParameter("nombre", especie);
+            return (Especie)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
 }

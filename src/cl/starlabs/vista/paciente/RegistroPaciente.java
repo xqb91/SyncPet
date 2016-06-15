@@ -8,6 +8,8 @@ package cl.starlabs.vista.paciente;
 import cl.starlabs.controladores.CaracterJpaController;
 import cl.starlabs.controladores.EspecieJpaController;
 import cl.starlabs.controladores.HabitadJpaController;
+import cl.starlabs.controladores.MascotaJpaController;
+import cl.starlabs.controladores.PropietarioJpaController;
 import cl.starlabs.controladores.RazaJpaController;
 import cl.starlabs.modelo.Caracter;
 import cl.starlabs.modelo.Especie;
@@ -17,76 +19,50 @@ import cl.starlabs.modelo.Mascota;
 import cl.starlabs.modelo.Propietario;
 import cl.starlabs.modelo.Raza;
 import cl.starlabs.modelo.Usuarios;
+import java.awt.Color;
 import java.math.BigInteger;
+import java.util.GregorianCalendar;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Victor Manuel Araya
  */
 public class RegistroPaciente extends javax.swing.JFrame {
 
-    public Mascota m = null;
-    public Usuarios u = null;
-    public Propietario p = null;
-
+    Usuarios u = null;
     EntityManagerFactory emf = null;
+    Propietario p = null;
     
     public RegistroPaciente() {
         initComponents();
+        //deshabilitando campos que requieren seleccion
+        slcRaza.setEnabled(false);
+        btnBuscarPropietario.setEnabled(false);
+        
         //centrando ventana
         this.setLocationRelativeTo(null);
         //seteando persistencia
         emf = Persistence.createEntityManagerFactory("SyncPetPU");
         //rellenando valores por defecto en campos
-        for(Especie e : new EspecieJpaController(emf).findEspecieEntities()) {
-            slcEspecie.addItem(e.getNombre());
-        }
         
-        for(Caracter c : new CaracterJpaController(emf).findCaracterEntities()) {
-           slcCaracter.addItem(c.getNombre());
-        }
+            txtFechaNacimiento.setDate(new GregorianCalendar().getTime());
         
-        for(Habitad h : new HabitadJpaController(emf).findHabitadEntities()) {
-            slcHabitad.addItem(h.getNombre());
-        }
-        if(p != null)
-        {
-            lblInfoPropietario.setText(p.getRut()+"-"+p.getDv()+" :"+p.getNombres().split(" ")[0]+" "+p.getApaterno());
-        }else{
-            lblInfoPropietario.setText("Propietario no seleccionado...");
-        }
-    }
-    
-    public RegistroPaciente(Mascota m, Usuarios us, Propietario p) {
-        initComponents();
-        //centrando ventana
-        this.setLocationRelativeTo(null);
-        //seteando valores
-        this.m = m;
-        this.u = us;
-        this.p = p;
+            //rellenando especies
+            for(Especie e : new EspecieJpaController(emf).findEspecieEntities()) {
+                slcEspecie.addItem(e.getNombre());
+            }
+            
+            //rellenando carácteres
+            for(Caracter c : new CaracterJpaController(emf).findCaracterEntities()) {
+               slcCaracter.addItem(c.getNombre());
+            }
         
-        
-        //seteando persistencia
-        emf = Persistence.createEntityManagerFactory("SyncPetPU");
-        for(Especie e : new EspecieJpaController(emf).findEspecieEntities()) {
-            slcEspecie.addItem(e.getNombre());
-        }
-        
-        for(Caracter c : new CaracterJpaController(emf).findCaracterEntities()) {
-           slcCaracter.addItem(c.getNombre());
-        }
-        
-        for(Habitad h : new HabitadJpaController(emf).findHabitadEntities()) {
-            slcHabitad.addItem(h.getNombre());
-        }
-        if(p != null)
-        {
-            lblInfoPropietario.setText(p.getRut()+"-"+p.getDv()+" :"+p.getNombres().split(" ")[0]+" "+p.getApaterno());
-        }else{
-            lblInfoPropietario.setText("Propietario no seleccionado...");
-        }
+            //rellenando habitad
+            for(Habitad h : new HabitadJpaController(emf).findHabitadEntities()) {
+                slcHabitad.addItem(h.getNombre());
+            }
     }
     
     public RegistroPaciente(Usuarios us) {
@@ -95,36 +71,30 @@ public class RegistroPaciente extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         //seteando valores
         this.u = us;
+        //deshabilitando campos que requieren seleccion
+        slcRaza.setEnabled(false);
+        btnBuscarPropietario.setEnabled(false);
+        
         //seteando persistencia
         emf = Persistence.createEntityManagerFactory("SyncPetPU");
         //rellenando valores por defecto en campos
-        for(Especie e : new EspecieJpaController(emf).findEspecieEntities()) {
-            slcEspecie.addItem(e.getNombre());
-        }
+            
+            txtFechaNacimiento.setDate(new GregorianCalendar().getTime());
+            
+            //rellenando especies
+            for(Especie e : new EspecieJpaController(emf).findEspecieEntities()) {
+                slcEspecie.addItem(e.getNombre());
+            }
+            
+            //rellenando carácteres
+            for(Caracter c : new CaracterJpaController(emf).findCaracterEntities()) {
+               slcCaracter.addItem(c.getNombre());
+            }
         
-        for(Caracter c : new CaracterJpaController(emf).findCaracterEntities()) {
-           slcCaracter.addItem(c.getNombre());
-        }
-        
-        for(Habitad h : new HabitadJpaController(emf).findHabitadEntities()) {
-            slcHabitad.addItem(h.getNombre());
-        }
-        
-        if(p != null)
-        {
-            lblInfoPropietario.setText(p.getRut()+"-"+p.getDv()+" :"+p.getNombres().split(" ")[0]+" "+p.getApaterno());
-        }else{
-            lblInfoPropietario.setText("Propietario no seleccionado...");
-        }
-        
-    }
-    
-    public Propietario getP() {
-        return p;
-    }
-
-    public void setP(Propietario p) {
-        this.p = p;
+            //rellenando habitad
+            for(Habitad h : new HabitadJpaController(emf).findHabitadEntities()) {
+                slcHabitad.addItem(h.getNombre());
+            }
     }
 
     /**
@@ -162,9 +132,10 @@ public class RegistroPaciente extends javax.swing.JFrame {
         btnGuardarImagen = new javax.swing.JButton();
         btnCancelarImagen = new javax.swing.JButton();
         panelInfoPropietario = new javax.swing.JPanel();
-        lblTituloInfoPropietario = new javax.swing.JLabel();
         lblInfoPropietario = new javax.swing.JLabel();
         btnBuscarPropietario = new javax.swing.JButton();
+        txtRut = new javax.swing.JTextField();
+        lblRutPropp = new javax.swing.JLabel();
         btnCancelarRegistro = new javax.swing.JButton();
         btnGuardarPaciente = new javax.swing.JButton();
 
@@ -198,6 +169,11 @@ public class RegistroPaciente extends javax.swing.JFrame {
         slcRaza.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione..." }));
 
         slcEspecie.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione..." }));
+        slcEspecie.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                slcEspecieFocusLost(evt);
+            }
+        });
         slcEspecie.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 slcEspecieActionPerformed(evt);
@@ -374,18 +350,29 @@ public class RegistroPaciente extends javax.swing.JFrame {
 
         panelInfoPropietario.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder("Propietario del Paciente")));
 
-        lblTituloInfoPropietario.setText("Información del propietario");
-
         lblInfoPropietario.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        lblInfoPropietario.setText("Nombre Rut");
+        lblInfoPropietario.setText("Propietario no definido");
 
         btnBuscarPropietario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/find.png"))); // NOI18N
-        btnBuscarPropietario.setText("Buscar Propietario");
+        btnBuscarPropietario.setText("Buscar");
         btnBuscarPropietario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarPropietarioActionPerformed(evt);
             }
         });
+
+        txtRut.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtRutFocusLost(evt);
+            }
+        });
+        txtRut.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtRutKeyTyped(evt);
+            }
+        });
+
+        lblRutPropp.setText("Propietario no definido");
 
         javax.swing.GroupLayout panelInfoPropietarioLayout = new javax.swing.GroupLayout(panelInfoPropietario);
         panelInfoPropietario.setLayout(panelInfoPropietarioLayout);
@@ -394,27 +381,43 @@ public class RegistroPaciente extends javax.swing.JFrame {
             .addGroup(panelInfoPropietarioLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelInfoPropietarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTituloInfoPropietario)
-                    .addComponent(lblInfoPropietario))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelInfoPropietarioLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnBuscarPropietario, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelInfoPropietarioLayout.createSequentialGroup()
+                        .addComponent(lblInfoPropietario)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelInfoPropietarioLayout.createSequentialGroup()
+                        .addComponent(txtRut)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnBuscarPropietario))
+                    .addGroup(panelInfoPropietarioLayout.createSequentialGroup()
+                        .addComponent(lblRutPropp)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         panelInfoPropietarioLayout.setVerticalGroup(
             panelInfoPropietarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelInfoPropietarioLayout.createSequentialGroup()
-                .addComponent(lblTituloInfoPropietario)
+                .addGroup(panelInfoPropietarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBuscarPropietario)
+                    .addComponent(txtRut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblInfoPropietario)
-                .addGap(18, 18, 18)
-                .addComponent(btnBuscarPropietario)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblRutPropp)
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         btnCancelarRegistro.setText("Cancelar");
+        btnCancelarRegistro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarRegistroActionPerformed(evt);
+            }
+        });
 
         btnGuardarPaciente.setText("Guardar");
+        btnGuardarPaciente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarPacienteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -443,7 +446,7 @@ public class RegistroPaciente extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(panelTomaImagen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelInfoPropietario, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(panelInfoPropietario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(panelDatosPaciente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -456,23 +459,23 @@ public class RegistroPaciente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnTomarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTomarImagenActionPerformed
-        new TomarFoto().setVisible(true);
+
         
     }//GEN-LAST:event_btnTomarImagenActionPerformed
 
     private void btnBuscarPropietarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarPropietarioActionPerformed
-        Mascota m = new Mascota();
-        m.setNombre(txtNombre.getText());
-        m.setFechaNacimiento(txtFechaNacimiento.getDate());
-        m.setRaza(new RazaJpaController(emf).buscarRaza(slcCaracter.getSelectedItem().toString()));
-        m.setCaracter(new CaracterJpaController(emf).buscarCaracter(slcCaracter.getSelectedItem().toString()));
-        m.setSexo(slcSexo.getSelectedItem().toString().charAt(0));
-        m.setNumeroChip(Integer.parseInt(txtChip.getText()));
-        m.setHabitad(new HabitadJpaController(emf).buscarHabitad(slcHabitad.getSelectedItem().toString()));
-        m.setGrupoSanguineo(slcGrupoSanguineo.getSelectedItem().toString());
-              
-        new BuscarPropietario(emf, m, this, u, p).setVisible(true);
-        this.dispose();
+        p = new PropietarioJpaController(emf).buscarPorRut(txtRut.getText());
+        if(p == null) {
+            JOptionPane.showMessageDialog(null, "No existen propietarios con rut "+txtRut.getText());
+            txtRut.setText("");
+            txtRut.requestFocus();
+            btnBuscarPropietario.setEnabled(false);
+            lblInfoPropietario.setText("Propietario no definido");
+            lblRutPropp.setText("Propietario no definido");
+        }else{
+            lblInfoPropietario.setText(p.getNombres()+" "+p.getApaterno()+" "+p.getAmaterno());
+            lblRutPropp.setText(cl.starlabs.herramientas.HerramientasRut.formatear(p.getRut()+""+p.getDv()));
+        }
     }//GEN-LAST:event_btnBuscarPropietarioActionPerformed
 
     private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
@@ -493,6 +496,158 @@ public class RegistroPaciente extends javax.swing.JFrame {
     private void txtNombreFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreFocusLost
         txtNombre.setText(txtNombre.getText().toUpperCase());
     }//GEN-LAST:event_txtNombreFocusLost
+
+    private void btnCancelarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarRegistroActionPerformed
+        int opcion = JOptionPane.showConfirmDialog(null, "¿Desea salir sin guardar los cambios del registro de paciente?");
+        if(opcion == 0) {
+            //guardar cambios
+            btnGuardarPacienteActionPerformed(evt);
+        }else if(opcion == 1) {
+            //no quiere guardar los cambios
+            this.dispose();
+        }
+        
+    }//GEN-LAST:event_btnCancelarRegistroActionPerformed
+
+    private void slcEspecieFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_slcEspecieFocusLost
+        //buscar razas de la especie
+        if(slcEspecie.getSelectedItem().toString().compareToIgnoreCase("Seleccione...") != 0) {
+            slcRaza.removeAllItems();
+            slcRaza.addItem("Seleccione...");
+            if((new EspecieJpaController(emf).buscarRaza(slcEspecie.getSelectedItem().toString())).getRazaList() != null) {
+                for(Raza r : (new EspecieJpaController(emf).buscarRaza(slcEspecie.getSelectedItem().toString())).getRazaList() ) {
+                    slcRaza.addItem(r.getNombre());
+                }
+                slcRaza.setEnabled(true);
+            }else{
+                slcRaza.setEnabled(false);
+                slcRaza.removeAllItems();
+                slcRaza.addItem("Seleccione...");
+            }
+        }else{
+            slcRaza.setEnabled(false);
+        }
+        slcRaza.requestFocus();
+    }//GEN-LAST:event_slcEspecieFocusLost
+
+    private void txtRutKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRutKeyTyped
+        //comprobacion de caracteres validos para ingreso de rut
+        char c = evt.getKeyChar();
+        if((!Character.isDigit(c)) && (!((c == 'K') || (c == 'k') || (c == '-') || (c == '.'))))
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtRutKeyTyped
+
+    private void txtRutFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtRutFocusLost
+        if(!txtRut.getText().isEmpty()) {
+            //formatear rut
+            txtRut.setText(cl.starlabs.herramientas.HerramientasRut.formatear(txtRut.getText()));
+            //verificando que este correcto el rut
+            if(cl.starlabs.herramientas.HerramientasRut.validar(txtRut.getText())) {
+                btnBuscarPropietario.setEnabled(true);
+                txtRut.setForeground(Color.black);
+                btnBuscarPropietario.requestFocus();
+            }else{
+                btnBuscarPropietario.setEnabled(false);
+                txtRut.setForeground(Color.red);
+                txtRut.selectAll();
+                txtRut.requestFocus();
+            }
+        }else{
+            btnBuscarPropietario.setEnabled(false);
+        }
+    }//GEN-LAST:event_txtRutFocusLost
+
+    private void btnGuardarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarPacienteActionPerformed
+        Mascota m = new Mascota();
+        if(txtNombre.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El campo de nombre de paciente esta vacío");
+            txtNombre.requestFocus();
+        }else{
+            m.setNombre(txtNombre.getText());
+            //comprobando
+            if(slcEspecie.getSelectedItem().toString().compareToIgnoreCase("Seleccione...") == 0) {
+                JOptionPane.showMessageDialog(null, "Seleccione la especie del paciente");
+                slcEspecie.requestFocus();
+            }else{
+                if(slcRaza.getSelectedItem().toString().compareToIgnoreCase("Seleccione...") == 0) {
+                    JOptionPane.showMessageDialog(null, "Seleccione la raza del paciente");
+                    slcRaza.requestFocus();
+                }else{
+                    Raza r = new RazaJpaController(emf).buscarRaza(slcRaza.getSelectedItem().toString());
+                    if(r == null) {
+                        JOptionPane.showMessageDialog(null, "Error Grave: La raza del paciente no pudo ser verificada contra el sistema");
+                        this.dispose();
+                    }else{
+                        m.setRaza(r);
+                        //verificando
+                        if(slcCaracter.getSelectedItem().toString().compareToIgnoreCase("Seleccione...") == 0) {
+                            JOptionPane.showMessageDialog(null, "Seleccione el caracter del paciente");
+                            slcCaracter.requestFocus();
+                        }else{
+                            Caracter c = new CaracterJpaController(emf).buscarCaracter(slcCaracter.getSelectedItem().toString());
+                            if(c == null) {
+                                JOptionPane.showMessageDialog(null, "Error Grave: El caracter del paciente no pudo ser verificado contra el sistema");
+                                this.dispose();
+                            }else{
+                                m.setCaracter(c);
+                                //verificando
+                                if(slcSexo.getSelectedItem().toString().compareToIgnoreCase("Seleccione...") == 0) {
+                                    JOptionPane.showMessageDialog(null, "Seleccione el sexo del paciente");
+                                }else{
+                                    m.setSexo(slcSexo.getSelectedItem().toString().charAt(0));
+                                    //verificando
+                                    if(txtChip.getText().isEmpty()) {
+                                        txtChip.setText("0");
+                                    }
+                                    m.setNumeroChip(Integer.parseInt(txtChip.getText()));
+                                    
+                                    //verificando
+                                    if(slcHabitad.getSelectedItem().toString().compareToIgnoreCase("Seleccione...") == 0) {
+                                        JOptionPane.showMessageDialog(null, "Seleccione el habitad del paciente");
+                                        slcHabitad.requestFocus();
+                                    }else{
+                                        Habitad h = new HabitadJpaController(emf).buscarHabitad(slcHabitad.getSelectedItem().toString());
+                                        if(h == null) {
+                                            JOptionPane.showMessageDialog(null, "Error Grave: El habitad del paciente no pudo ser verificado contra el sistema");
+                                            this.dispose();
+                                        }else{
+                                            m.setHabitad(h);
+                                            //verificando
+                                            if(slcGrupoSanguineo.getSelectedItem().toString().compareToIgnoreCase("Seleccione...") == 0) {
+                                                JOptionPane.showMessageDialog(null, "Seleccione el grupo sanguíneo del paciente");
+                                                slcGrupoSanguineo.requestFocus();
+                                            }else{
+                                                m.setGrupoSanguineo(slcGrupoSanguineo.getSelectedItem().toString());
+                                                //verificando
+                                                if(p == null) {
+                                                    JOptionPane.showMessageDialog(null, "Debe especificar el propietario del paciente");
+                                                    txtRut.requestFocus();
+                                                }else{
+                                                    m.setPropietario(p);
+                                                    m.setFechaNacimiento(txtFechaNacimiento.getDate());
+                                                    //registrar
+                                                    m.setIdMascota(new MascotaJpaController(emf).ultimoRegistro());
+                                                    try {
+                                                        new MascotaJpaController(emf).create(m);
+                                                        JOptionPane.showMessageDialog(null, "Paciente registrado");
+                                                        this.dispose();
+                                                    } catch (Exception e) {
+                                                        JOptionPane.showMessageDialog(null, "Error al registrar paciente. SyncPet dijo: "+e.getMessage());
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_btnGuardarPacienteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -548,7 +703,7 @@ public class RegistroPaciente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel lblImagenPaciente;
     private javax.swing.JLabel lblInfoPropietario;
-    private javax.swing.JLabel lblTituloInfoPropietario;
+    private javax.swing.JLabel lblRutPropp;
     private javax.swing.JPanel panelDatosPaciente;
     private javax.swing.JPanel panelInfoPropietario;
     private javax.swing.JPanel panelTomaImagen;
@@ -561,5 +716,6 @@ public class RegistroPaciente extends javax.swing.JFrame {
     private javax.swing.JTextField txtChip;
     private com.toedter.calendar.JDateChooser txtFechaNacimiento;
     private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtRut;
     // End of variables declaration//GEN-END:variables
 }
