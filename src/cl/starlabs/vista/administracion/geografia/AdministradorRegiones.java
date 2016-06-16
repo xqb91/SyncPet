@@ -64,7 +64,7 @@ public class AdministradorRegiones extends javax.swing.JFrame {
         tablaResultados = new javax.swing.JTable();
         btnAgregar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
-        slcPais = new javax.swing.JComboBox<String>();
+        slcPais = new javax.swing.JComboBox<>();
         btnSeleccionaPais = new javax.swing.JButton();
         panelInfoRegion = new javax.swing.JPanel();
         lblPais = new javax.swing.JLabel();
@@ -122,7 +122,7 @@ public class AdministradorRegiones extends javax.swing.JFrame {
             }
         });
 
-        slcPais.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione País..." }));
+        slcPais.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione País..." }));
 
         btnSeleccionaPais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/find.png"))); // NOI18N
         btnSeleccionaPais.addActionListener(new java.awt.event.ActionListener() {
@@ -146,7 +146,7 @@ public class AdministradorRegiones extends javax.swing.JFrame {
                 .addComponent(slcPais, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSeleccionaPais, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 45, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -404,7 +404,6 @@ public class AdministradorRegiones extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar actualizar la región: "+e.getMessage()); 
             }
         }
-
     }//GEN-LAST:event_btnAccionActionPerformed
 
     public void rellenarTabla(String valor) {
