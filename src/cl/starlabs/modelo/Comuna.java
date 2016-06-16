@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Comuna.findAll", query = "SELECT c FROM Comuna c ORDER BY c.nombre ASC"),
+    @NamedQuery(name = "Comuna.findAllById", query = "SELECT c FROM Comuna c ORDER BY c.idComuna DESC"),
     @NamedQuery(name = "Comuna.findByIdComuna", query = "SELECT c FROM Comuna c WHERE c.idComuna = :idComuna"),
     @NamedQuery(name = "Comuna.findByNombre", query = "SELECT c FROM Comuna c WHERE c.nombre = :nombre")})
 public class Comuna implements Serializable {
@@ -59,6 +60,12 @@ public class Comuna implements Serializable {
     public Comuna(Integer idComuna, String nombre) {
         this.idComuna = idComuna;
         this.nombre = nombre;
+    }
+    
+    public Comuna(Integer idComuna, String nombre, Provincia provincia) {
+        this.idComuna = idComuna;
+        this.nombre = nombre;
+        this.provincia = provincia;
     }
 
     public Integer getIdComuna() {
