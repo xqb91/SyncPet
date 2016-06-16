@@ -64,7 +64,7 @@ public class AdministradorRegiones extends javax.swing.JFrame {
         tablaResultados = new javax.swing.JTable();
         btnAgregar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
-        slcPais = new javax.swing.JComboBox<>();
+        slcPais = new javax.swing.JComboBox<String>();
         btnSeleccionaPais = new javax.swing.JButton();
         panelInfoRegion = new javax.swing.JPanel();
         lblPais = new javax.swing.JLabel();
@@ -89,7 +89,7 @@ public class AdministradorRegiones extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true
+                false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -104,7 +104,8 @@ public class AdministradorRegiones extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tablaResultados);
         if (tablaResultados.getColumnModel().getColumnCount() > 0) {
             tablaResultados.getColumnModel().getColumn(0).setResizable(false);
-            tablaResultados.getColumnModel().getColumn(0).setPreferredWidth(25);
+            tablaResultados.getColumnModel().getColumn(0).setPreferredWidth(15);
+            tablaResultados.getColumnModel().getColumn(1).setResizable(false);
         }
 
         btnAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/add.png"))); // NOI18N
@@ -115,8 +116,13 @@ public class AdministradorRegiones extends javax.swing.JFrame {
         });
 
         btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/delete.png"))); // NOI18N
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
-        slcPais.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione País..." }));
+        slcPais.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione País..." }));
 
         btnSeleccionaPais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/find.png"))); // NOI18N
         btnSeleccionaPais.addActionListener(new java.awt.event.ActionListener() {
@@ -163,6 +169,11 @@ public class AdministradorRegiones extends javax.swing.JFrame {
         lblNombre.setText("Nombre");
 
         btnAccion.setText("Registrar");
+        btnAccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAccionActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -315,6 +326,86 @@ public class AdministradorRegiones extends javax.swing.JFrame {
             tablaResultados.setEnabled(false);
         }
     }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        //comprobando si hay elementos seleccionados en la tabla
+        if(tablaResultados.getSelectedColumn() >= 0) {
+            //recuperando valores desde la tabla
+            DefaultTableModel modelo = (DefaultTableModel)tablaResultados.getModel();
+            //se consulta si se desea eliminar el valor seleccionado de la tabla
+            int opcion = JOptionPane.showConfirmDialog(null, "¿Esta seguro de eliminar la región "+String.valueOf(modelo.getValueAt(tablaResultados.getSelectedRow(), 1)).toLowerCase()+"?");
+            //si la respuesta es positiva
+            if(opcion == 0) {
+                try {
+                    //se envia el id del pais para destrucción
+                    new RegionJpaController(emf).destroy(Integer.parseInt(modelo.getValueAt(tablaResultados.getSelectedRow(), 0).toString()));
+                    //se informa al usuario
+                    JOptionPane.showMessageDialog(null, "Región eliminada");
+                    //se rellena la tabla desde 0
+                    rellenarTabla(p.getIdPais()+"");
+                    //se setean valores por defecto haciendo clic en el boton cancelar
+                    btnCancelarActionPerformed(evt);
+                } catch (Exception e) {
+                    //si ocurre un error, es informado al usuario
+                    JOptionPane.showMessageDialog(null, "Error al eliminar la región: "+e.getMessage());
+                }
+            }else if(opcion == 1) {
+                btnCancelarActionPerformed(evt);
+            }
+        }   
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnAccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionActionPerformed
+        //se realiza la accion dependiendo del texto del boton
+        if(btnAccion.getText().compareToIgnoreCase("registrar") == 0) {
+            //si es registrar, se corrobora que el campo de texto de nombre de pais no este vacio
+            if(!txtNombreRegion.getText().isEmpty() && p != null) {
+                try {
+                    //se crea un pais creando un objeto de tipo pais con los valores predeterminados y enviandolo al controlador
+                    new RegionJpaController(emf).create(new Region(new RegionJpaController(emf).ultimo(), txtNombreRegion.getText(), p));
+                    //si la creacion fue correcta, se informa al usuario
+                    JOptionPane.showMessageDialog(null, "Elemento "+txtNombreRegion.getText()+" ha sido registrado con éxito");
+                    //se reestablecen los campos a sus valores por defecto
+                    btnCancelarActionPerformed(evt);
+                    //se rellena la tabla de paises
+                    rellenarTabla(p.getIdPais()+"");
+                } catch (Exception e) {
+                    //si ocurre un error, se informa al usuario
+                    JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar registrar la región: "+e.getMessage()); 
+                }
+            }else{
+                //si el campo de texto esta vacío, se informa al usuario y se coloca el cursor para que escriba
+                JOptionPane.showMessageDialog(null, "El campo de nombre de región esta vacío o el país no se encuentra seleccionado");
+                txtNombreRegion.requestFocus();
+            }
+        //si desea actualizar un registro...
+        }else if(btnAccion.getText().compareToIgnoreCase("actualizar") == 0) {
+            try {
+                //se verifica que el campo de texto no este vacio
+                if(!txtNombreRegion.getText().isEmpty() && p != null) {
+                    //se setea el nombre nuevo desde el campo de texto al objeto pais recuperado
+                    r.setNombre(txtNombreRegion.getText());
+                    //se envia el objeto con el nombre actualizado al controlador
+                    new RegionJpaController(emf).edit(r);
+                    //si es actualizado, se informa al usuario
+                    JOptionPane.showMessageDialog(null, "La región ha sido actualizada");
+                    //se reestablecen los campos a sus valores por defecto
+                    btnCancelarActionPerformed(evt);
+                    //se rellena la tabla de paises nuevamente
+                    rellenarTabla(p.getIdPais()+"");
+                }else{
+                    //si el campo de texto esta vacio, se informa al usuarioi
+                    JOptionPane.showMessageDialog(null, "El campo de región esta vacío");
+                    //se coloca el cursor para que escriba en el campo
+                    txtNombreRegion.requestFocus();
+                }
+            } catch (Exception e) {
+                // si ocurre un error, es informado al usuario
+                JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar actualizar la región: "+e.getMessage()); 
+            }
+        }
+
+    }//GEN-LAST:event_btnAccionActionPerformed
 
     public void rellenarTabla(String valor) {
         p = new PaisJpaController(emf).findPais(Integer.parseInt(valor));
