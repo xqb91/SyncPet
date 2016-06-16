@@ -115,11 +115,14 @@ public class AdministradorRegiones extends javax.swing.JFrame {
         });
 
         btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/delete.png"))); // NOI18N
+<<<<<<< HEAD
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarActionPerformed(evt);
             }
         });
+=======
+>>>>>>> origin/master
 
         slcPais.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione País..." }));
 
@@ -168,11 +171,14 @@ public class AdministradorRegiones extends javax.swing.JFrame {
         lblNombre.setText("Nombre");
 
         btnAccion.setText("Registrar");
+<<<<<<< HEAD
         btnAccion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAccionActionPerformed(evt);
             }
         });
+=======
+>>>>>>> origin/master
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -326,6 +332,7 @@ public class AdministradorRegiones extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAgregarActionPerformed
 
+<<<<<<< HEAD
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         //comprobando si hay elementos seleccionados en la tabla
         if(tablaResultados.getSelectedColumn() >= 0) {
@@ -406,6 +413,8 @@ public class AdministradorRegiones extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnAccionActionPerformed
 
+=======
+>>>>>>> origin/master
     public void rellenarTabla(String valor) {
         p = new PaisJpaController(emf).findPais(Integer.parseInt(valor));
         DefaultTableModel modelo = new DefaultTableModel(new Object [][] { }, new String [] {"ID", "Nombre"});
