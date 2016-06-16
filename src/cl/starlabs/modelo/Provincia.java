@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Provincia.findAll", query = "SELECT p FROM Provincia p"),
+    @NamedQuery(name = "Provincia.findAllById", query = "SELECT p FROM Provincia p ORDER BY p.idProvincia DESC"),
     @NamedQuery(name = "Provincia.findByIdProvincia", query = "SELECT p FROM Provincia p WHERE p.idProvincia = :idProvincia"),
     @NamedQuery(name = "Provincia.findByNombre", query = "SELECT p FROM Provincia p WHERE p.nombre = :nombre")})
 public class Provincia implements Serializable {
@@ -57,6 +58,12 @@ public class Provincia implements Serializable {
     public Provincia(Integer idProvincia, String nombre) {
         this.idProvincia = idProvincia;
         this.nombre = nombre;
+    }
+    
+    public Provincia(Integer idProvincia, String nombre, Region region) {
+        this.idProvincia = idProvincia;
+        this.nombre = nombre;
+        this.region = region;
     }
 
     public Integer getIdProvincia() {

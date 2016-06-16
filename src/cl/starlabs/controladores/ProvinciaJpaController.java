@@ -235,4 +235,14 @@ public class ProvinciaJpaController implements Serializable {
         }
     }
     
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Provincia.findAllById");
+            consulta.setMaxResults(1);
+            return ((Provincia)consulta.getSingleResult()).getIdProvincia()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
 }

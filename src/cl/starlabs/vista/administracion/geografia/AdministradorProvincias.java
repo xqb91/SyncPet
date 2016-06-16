@@ -42,7 +42,7 @@ public class AdministradorProvincias extends javax.swing.JFrame {
         lblRegion.setEnabled(false);
         lblPais.setEnabled(false);
         txtNombreProvincia.setEditable(false);
-        btnRegistrar.setEnabled(false);
+        btnAccion.setEnabled(false);
         btnCancelar.setEnabled(false);
        
         //seteando valores por defecto
@@ -76,18 +76,25 @@ public class AdministradorProvincias extends javax.swing.JFrame {
         lblRegion = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txtNombreProvincia = new javax.swing.JTextField();
-        btnRegistrar = new javax.swing.JButton();
+        btnAccion = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         lblPais = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("SyncPet :: Administrar Provincias");
+        setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Provincias en el Sistema"));
 
         cmbRegion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar Region..." }));
 
         btnSeleccionarRegion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/find.png"))); // NOI18N
+        btnSeleccionarRegion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSeleccionarRegionActionPerformed(evt);
+            }
+        });
 
         tablaListaProvincias.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -153,8 +160,8 @@ public class AdministradorProvincias extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAgregar)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnAgregar, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnEliminar)))
         );
 
@@ -167,7 +174,12 @@ public class AdministradorProvincias extends javax.swing.JFrame {
 
         jLabel3.setText("Nombre");
 
-        btnRegistrar.setText("Registrar");
+        btnAccion.setText("Registrar");
+        btnAccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAccionActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -190,7 +202,7 @@ public class AdministradorProvincias extends javax.swing.JFrame {
                 .addGroup(panelInfoProvinciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtNombreProvincia)
                     .addGroup(panelInfoProvinciaLayout.createSequentialGroup()
-                        .addComponent(btnRegistrar)
+                        .addComponent(btnAccion)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                         .addComponent(btnCancelar))
                     .addGroup(panelInfoProvinciaLayout.createSequentialGroup()
@@ -224,7 +236,7 @@ public class AdministradorProvincias extends javax.swing.JFrame {
                 .addComponent(txtNombreProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelInfoProvinciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRegistrar)
+                    .addComponent(btnAccion)
                     .addComponent(btnCancelar))
                 .addContainerGap())
         );
@@ -261,7 +273,7 @@ public class AdministradorProvincias extends javax.swing.JFrame {
         txtNombreProvincia.setEnabled(true);
         txtNombreProvincia.setText("");
         txtNombreProvincia.requestFocus();
-        btnRegistrar.setEnabled(true);
+        btnAccion.setEnabled(true);
         btnCancelar.setEnabled(true);
         tablaListaProvincias.setEnabled(false);
     }//GEN-LAST:event_btnAgregarActionPerformed
@@ -299,7 +311,8 @@ public class AdministradorProvincias extends javax.swing.JFrame {
         txtNombreProvincia.setEnabled(false);
         txtNombreProvincia.setText("");
         txtNombreProvincia.requestFocus();
-        btnRegistrar.setEnabled(false);
+        btnAccion.setEnabled(false);
+        btnAccion.setText("actualizar");
         btnCancelar.setEnabled(false);
         tablaListaProvincias.setEnabled(true);
     }//GEN-LAST:event_btnCancelarActionPerformed
@@ -323,12 +336,75 @@ public class AdministradorProvincias extends javax.swing.JFrame {
                 txtNombreProvincia.setEnabled(true);
                 txtNombreProvincia.setText("");
                 txtNombreProvincia.requestFocus();
-                btnRegistrar.setEnabled(true);
+                btnAccion.setEnabled(true);
                 btnCancelar.setEnabled(true);
                 tablaListaProvincias.setEnabled(false);
             }
         }
     }//GEN-LAST:event_tablaListaProvinciasMouseClicked
+
+    private void btnAccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionActionPerformed
+        // TODO add your handling code here:
+        if(btnAccion.getText().compareToIgnoreCase("registrar") == 0) {
+            //si es registrar, se corrobora que el campo de texto de nombre de pais no este vacio
+            if(!txtNombreProvincia.getText().isEmpty() && r != null) {
+                try {
+                    //se crea un pais creando un objeto de tipo pais con los valores predeterminados y enviandolo al controlador
+                    new ProvinciaJpaController(emf).create(new Provincia(new ProvinciaJpaController(emf).ultimo(), txtNombreProvincia.getText(), r));
+                    //si la creacion fue correcta, se informa al usuario
+                    JOptionPane.showMessageDialog(null, "Elemento "+txtNombreProvincia.getText()+" ha sido registrado con éxito");
+                    //se reestablecen los campos a sus valores por defecto
+                    btnCancelarActionPerformed(evt);
+                    //se rellena la tabla de paises
+                    rellenarTabla(r.getIdRegion()+"");
+                } catch (Exception e) {
+                    //si ocurre un error, se informa al usuario
+                    JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar registrar la región: "+e.getMessage()); 
+                }
+            }else{
+                //si el campo de texto esta vacío, se informa al usuario y se coloca el cursor para que escriba
+                JOptionPane.showMessageDialog(null, "El campo de nombre de región esta vacío o el país no se encuentra seleccionado");
+                txtNombreProvincia.requestFocus();
+            }
+        //si desea actualizar un registro...
+        }else if(btnAccion.getText().compareToIgnoreCase("actualizar") == 0){
+            try {
+                //se verifica que el campo de texto no este vacio
+                if(!txtNombreProvincia.getText().isEmpty() && r != null) {
+                    //se setea el nombre nuevo desde el campo de texto al objeto pais recuperado
+                    pp.setNombre(txtNombreProvincia.getText());
+                    //se envia el objeto con el nombre actualizado al controlador
+                    new ProvinciaJpaController(emf).edit(pp);
+                    //si es actualizado, se informa al usuario
+                    JOptionPane.showMessageDialog(null, "La provincia ha sido actualizada");
+                    //se reestablecen los campos a sus valores por defecto
+                    btnCancelarActionPerformed(evt);
+                    //se rellena la tabla de paises nuevamente
+                    rellenarTabla(r.getIdRegion()+"");
+                }else{
+                    //si el campo de texto esta vacio, se informa al usuarioi
+                    JOptionPane.showMessageDialog(null, "El campo de provincia esta vacío");
+                    //se coloca el cursor para que escriba en el campo
+                    txtNombreProvincia.requestFocus();
+                }
+            } catch (Exception e) {
+                // si ocurre un error, es informado al usuario
+                JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar actualizar la región: "+e.getMessage()); 
+            }
+        }
+    }//GEN-LAST:event_btnAccionActionPerformed
+
+    private void btnSeleccionarRegionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarRegionActionPerformed
+        // TODO add your handling code here:
+        if(cmbRegion.getSelectedItem().toString().compareToIgnoreCase("Seleccione Region...") == 0)
+        {
+            JOptionPane.showMessageDialog(null, "Debe Seleccionar region");
+            cmbRegion.requestFocus();
+            r = null;
+        }else{
+            rellenarTabla(cmbRegion.getSelectedItem().toString().split(":")[0]);
+        }
+    }//GEN-LAST:event_btnSeleccionarRegionActionPerformed
     
     public void rellenarTabla(String valor){
         r = new RegionJpaController(emf).findRegion(Integer.parseInt(valor));
@@ -353,7 +429,7 @@ public class AdministradorProvincias extends javax.swing.JFrame {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    javax.swing.UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                     break;
                 }
             }
@@ -377,10 +453,10 @@ public class AdministradorProvincias extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAccion;
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEliminar;
-    private javax.swing.JButton btnRegistrar;
     private javax.swing.JButton btnSeleccionarRegion;
     private javax.swing.JComboBox<String> cmbPais;
     private javax.swing.JComboBox<String> cmbRegion;
