@@ -372,4 +372,14 @@ public class SucursalJpaController implements Serializable {
         }
     }
     
+    
+    public List<Sucursal> buscarSucursales(Clinica c) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Sucursal.findByClinica");
+            consulta.setParameter("clinica", c);
+            return consulta.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

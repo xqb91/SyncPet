@@ -7,6 +7,7 @@ package cl.starlabs.vista.principal;
 
 import cl.starlabs.modelo.Sucursal;
 import cl.starlabs.modelo.Usuarios;
+import cl.starlabs.vista.administracion.clinica.AdministracionSucursales;
 import cl.starlabs.vista.administracion.geografia.AdministradorComunas;
 import cl.starlabs.vista.administracion.geografia.AdministradorPaises;
 import cl.starlabs.vista.administracion.geografia.AdministradorProvincias;
@@ -419,6 +420,11 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menAdmin_Sucursal.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_J, java.awt.event.InputEvent.CTRL_MASK));
         menAdmin_Sucursal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/building_add.png"))); // NOI18N
         menAdmin_Sucursal.setText("Sucursales");
+        menAdmin_Sucursal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menAdmin_SucursalActionPerformed(evt);
+            }
+        });
         jMenu9.add(menAdmin_Sucursal);
 
         menAdmin.add(jMenu9);
@@ -608,6 +614,10 @@ public class PrincipalAdmin extends javax.swing.JFrame {
     private void menAdmin_trabajadoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menAdmin_trabajadoresActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_menAdmin_trabajadoresActionPerformed
+
+    private void menAdmin_SucursalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menAdmin_SucursalActionPerformed
+        new AdministracionSucursales(s).setVisible(true);
+    }//GEN-LAST:event_menAdmin_SucursalActionPerformed
 
     
     /**

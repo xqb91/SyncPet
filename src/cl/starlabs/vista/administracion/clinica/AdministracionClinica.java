@@ -5,12 +5,15 @@
  */
 package cl.starlabs.vista.administracion.clinica;
 
+import cl.starlabs.controladores.ClinicaJpaController;
 import cl.starlabs.controladores.SucursalJpaController;
+import cl.starlabs.modelo.Clinica;
 import cl.starlabs.modelo.Sucursal;
 import java.awt.Color;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
@@ -186,6 +189,34 @@ public class AdministracionClinica extends javax.swing.JFrame {
             editar = false;
             btnAccion.setText("Editar");
             btnCancelar.setText("Cerrar");
+            
+            if(txtRut.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "El campo de rut se encuentra vacío");
+                txtRut.requestFocus();
+            }else{
+                if(!cl.starlabs.herramientas.HerramientasRut.validar(txtRut.getText())) {
+                    JOptionPane.showMessageDialog(null, "El rut no es valido");
+                    txtRut.requestFocus();
+                }else{
+                    if(txtNombreFantasia.getText().isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Debe especificar el nombre de fantasía de la empresa");
+                        txtNombreFantasia.requestFocus();
+                    }else{
+                        if(txtNombreReal.getText().isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "Debe especificar el nombre real de la empresa");
+                            txtNombreReal.requestFocus();
+                        }else{
+                            //todo correcto
+                            try {
+                                new ClinicaJpaController(emf).edit(new Clinica(suc.getClinica().getIdClinica(), txtNombreFantasia.getText(), txtNombreReal.getText(), Integer.parseInt(((txtRut.getText().replace(".", "")).split("-")[0])), (txtRut.getText().split("-")[0]).charAt(0)));
+                                JOptionPane.showMessageDialog(null, "Datos actualizados con éxito");
+                            } catch (Exception e) {
+                                JOptionPane.showMessageDialog(null, "Ocurrió un error al actualizar los datos: "+e.getMessage());
+                            }
+                        }
+                    }
+                }
+            }
         }
     }//GEN-LAST:event_btnAccionActionPerformed
 

@@ -5,12 +5,12 @@
  */
 package cl.starlabs.vista.administracion.geografia;
 
+import cl.starlabs.controladores.PaisJpaController;
 import cl.starlabs.controladores.ProvinciaJpaController;
 import cl.starlabs.controladores.RegionJpaController;
-import cl.starlabs.controladores.PaisJpaController;
+import cl.starlabs.modelo.Pais;
 import cl.starlabs.modelo.Provincia;
 import cl.starlabs.modelo.Region;
-import cl.starlabs.modelo.Pais;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.JOptionPane;
@@ -19,38 +19,93 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author Janno
+ * @author Victor Manuel Araya
  */
 public class AdministradorProvincias extends javax.swing.JFrame {
 
+    Pais pa = null;
+    Region re = null;
+    Provincia pro = null;
     EntityManagerFactory emf = null;
-    Provincia pp = null;
-    Region r = null;
-    Pais p = null;
     
     public AdministradorProvincias() {
         initComponents();
-        
         //centrando ventana
         this.setLocationRelativeTo(null);
         
-        //definiendo valores para persistencia
+        //emf
         emf = Persistence.createEntityManagerFactory("SyncPetPU");
         
-        //desahibilitando campos
-        this.panelInfoProvincia.setEnabled(false);
-        lblRegion.setEnabled(false);
+        //seteando valores por defecto
+        panelInfo.setEnabled(false);
+        lblNombrePais.setEnabled(false);
         lblPais.setEnabled(false);
-        txtNombreProvincia.setEditable(false);
+        lblRegion.setEnabled(false);
+        lblNombreRegion.setEnabled(false);
+        lblProvincia.setEnabled(false);
+        txtNombreProvincia.setEnabled(false);
         btnAccion.setEnabled(false);
         btnCancelar.setEnabled(false);
-       
-        //seteando valores por defecto
+        slcRegion.setEnabled(false);
+        btnBuscar.setEnabled(false);
+        btnAgregar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        
+        //rellenando primer valor
+        rellenarPaises();
+    }
+    
+    public void rellenarPaises() {
+        slcPais.removeAllItems();
+        slcPais.addItem("Seleccione país...");
         for(Pais p : new PaisJpaController(emf).findPaisEntities()) {
-            cmbPais.addItem(p.getIdPais()+": "+p.getNombre());
+            slcPais.addItem(p.getIdPais()+": "+p.getNombre());
         }
-        for(Region r : new RegionJpaController(emf).findRegionEntities()){
-            cmbRegion.addItem(r.getIdRegion()+": "+r.getNombre());
+        slcPais.requestFocus();
+    }
+    
+    public void rellenarRegiones() {
+        if(slcPais.getSelectedItem().toString().compareToIgnoreCase("Seleccione país...") == 0) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un país para continuar...");
+            slcPais.requestFocus();
+            pa = null;
+            slcRegion.removeAllItems();
+            slcRegion.setEnabled(false);
+        }else{
+            pa = new PaisJpaController(emf).findPais(Integer.parseInt(slcPais.getSelectedItem().toString().split(":")[0]));
+            //recuperando valores
+            if(pa != null) 
+            {
+                slcRegion.removeAllItems();
+                slcRegion.addItem("Seleccione Región...");
+                for(Region r : pa.getRegionList()) {
+                    slcRegion.addItem(r.getIdRegion()+": "+r.getNombre());
+                }
+                slcRegion.setEnabled(true);
+                slcRegion.requestFocus();
+            }
+        }
+    }
+    
+    public void rellenarTabla() {
+        if(slcRegion.getSelectedItem().toString().compareToIgnoreCase("Seleccione Región...") != 0) {
+            DefaultTableModel modelo = new DefaultTableModel(new Object [][] {}, new String [] { "ID", "Provincia" });
+            re = new RegionJpaController(emf).findRegion(Integer.parseInt(slcRegion.getSelectedItem().toString().split(":")[0]));
+            for(Provincia p : re.getProvinciaList()) {
+                Object[] arreglo = new Object[2];
+                arreglo[0] = p.getIdProvincia();
+                arreglo[1] = p.getNombre();
+                modelo.addRow(arreglo);
+            }
+            tablaResultados.setModel(modelo);
+            tablaResultados.getColumnModel().getColumn(0).setPreferredWidth(5);
+            tablaResultados.requestFocus();
+            btnAgregar.setEnabled(true);
+            btnEliminar.setEnabled(true);
+        }else{
+            btnBuscar.setEnabled(false);
+            btnAgregar.setEnabled(false);
+            btnEliminar.setEnabled(false);
         }
     }
 
@@ -63,63 +118,56 @@ public class AdministradorProvincias extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        cmbRegion = new javax.swing.JComboBox<String>();
-        btnSeleccionarRegion = new javax.swing.JButton();
+        panelProvincias = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablaListaProvincias = new javax.swing.JTable();
-        btnAgregar = new javax.swing.JButton();
+        tablaResultados = new javax.swing.JTable();
         btnEliminar = new javax.swing.JButton();
-        cmbPais = new javax.swing.JComboBox<String>();
-        panelInfoProvincia = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        btnAgregar = new javax.swing.JButton();
+        slcPais = new javax.swing.JComboBox();
+        slcRegion = new javax.swing.JComboBox();
+        btnBuscar = new javax.swing.JButton();
+        panelInfo = new javax.swing.JPanel();
+        lblPais = new javax.swing.JLabel();
         lblRegion = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        lblNombrePais = new javax.swing.JLabel();
+        lblNombreRegion = new javax.swing.JLabel();
+        lblProvincia = new javax.swing.JLabel();
         txtNombreProvincia = new javax.swing.JTextField();
         btnAccion = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        lblPais = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-<<<<<<< HEAD
-=======
         setTitle("SyncPet :: Administrar Provincias");
         setResizable(false);
->>>>>>> origin/master
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Provincias en el Sistema"));
+        panelProvincias.setBorder(javax.swing.BorderFactory.createTitledBorder("Provincias en Sistema"));
 
-        cmbRegion.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccionar Region..." }));
-
-        btnSeleccionarRegion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/find.png"))); // NOI18N
-        btnSeleccionarRegion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSeleccionarRegionActionPerformed(evt);
-            }
-        });
-
-        tablaListaProvincias.setModel(new javax.swing.table.DefaultTableModel(
+        tablaResultados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Nombre"
+                "ID", "Provincia"
             }
-        ));
-        tablaListaProvincias.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tablaListaProvinciasMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(tablaListaProvincias);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true
+            };
 
-        btnAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/add.png"))); // NOI18N
-        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarActionPerformed(evt);
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
+        tablaResultados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaResultadosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tablaResultados);
+        if (tablaResultados.getColumnModel().getColumnCount() > 0) {
+            tablaResultados.getColumnModel().getColumn(0).setResizable(false);
+            tablaResultados.getColumnModel().getColumn(0).setPreferredWidth(25);
+        }
 
         btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/delete.png"))); // NOI18N
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
@@ -128,56 +176,79 @@ public class AdministradorProvincias extends javax.swing.JFrame {
             }
         });
 
-        cmbPais.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccionar Pais..." }));
+        btnAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/add.png"))); // NOI18N
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(cmbRegion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnSeleccionarRegion)))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(cmbPais, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        slcPais.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                slcPaisFocusLost(evt);
+            }
+        });
+
+        slcRegion.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                slcRegionItemStateChanged(evt);
+            }
+        });
+
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/find.png"))); // NOI18N
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelProvinciasLayout = new javax.swing.GroupLayout(panelProvincias);
+        panelProvincias.setLayout(panelProvinciasLayout);
+        panelProvinciasLayout.setHorizontalGroup(
+            panelProvinciasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(slcPais, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(slcRegion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelProvinciasLayout.createSequentialGroup()
+                .addGap(0, 72, Short.MAX_VALUE)
+                .addGroup(panelProvinciasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelProvinciasLayout.createSequentialGroup()
+                        .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(cmbPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbRegion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSeleccionarRegion))
+        panelProvinciasLayout.setVerticalGroup(
+            panelProvinciasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelProvinciasLayout.createSequentialGroup()
+                .addComponent(slcPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAgregar, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnEliminar)))
+                .addComponent(slcRegion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnBuscar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(panelProvinciasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnEliminar, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnAgregar, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
 
-        panelInfoProvincia.setBorder(javax.swing.BorderFactory.createTitledBorder("Información de la Provincia"));
+        panelInfo.setBorder(javax.swing.BorderFactory.createTitledBorder("Información de Provincia"));
 
-        jLabel1.setText("Region");
+        lblPais.setText("País");
 
-        lblRegion.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        lblRegion.setText("Seleccione Region");
+        lblRegion.setText("Región");
 
-        jLabel3.setText("Nombre");
+        lblNombrePais.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblNombrePais.setText("País no seleccionado");
 
-        btnAccion.setText("Registrar");
+        lblNombreRegion.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblNombreRegion.setText("Región no seleccionada");
+
+        lblProvincia.setText("Nombre de Provincia");
+
+        btnAccion.setText("Actualizar");
         btnAccion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAccionActionPerformed(evt);
@@ -191,57 +262,51 @@ public class AdministradorProvincias extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Pais");
-
-        lblPais.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        lblPais.setText("Seleccione Pais");
-
-        javax.swing.GroupLayout panelInfoProvinciaLayout = new javax.swing.GroupLayout(panelInfoProvincia);
-        panelInfoProvincia.setLayout(panelInfoProvinciaLayout);
-        panelInfoProvinciaLayout.setHorizontalGroup(
-            panelInfoProvinciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelInfoProvinciaLayout.createSequentialGroup()
+        javax.swing.GroupLayout panelInfoLayout = new javax.swing.GroupLayout(panelInfo);
+        panelInfo.setLayout(panelInfoLayout);
+        panelInfoLayout.setHorizontalGroup(
+            panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelInfoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelInfoProvinciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtNombreProvincia)
-                    .addGroup(panelInfoProvinciaLayout.createSequentialGroup()
+                    .addGroup(panelInfoLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnAccion)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCancelar))
-                    .addGroup(panelInfoProvinciaLayout.createSequentialGroup()
-                        .addGroup(panelInfoProvinciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addGroup(panelInfoProvinciaLayout.createSequentialGroup()
-                                .addGroup(panelInfoProvinciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2))
-                                .addGap(18, 18, 18)
-                                .addGroup(panelInfoProvinciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblPais)
-                                    .addComponent(lblRegion))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGroup(panelInfoLayout.createSequentialGroup()
+                        .addGroup(panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblRegion)
+                            .addComponent(lblNombreRegion)
+                            .addComponent(lblProvincia)
+                            .addGroup(panelInfoLayout.createSequentialGroup()
+                                .addComponent(lblPais)
+                                .addGap(46, 46, 46)
+                                .addComponent(lblNombrePais)))
+                        .addGap(0, 63, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        panelInfoProvinciaLayout.setVerticalGroup(
-            panelInfoProvinciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelInfoProvinciaLayout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(panelInfoProvinciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(lblPais))
+        panelInfoLayout.setVerticalGroup(
+            panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelInfoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPais)
+                    .addComponent(lblNombrePais, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelInfoProvinciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(lblRegion))
+                .addComponent(lblRegion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
+                .addComponent(lblNombreRegion)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblProvincia)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtNombreProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(panelInfoProvinciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(18, 18, 18)
+                .addGroup(panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAccion)
                     .addComponent(btnCancelar))
-                .addContainerGap())
+                .addContainerGap(170, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -250,179 +315,204 @@ public class AdministradorProvincias extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelProvincias, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelInfoProvincia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelInfoProvincia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelProvincias, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void slcPaisFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_slcPaisFocusLost
+        rellenarRegiones();
+    }//GEN-LAST:event_slcPaisFocusLost
+
+    private void slcRegionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_slcRegionItemStateChanged
+        if(slcRegion.getSelectedItem().toString().compareToIgnoreCase("Seleccione Región...") != 0) {
+            btnBuscar.setEnabled(true);
+        }else{
+            btnBuscar.setEnabled(false);
+        }
+    }//GEN-LAST:event_slcRegionItemStateChanged
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        rellenarTabla();
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void tablaResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaResultadosMouseClicked
+        if(tablaResultados.getSelectedColumn() >= 0) {
+            //recuperando valores desde la tabla
+            DefaultTableModel modelo = (DefaultTableModel)tablaResultados.getModel();
+            //consultando por el valor a cargar, es recuperado desde el valor seleccionado recuperando el ROW ID
+            pro = new ProvinciaJpaController(emf).findProvincia(Integer.parseInt(String.valueOf(modelo.getValueAt(tablaResultados.getSelectedRow(), 0))));
+            //si el pais no fue encontrado
+            if(pro == null) {
+                //se informa que el pais no fue encontrado
+                JOptionPane.showMessageDialog(null, "Error: La provincia no pudo ser encontrada por el sistema");
+            }else{
+                //si el pais es encontrado, se definen valores en campos por defecto
+                panelInfo.setEnabled(true);
+                lblNombrePais.setEnabled(true);
+                lblNombrePais.setText(pa.getNombre());
+                lblPais.setEnabled(true);
+                lblRegion.setEnabled(true);
+                lblNombreRegion.setEnabled(true);
+                lblNombreRegion.setText(re.getNombre());
+                lblProvincia.setEnabled(true);
+                txtNombreProvincia.setEnabled(true);
+                txtNombreProvincia.setText(pro.getNombre());
+                btnAccion.setEnabled(true);
+                btnAccion.setText("Actualizar");
+                btnCancelar.setEnabled(true);
+                btnCancelar.setText("Cancelar");
+                slcRegion.setEnabled(false);
+                slcPais.setEnabled(false);
+                btnBuscar.setEnabled(false);
+                btnAgregar.setEnabled(false);
+                btnEliminar.setEnabled(true);
+                tablaResultados.setEnabled(false);
+            }
+        }
+    }//GEN-LAST:event_tablaResultadosMouseClicked
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+                panelInfo.setEnabled(false);
+                lblNombrePais.setEnabled(false);
+                lblNombrePais.setText("País no seleccionado");
+                lblPais.setEnabled(false);
+                lblRegion.setEnabled(false);
+                lblNombreRegion.setEnabled(false);
+                lblNombreRegion.setText("Región no seleccionada");
+                lblProvincia.setEnabled(false);
+                txtNombreProvincia.setEnabled(false);
+                txtNombreProvincia.setText("");
+                btnAccion.setEnabled(false);
+                btnAccion.setText("Actualizar");
+                btnCancelar.setEnabled(false);
+                btnCancelar.setText("Cancelar");
+                slcRegion.setEnabled(true);
+                slcPais.setEnabled(true);
+                btnBuscar.setEnabled(true);
+                btnAgregar.setEnabled(true);
+                btnEliminar.setEnabled(true);
+                tablaResultados.setEnabled(true);
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        //seteando valores por defecto
-        this.panelInfoProvincia.setEnabled(true);
-        lblRegion.setEnabled(true);
-        lblPais.setEnabled(true);
-        txtNombreProvincia.setEnabled(true);
-        txtNombreProvincia.setText("");
-        txtNombreProvincia.requestFocus();
-        btnAccion.setEnabled(true);
-        btnCancelar.setEnabled(true);
-        tablaListaProvincias.setEnabled(false);
+                panelInfo.setEnabled(true);
+                lblNombrePais.setEnabled(true);
+                lblNombrePais.setText(pa.getNombre());
+                lblPais.setEnabled(true);
+                lblRegion.setEnabled(true);
+                lblNombreRegion.setEnabled(true);
+                lblNombreRegion.setText(re.getNombre());
+                lblProvincia.setEnabled(true);
+                txtNombreProvincia.setEnabled(true);
+                txtNombreProvincia.setText("");
+                btnAccion.setEnabled(true);
+                btnAccion.setText("Guardar");
+                btnCancelar.setEnabled(true);
+                btnCancelar.setText("Cancelar");
+                slcRegion.setEnabled(false);
+                slcPais.setEnabled(false);
+                btnBuscar.setEnabled(false);
+                btnAgregar.setEnabled(false);
+                btnEliminar.setEnabled(false);
+                tablaResultados.setEnabled(false);
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        //
-        if(tablaListaProvincias.getSelectedColumn() >= 0) {
+        //comprobando si hay elementos seleccionados en la tabla
+        if(tablaResultados.getSelectedColumn() >= 0) {
             //recuperando valores desde la tabla
-            DefaultTableModel modelo = (DefaultTableModel)tablaListaProvincias.getModel();
+            DefaultTableModel modelo = (DefaultTableModel)tablaResultados.getModel();
             //se consulta si se desea eliminar el valor seleccionado de la tabla
-            int opcion = JOptionPane.showConfirmDialog(null, "¿Esta seguro de eliminar la Provincia "+String.valueOf(modelo.getValueAt(tablaListaProvincias.getSelectedRow(), 1)).toLowerCase()+"?");
+            int opcion = JOptionPane.showConfirmDialog(null, "¿Esta seguro de eliminar "+String.valueOf(modelo.getValueAt(tablaResultados.getSelectedRow(), 1)).toLowerCase()+" del listado de provincias?");
             //si la respuesta es positiva
             if(opcion == 0) {
                 try {
-                    //se envia el id de la provincia para destrucción
-                    new ProvinciaJpaController(emf).destroy(Integer.parseInt(modelo.getValueAt(tablaListaProvincias.getSelectedRow(), 0).toString()));
+                    //se envia el id del pais para destrucción
+                    new ProvinciaJpaController(emf).destroy(Integer.parseInt(modelo.getValueAt(tablaResultados.getSelectedRow(), 0).toString()));
                     //se informa al usuario
-                    JOptionPane.showMessageDialog(null, "Provincia eliminado");
+                    JOptionPane.showMessageDialog(null, "Provincia eliminada");
                     //se rellena la tabla desde 0
-                    rellenarTabla(r.getIdRegion()+"");
+                    rellenarTabla();
                     //se setean valores por defecto haciendo clic en el boton cancelar
                     btnCancelarActionPerformed(evt);
                 } catch (Exception e) {
                     //si ocurre un error, es informado al usuario
-                    JOptionPane.showMessageDialog(null, "Error al eliminar Provincia: "+e.getMessage());
+                    JOptionPane.showMessageDialog(null, "Error al eliminar provincia: "+e.getMessage());
                 }
+            }else{
+                btnCancelarActionPerformed(evt);
             }
-        }
+        }          
     }//GEN-LAST:event_btnEliminarActionPerformed
 
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // 
-        this.panelInfoProvincia.setEnabled(false);
-        lblRegion.setEnabled(false);
-        txtNombreProvincia.setEnabled(false);
-        txtNombreProvincia.setText("");
-        txtNombreProvincia.requestFocus();
-        btnAccion.setEnabled(false);
-        btnAccion.setText("actualizar");
-        btnCancelar.setEnabled(false);
-        tablaListaProvincias.setEnabled(true);
-    }//GEN-LAST:event_btnCancelarActionPerformed
-
-    private void tablaListaProvinciasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaListaProvinciasMouseClicked
-        // 
-        if(tablaListaProvincias.getSelectedColumn() >= 0) {
-            //recuperando valores desde la tabla
-            DefaultTableModel modelo = (DefaultTableModel)tablaListaProvincias.getModel();
-            //consultando por el valor a cargar, es recuperado desde el valor seleccionado recuperando el ROW ID
-            pp = new ProvinciaJpaController(emf).findProvincia(Integer.parseInt(String.valueOf(modelo.getValueAt(tablaListaProvincias.getSelectedRow(), 0))));
-            //si el pais no fue encontrado
-            if(pp == null) {
-                //se informa que el pais no fue encontrado
-                JOptionPane.showMessageDialog(null, "Error: La Provincia no pudo ser encontrado por el sistema");
-            }else{
-                //si el pais es encontrado, se definen valores en campos por defecto
-                this.panelInfoProvincia.setEnabled(true);
-                lblPais.setEnabled(true);
-                lblRegion.setEnabled(true);
-                txtNombreProvincia.setEnabled(true);
-                txtNombreProvincia.setText("");
-                txtNombreProvincia.requestFocus();
-                btnAccion.setEnabled(true);
-                btnCancelar.setEnabled(true);
-                tablaListaProvincias.setEnabled(false);
-            }
-        }
-    }//GEN-LAST:event_tablaListaProvinciasMouseClicked
-
     private void btnAccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionActionPerformed
-        // TODO add your handling code here:
-        if(btnAccion.getText().compareToIgnoreCase("registrar") == 0) {
+        //se realiza la accion dependiendo del texto del boton
+        if(btnAccion.getText().compareToIgnoreCase("guardar") == 0) {
             //si es registrar, se corrobora que el campo de texto de nombre de pais no este vacio
-            if(!txtNombreProvincia.getText().isEmpty() && r != null) {
+            if(!txtNombreProvincia.getText().isEmpty()) {
                 try {
                     //se crea un pais creando un objeto de tipo pais con los valores predeterminados y enviandolo al controlador
-                    new ProvinciaJpaController(emf).create(new Provincia(new ProvinciaJpaController(emf).ultimo(), txtNombreProvincia.getText(), r));
+                    new ProvinciaJpaController(emf).create(new Provincia(new ProvinciaJpaController(emf).ultimo(), txtNombreProvincia.getText(), re));
                     //si la creacion fue correcta, se informa al usuario
-                    JOptionPane.showMessageDialog(null, "Elemento "+txtNombreProvincia.getText()+" ha sido registrado con éxito");
+                    JOptionPane.showMessageDialog(null, "Provincia "+txtNombreProvincia.getText()+" ha sido registrada con éxito");
                     //se reestablecen los campos a sus valores por defecto
                     btnCancelarActionPerformed(evt);
                     //se rellena la tabla de paises
-                    rellenarTabla(r.getIdRegion()+"");
+                    rellenarTabla();
                 } catch (Exception e) {
                     //si ocurre un error, se informa al usuario
-                    JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar registrar la región: "+e.getMessage()); 
+                    JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar registrar la provincia: "+e.getMessage()); 
                 }
             }else{
                 //si el campo de texto esta vacío, se informa al usuario y se coloca el cursor para que escriba
-                JOptionPane.showMessageDialog(null, "El campo de nombre de región esta vacío o el país no se encuentra seleccionado");
+                JOptionPane.showMessageDialog(null, "El campo de nombre de provincia esta vacío");
                 txtNombreProvincia.requestFocus();
             }
         //si desea actualizar un registro...
-        }else if(btnAccion.getText().compareToIgnoreCase("actualizar") == 0){
+        }else if(btnAccion.getText().compareToIgnoreCase("actualizar") == 0) {
             try {
                 //se verifica que el campo de texto no este vacio
-                if(!txtNombreProvincia.getText().isEmpty() && r != null) {
+                if(!txtNombreProvincia.getText().isEmpty()) {
                     //se setea el nombre nuevo desde el campo de texto al objeto pais recuperado
-                    pp.setNombre(txtNombreProvincia.getText());
+                    pro.setNombre(txtNombreProvincia.getText());
                     //se envia el objeto con el nombre actualizado al controlador
-                    new ProvinciaJpaController(emf).edit(pp);
+                    new ProvinciaJpaController(emf).edit(pro);
                     //si es actualizado, se informa al usuario
                     JOptionPane.showMessageDialog(null, "La provincia ha sido actualizada");
                     //se reestablecen los campos a sus valores por defecto
                     btnCancelarActionPerformed(evt);
                     //se rellena la tabla de paises nuevamente
-                    rellenarTabla(r.getIdRegion()+"");
+                    rellenarTabla();
                 }else{
                     //si el campo de texto esta vacio, se informa al usuarioi
-                    JOptionPane.showMessageDialog(null, "El campo de provincia esta vacío");
+                    JOptionPane.showMessageDialog(null, "El campo de nombre de provincia esta vacío");
                     //se coloca el cursor para que escriba en el campo
                     txtNombreProvincia.requestFocus();
                 }
             } catch (Exception e) {
                 // si ocurre un error, es informado al usuario
-                JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar actualizar la región: "+e.getMessage()); 
+                JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar registrar el país: "+e.getMessage()); 
             }
         }
     }//GEN-LAST:event_btnAccionActionPerformed
 
-    private void btnSeleccionarRegionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarRegionActionPerformed
-        // TODO add your handling code here:
-        if(cmbRegion.getSelectedItem().toString().compareToIgnoreCase("Seleccione Region...") == 0)
-        {
-            JOptionPane.showMessageDialog(null, "Debe Seleccionar region");
-            cmbRegion.requestFocus();
-            r = null;
-        }else{
-            rellenarTabla(cmbRegion.getSelectedItem().toString().split(":")[0]);
-        }
-    }//GEN-LAST:event_btnSeleccionarRegionActionPerformed
-    
-    public void rellenarTabla(String valor){
-        r = new RegionJpaController(emf).findRegion(Integer.parseInt(valor));
-        DefaultTableModel modelo = new DefaultTableModel(new Object[][] { }, new String [] {"ID", "Nombre"});
-        if(r != null){
-            for(Provincia pp : r.getProvinciaList()){
-                Object[] fila = new Object[5];
-                fila[0] = pp.getIdProvincia();
-                fila[1] = pp.getNombre();
-                modelo.addRow(fila);
-            }
-        }
-        tablaListaProvincias.setModel(modelo);
-    }
-    
+    /**
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -458,20 +548,20 @@ public class AdministradorProvincias extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAccion;
     private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEliminar;
-    private javax.swing.JButton btnSeleccionarRegion;
-    private javax.swing.JComboBox<String> cmbPais;
-    private javax.swing.JComboBox<String> cmbRegion;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblNombrePais;
+    private javax.swing.JLabel lblNombreRegion;
     private javax.swing.JLabel lblPais;
+    private javax.swing.JLabel lblProvincia;
     private javax.swing.JLabel lblRegion;
-    private javax.swing.JPanel panelInfoProvincia;
-    private javax.swing.JTable tablaListaProvincias;
+    private javax.swing.JPanel panelInfo;
+    private javax.swing.JPanel panelProvincias;
+    private javax.swing.JComboBox slcPais;
+    private javax.swing.JComboBox slcRegion;
+    private javax.swing.JTable tablaResultados;
     private javax.swing.JTextField txtNombreProvincia;
     // End of variables declaration//GEN-END:variables
 }

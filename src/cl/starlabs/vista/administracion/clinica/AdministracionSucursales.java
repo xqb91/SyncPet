@@ -5,19 +5,50 @@
  */
 package cl.starlabs.vista.administracion.clinica;
 
+import cl.starlabs.controladores.ClinicaJpaController;
+import cl.starlabs.controladores.SucursalJpaController;
+import cl.starlabs.modelo.Clinica;
+import cl.starlabs.modelo.Sucursal;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Victor Manuel Araya
  */
 public class AdministracionSucursales extends javax.swing.JFrame {
 
-    /**
-     * Creates new form AdministracionSucursales
-     */
+    EntityManagerFactory emf = null;
+    Sucursal su = null;
+    
     public AdministracionSucursales() {
         initComponents();
+        emf = Persistence.createEntityManagerFactory("SyncPetPU");
     }
     
+    public AdministracionSucursales(Sucursal su) {
+        initComponents();
+        this.setLocationRelativeTo(null);
+        emf = Persistence.createEntityManagerFactory("SyncPetPU");
+        this.su = su;
+        lblNombreClínica.setName(su.getClinica().getNombreFantasia());
+        rellenarTabla();
+    }
+    
+    public void rellenarTabla() {
+        DefaultTableModel modelo = new DefaultTableModel(new Object [][] { }, new String [] { "ID", "Sucursal" });
+        Clinica c = new ClinicaJpaController(emf).findClinica(su.getClinica().getIdClinica());
+        for(Sucursal s : c.getSucursalList()) {
+          Object[] obj = new Object[2];
+          obj[0] = s.getIdSucursal();
+          obj[1] = s.getNombre();
+          modelo.addRow(obj);
+        }
+        tablaResultados.setModel(modelo);
+    }
+        
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -28,17 +59,102 @@ public class AdministracionSucursales extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        lblNombreClínica = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaResultados = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("SyncPet :: Administrar Sucursales");
+        setResizable(false);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Sucursales"));
+
+        jLabel1.setText("Clínica:");
+
+        lblNombreClínica.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblNombreClínica.setText("Nombre Clínica");
+
+        tablaResultados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Sucursal"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tablaResultados);
+        if (tablaResultados.getColumnModel().getColumnCount() > 0) {
+            tablaResultados.getColumnModel().getColumn(0).setResizable(false);
+            tablaResultados.getColumnModel().getColumn(0).setPreferredWidth(10);
+        }
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/add.png"))); // NOI18N
+
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/delete.png"))); // NOI18N
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(lblNombreClínica))
+                .addContainerGap(129, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblNombreClínica)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton2))))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(366, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -80,5 +196,12 @@ public class AdministracionSucursales extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblNombreClínica;
+    private javax.swing.JTable tablaResultados;
     // End of variables declaration//GEN-END:variables
 }
