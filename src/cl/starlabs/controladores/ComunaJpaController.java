@@ -308,4 +308,14 @@ public class ComunaJpaController implements Serializable {
         }
     }
     
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Comuna.findAllById");
+            consulta.setMaxResults(1);
+            return ((Comuna)consulta.getSingleResult()).getIdComuna()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
 }

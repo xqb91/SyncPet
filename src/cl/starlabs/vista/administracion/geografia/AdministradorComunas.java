@@ -47,7 +47,8 @@ public class AdministradorComunas extends javax.swing.JFrame {
         lblProvinciaNombre.setEnabled(false);
         panelInformacionComuna.setEnabled(false);
         lblNombreComuna.setEnabled(false);
-        
+        btnAccion.setEnabled(false);
+        btnCancelar.setEnabled(false);
         //rellenando valores
         rellenarComboPais();
     }
@@ -136,8 +137,8 @@ public class AdministradorComunas extends javax.swing.JFrame {
         btnSeleccionarComuna = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaComunas = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
         panelInformacionComuna = new javax.swing.JPanel();
         lblPais = new javax.swing.JLabel();
         lblRegion = new javax.swing.JLabel();
@@ -216,11 +217,21 @@ public class AdministradorComunas extends javax.swing.JFrame {
             tablaComunas.getColumnModel().getColumn(0).setPreferredWidth(25);
         }
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/add.png"))); // NOI18N
-        jButton1.setToolTipText("Agregar nueva comuna");
+        btnAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/add.png"))); // NOI18N
+        btnAgregar.setToolTipText("Agregar nueva comuna");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/delete.png"))); // NOI18N
-        jButton2.setToolTipText("Eliminar comuna seleccionada");
+        btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/delete.png"))); // NOI18N
+        btnEliminar.setToolTipText("Eliminar comuna seleccionada");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -235,9 +246,9 @@ public class AdministradorComunas extends javax.swing.JFrame {
             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(6, 6, 6))
         );
         jPanel1Layout.setVerticalGroup(
@@ -254,8 +265,8 @@ public class AdministradorComunas extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(btnAgregar)
+                    .addComponent(btnEliminar))
                 .addContainerGap())
         );
 
@@ -279,6 +290,11 @@ public class AdministradorComunas extends javax.swing.JFrame {
         lblNombreComuna.setText("Nombre de Comuna:");
 
         btnAccion.setText("Registrar");
+        btnAccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAccionActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -422,7 +438,123 @@ public class AdministradorComunas extends javax.swing.JFrame {
         panelInformacionComuna.setEnabled(false);
         lblNombreComuna.setEnabled(false);
         tablaComunas.setEnabled(true);
+        tablaComunas.requestFocus();
+        txtNombreComuna.setText("");
+        btnAccion.setText("Actualizar");
+        btnAccion.setEnabled(false);
+        btnCancelar.setEnabled(false);
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        if(pai == null) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un país para poder continuar");
+            cmbPais.requestFocus();
+        }else{
+            if(reg == null) {
+                JOptionPane.showMessageDialog(null, "Debe seleccionar una región para poder continuar");
+                cmbRegion.requestFocus();
+            }else{
+                if(pro == null) {
+                    JOptionPane.showMessageDialog(null, "Debe seleccionar una provincia para poder continuar");
+                    cmbProvincia.requestFocus();
+                }else{
+                    lblPais.setEnabled(true);
+                    lblPaisNombre.setEnabled(true);
+                    lblPaisNombre.setText(pai.getNombre());
+                    lblRegion.setEnabled(true);
+                    lblRegionNombre.setEnabled(true);
+                    lblRegionNombre.setText(reg.getNombre());
+                    lblProvincia.setEnabled(true);
+                    lblProvinciaNombre.setEnabled(true);
+                    lblProvinciaNombre.setText(pro.getNombre());
+                    txtNombreComuna.setEnabled(true);
+                    txtNombreComuna.requestFocus();
+                    txtNombreComuna.setText("");
+                    btnAccion.setText("Registrar");
+                    btnAccion.setEnabled(true);
+                    btnCancelar.setEnabled(true);
+                    tablaComunas.setEnabled(false);
+                }
+            }
+        }
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        //comprobando si hay elementos seleccionados en la tabla
+        if(tablaComunas.getSelectedColumn() >= 0) {
+            //recuperando valores desde la tabla
+            DefaultTableModel modelo = (DefaultTableModel)tablaComunas.getModel();
+            //se consulta si se desea eliminar el valor seleccionado de la tabla
+            int opcion = JOptionPane.showConfirmDialog(null, "¿Esta seguro de eliminar la comuna "+String.valueOf(modelo.getValueAt(tablaComunas.getSelectedRow(), 1)).toLowerCase()+"?");
+            //si la respuesta es positiva
+            if(opcion == 0) {
+                try {
+                    //se envia el id del pais para destrucción
+                    new ComunaJpaController(emf).destroy(Integer.parseInt(modelo.getValueAt(tablaComunas.getSelectedRow(), 0).toString()));
+                    //se informa al usuario
+                    JOptionPane.showMessageDialog(null, "Comuna eliminada");
+                    //se rellena la tabla desde 0
+                    rellenarTabla();
+                    //se setean valores por defecto haciendo clic en el boton cancelar
+                    btnCancelarActionPerformed(evt);
+                } catch (Exception e) {
+                    //si ocurre un error, es informado al usuario
+                    JOptionPane.showMessageDialog(null, "Error al eliminar comuna: "+e.getMessage());
+                }
+            }
+        }  
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnAccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionActionPerformed
+        //se realiza la accion dependiendo del texto del boton
+        if(btnAccion.getText().compareToIgnoreCase("registrar") == 0) {
+            //si es registrar, se corrobora que el campo de texto de nombre de pais no este vacio
+            if(!txtNombreComuna.getText().isEmpty()) {
+                try {
+                    //se crea un pais creando un objeto de tipo pais con los valores predeterminados y enviandolo al controlador
+                    new ComunaJpaController(emf).create(new Comuna(new ComunaJpaController(emf).ultimo(), txtNombreComuna.getText(), pro));
+                    //si la creacion fue correcta, se informa al usuario
+                    JOptionPane.showMessageDialog(null, "Comuna "+txtNombreComuna.getText()+" ha sido registrada con éxito");
+                    //se reestablecen los campos a sus valores por defecto
+                    btnCancelarActionPerformed(evt);
+                    //se rellena la tabla de paises
+                    rellenarTabla();
+                } catch (Exception e) {
+                    //si ocurre un error, se informa al usuario
+                    JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar registrar la comuna: "+e.getMessage()); 
+                }
+            }else{
+                //si el campo de texto esta vacío, se informa al usuario y se coloca el cursor para que escriba
+                JOptionPane.showMessageDialog(null, "El campo de nombre de comuna esta vacía");
+                txtNombreComuna.requestFocus();
+            }
+        //si desea actualizar un registro...
+        }else if(btnAccion.getText().compareToIgnoreCase("actualizar") == 0) {
+            try {
+                //se verifica que el campo de texto no este vacio
+                if(!txtNombreComuna.getText().isEmpty()) {
+                    //se setea el nombre nuevo desde el campo de texto al objeto pais recuperado
+                    com.setNombre(txtNombreComuna.getText());
+                    //se envia el objeto con el nombre actualizado al controlador
+                    new ComunaJpaController(emf).edit(com);
+                    //si es actualizado, se informa al usuario
+                    JOptionPane.showMessageDialog(null, "La comuna ha sido actualizada");
+                    //se reestablecen los campos a sus valores por defecto
+                    btnCancelarActionPerformed(evt);
+                    //se rellena la tabla de paises nuevamente
+                    rellenarTabla();
+                }else{
+                    //si el campo de texto esta vacio, se informa al usuarioi
+                    JOptionPane.showMessageDialog(null, "El campo de nombre de país esta vacío");
+                    //se coloca el cursor para que escriba en el campo
+                    txtNombreComuna.requestFocus();
+                }
+            } catch (Exception e) {
+                // si ocurre un error, es informado al usuario
+                JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar registrar el país: "+e.getMessage()); 
+            }
+        }
+    }//GEN-LAST:event_btnAccionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -461,13 +593,13 @@ public class AdministradorComunas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAccion;
+    private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnSeleccionarComuna;
     private javax.swing.JComboBox<String> cmbPais;
     private javax.swing.JComboBox<String> cmbProvincia;
     private javax.swing.JComboBox<String> cmbRegion;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

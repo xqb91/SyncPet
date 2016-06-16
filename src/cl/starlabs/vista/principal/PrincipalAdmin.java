@@ -7,6 +7,10 @@ package cl.starlabs.vista.principal;
 
 import cl.starlabs.modelo.Sucursal;
 import cl.starlabs.modelo.Usuarios;
+import cl.starlabs.vista.administracion.geografia.AdministradorComunas;
+import cl.starlabs.vista.administracion.geografia.AdministradorPaises;
+import cl.starlabs.vista.administracion.geografia.AdministradorProvincias;
+import cl.starlabs.vista.administracion.geografia.AdministradorRegiones;
 import cl.starlabs.vista.login.PantallaBloqueo;
 import cl.starlabs.vista.paciente.ListarPacientes;
 import cl.starlabs.vista.paciente.RegistroPaciente;
@@ -108,18 +112,29 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menFicha_find = new javax.swing.JMenuItem();
         menRep = new javax.swing.JMenu();
         menAdmin = new javax.swing.JMenu();
-        menAdmin_clinica = new javax.swing.JMenuItem();
         jMenu9 = new javax.swing.JMenu();
-        menAdmin_addSucursal = new javax.swing.JMenuItem();
-        menAdmin_sucursales = new javax.swing.JMenuItem();
+        menAdmin_clinica = new javax.swing.JMenuItem();
+        menAdmin_Sucursal = new javax.swing.JMenuItem();
         jMenu8 = new javax.swing.JMenu();
-        menAdmin_addTrabajador = new javax.swing.JMenuItem();
         menAdmin_trabajadores = new javax.swing.JMenuItem();
         adminMenuGeografia = new javax.swing.JMenu();
         menAdminPais = new javax.swing.JMenuItem();
         menuAdminRegiones = new javax.swing.JMenuItem();
         menuAdminProvincias = new javax.swing.JMenuItem();
         menuAdminComunas = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
+        jMenuItem10 = new javax.swing.JMenuItem();
+        jMenuItem11 = new javax.swing.JMenuItem();
+        jMenuItem12 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("SyncPet :: conectado como usuario@nombre_clínica (Sucursal)");
@@ -393,33 +408,23 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menAdmin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/cog.png"))); // NOI18N
         menAdmin.setText("Administración");
 
+        jMenu9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/building_link.png"))); // NOI18N
+        jMenu9.setText("Clínica y Sucursales");
+
         menAdmin_clinica.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
         menAdmin_clinica.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/building.png"))); // NOI18N
         menAdmin_clinica.setText("Información de Clínica");
-        menAdmin.add(menAdmin_clinica);
+        jMenu9.add(menAdmin_clinica);
 
-        jMenu9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/building_link.png"))); // NOI18N
-        jMenu9.setText("Sucursales");
-
-        menAdmin_addSucursal.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_J, java.awt.event.InputEvent.CTRL_MASK));
-        menAdmin_addSucursal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/building_add.png"))); // NOI18N
-        menAdmin_addSucursal.setText("Añadir Sucursal");
-        jMenu9.add(menAdmin_addSucursal);
-
-        menAdmin_sucursales.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_K, java.awt.event.InputEvent.CTRL_MASK));
-        menAdmin_sucursales.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/building_go.png"))); // NOI18N
-        menAdmin_sucursales.setText("Administrar Sucursales");
-        jMenu9.add(menAdmin_sucursales);
+        menAdmin_Sucursal.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_J, java.awt.event.InputEvent.CTRL_MASK));
+        menAdmin_Sucursal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/building_add.png"))); // NOI18N
+        menAdmin_Sucursal.setText("Sucursales");
+        jMenu9.add(menAdmin_Sucursal);
 
         menAdmin.add(jMenu9);
 
         jMenu8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/user_gray.png"))); // NOI18N
         jMenu8.setText("Trabajadores");
-
-        menAdmin_addTrabajador.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_MASK));
-        menAdmin_addTrabajador.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/add.png"))); // NOI18N
-        menAdmin_addTrabajador.setText("Registrar Trabajador");
-        jMenu8.add(menAdmin_addTrabajador);
 
         menAdmin_trabajadores.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.CTRL_MASK));
         menAdmin_trabajadores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/application.png"))); // NOI18N
@@ -438,21 +443,82 @@ public class PrincipalAdmin extends javax.swing.JFrame {
 
         menAdminPais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/world.png"))); // NOI18N
         menAdminPais.setText("Administrar Paises");
+        menAdminPais.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menAdminPaisActionPerformed(evt);
+            }
+        });
         adminMenuGeografia.add(menAdminPais);
 
         menuAdminRegiones.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/world.png"))); // NOI18N
         menuAdminRegiones.setText("Administrar Regiones");
+        menuAdminRegiones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuAdminRegionesActionPerformed(evt);
+            }
+        });
         adminMenuGeografia.add(menuAdminRegiones);
 
         menuAdminProvincias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/world.png"))); // NOI18N
         menuAdminProvincias.setText("Administrar Provincias");
+        menuAdminProvincias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuAdminProvinciasActionPerformed(evt);
+            }
+        });
         adminMenuGeografia.add(menuAdminProvincias);
 
         menuAdminComunas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/world.png"))); // NOI18N
         menuAdminComunas.setText("Administrar Comunas");
+        menuAdminComunas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuAdminComunasActionPerformed(evt);
+            }
+        });
         adminMenuGeografia.add(menuAdminComunas);
 
         menAdmin.add(adminMenuGeografia);
+
+        jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/sistema/logo_mini.png"))); // NOI18N
+        jMenu1.setText("Configuración de Términos");
+
+        jMenuItem1.setText("Administrar Tipo de Alergias");
+        jMenu1.add(jMenuItem1);
+
+        jMenuItem2.setText("Administrar Alergias");
+        jMenu1.add(jMenuItem2);
+
+        jMenuItem3.setText("Administrar Especies");
+        jMenu1.add(jMenuItem3);
+
+        jMenuItem4.setText("Administrar Razas");
+        jMenu1.add(jMenuItem4);
+
+        jMenuItem5.setText("Administrar Carácter");
+        jMenu1.add(jMenuItem5);
+
+        jMenuItem6.setText("Administrar Habitad");
+        jMenu1.add(jMenuItem6);
+
+        jMenuItem7.setText("Administrar Vacunas");
+        jMenu1.add(jMenuItem7);
+
+        jMenuItem8.setText("Administrar Examenes");
+        jMenu1.add(jMenuItem8);
+
+        jMenuItem9.setText("Administrar Patologías");
+        jMenu1.add(jMenuItem9);
+
+        jMenuItem10.setText("Administrar Contraindicaciones");
+        jMenu1.add(jMenuItem10);
+
+        jMenuItem11.setText("Administrar Farmacos");
+        jMenu1.add(jMenuItem11);
+
+        jMenuItem12.setText("Administrar Procedimientos");
+        jMenu1.add(jMenuItem12);
+
+        menAdmin.add(jMenu1);
 
         jMenuBar1.add(menAdmin);
 
@@ -503,10 +569,6 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void menAdmin_trabajadoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menAdmin_trabajadoresActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menAdmin_trabajadoresActionPerformed
-
     private void syncmen_logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_syncmen_logoutActionPerformed
         u = null;
         s = null;
@@ -527,6 +589,27 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         new ListarPacientes(u, s).setVisible(true);
     }//GEN-LAST:event_menPacientes_adminActionPerformed
 
+    private void menAdminPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menAdminPaisActionPerformed
+        new AdministradorPaises().setVisible(true);
+    }//GEN-LAST:event_menAdminPaisActionPerformed
+
+    private void menuAdminRegionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAdminRegionesActionPerformed
+        new AdministradorRegiones().setVisible(true);
+    }//GEN-LAST:event_menuAdminRegionesActionPerformed
+
+    private void menuAdminProvinciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAdminProvinciasActionPerformed
+        new AdministradorProvincias().setVisible(true);
+    }//GEN-LAST:event_menuAdminProvinciasActionPerformed
+
+    private void menuAdminComunasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAdminComunasActionPerformed
+        new AdministradorComunas().setVisible(true);
+    }//GEN-LAST:event_menuAdminComunasActionPerformed
+
+    private void menAdmin_trabajadoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menAdmin_trabajadoresActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menAdmin_trabajadoresActionPerformed
+
+    
     /**
      * @param args the command line arguments
      */
@@ -578,9 +661,22 @@ public class PrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu8;
     private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
+    private javax.swing.JMenuItem jMenuItem11;
+    private javax.swing.JMenuItem jMenuItem12;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblHoraSistema;
     private javax.swing.JLabel lblNumCumpleaños;
@@ -589,10 +685,8 @@ public class PrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel lblNumPropietarios;
     private javax.swing.JMenu menAdmin;
     private javax.swing.JMenuItem menAdminPais;
-    private javax.swing.JMenuItem menAdmin_addSucursal;
-    private javax.swing.JMenuItem menAdmin_addTrabajador;
+    private javax.swing.JMenuItem menAdmin_Sucursal;
     private javax.swing.JMenuItem menAdmin_clinica;
-    private javax.swing.JMenuItem menAdmin_sucursales;
     private javax.swing.JMenuItem menAdmin_trabajadores;
     private javax.swing.JMenu menAgenda;
     private javax.swing.JMenuItem menAgenda_add;

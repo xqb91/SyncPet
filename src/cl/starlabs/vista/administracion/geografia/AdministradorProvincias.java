@@ -64,13 +64,13 @@ public class AdministradorProvincias extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        cmbRegion = new javax.swing.JComboBox<>();
+        cmbRegion = new javax.swing.JComboBox<String>();
         btnSeleccionarRegion = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaListaProvincias = new javax.swing.JTable();
         btnAgregar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
-        cmbPais = new javax.swing.JComboBox<>();
+        cmbPais = new javax.swing.JComboBox<String>();
         panelInfoProvincia = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         lblRegion = new javax.swing.JLabel();
@@ -81,11 +81,11 @@ public class AdministradorProvincias extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         lblPais = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Provincias en el Sistema"));
 
-        cmbRegion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar Region..." }));
+        cmbRegion.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccionar Region..." }));
 
         btnSeleccionarRegion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/find.png"))); // NOI18N
 
@@ -118,7 +118,7 @@ public class AdministradorProvincias extends javax.swing.JFrame {
             }
         });
 
-        cmbPais.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar Pais..." }));
+        cmbPais.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccionar Pais..." }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -153,8 +153,8 @@ public class AdministradorProvincias extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAgregar)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnAgregar, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnEliminar)))
         );
 
