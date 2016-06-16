@@ -27,7 +27,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Pais.findAll", query = "SELECT p FROM Pais p"),
+    @NamedQuery(name = "Pais.findAll", query = "SELECT p FROM Pais p ORDER BY p.nombre ASC"),
+    @NamedQuery(name = "Pais.findAllPorId", query = "SELECT p FROM Pais p ORDER BY p.idPais DESC"),
     @NamedQuery(name = "Pais.findByIdPais", query = "SELECT p FROM Pais p WHERE p.idPais = :idPais"),
     @NamedQuery(name = "Pais.findByNombre", query = "SELECT p FROM Pais p WHERE p.nombre = :nombre")})
 public class Pais implements Serializable {

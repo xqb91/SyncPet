@@ -8,6 +8,7 @@ package cl.starlabs.vista.principal;
 import cl.starlabs.modelo.Sucursal;
 import cl.starlabs.modelo.Usuarios;
 import cl.starlabs.vista.login.PantallaBloqueo;
+import cl.starlabs.vista.paciente.ListarPacientes;
 import cl.starlabs.vista.paciente.RegistroPaciente;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -36,6 +37,7 @@ public class PrincipalMedico extends javax.swing.JFrame {
         initComponents();
         //seteando usuario
         this.u = u;
+        this.s = s;
         //centrando ventana
         this.setLocationRelativeTo(null);
         //seteando el titulo de la ventana
@@ -255,6 +257,11 @@ public class PrincipalMedico extends javax.swing.JFrame {
         menPacientes_admin.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
         menPacientes_admin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/application.png"))); // NOI18N
         menPacientes_admin.setText("Administrar Pacientes");
+        menPacientes_admin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menPacientes_adminActionPerformed(evt);
+            }
+        });
         menPacientes.add(menPacientes_admin);
 
         menPacientes_tree.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_MASK));
@@ -397,9 +404,12 @@ public class PrincipalMedico extends javax.swing.JFrame {
     }//GEN-LAST:event_syncmen_lockActionPerformed
 
     private void menPacientes_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPacientes_addActionPerformed
-        new RegistroPaciente().setVisible(true);
-        this.dispose();
+        new RegistroPaciente(u).setVisible(true);
     }//GEN-LAST:event_menPacientes_addActionPerformed
+
+    private void menPacientes_adminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPacientes_adminActionPerformed
+        new ListarPacientes(u, s).setVisible(true);
+    }//GEN-LAST:event_menPacientes_adminActionPerformed
 
     /**
      * @param args the command line arguments

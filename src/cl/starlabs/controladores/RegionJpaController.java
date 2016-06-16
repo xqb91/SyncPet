@@ -235,4 +235,14 @@ public class RegionJpaController implements Serializable {
         }
     }
     
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Region.findAllById");
+            consulta.setMaxResults(1);
+            return ((Region)consulta.getSingleResult()).getIdRegion()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
 }

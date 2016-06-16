@@ -1,0 +1,394 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package cl.starlabs.vista.administracion.geografia;
+
+import cl.starlabs.controladores.PaisJpaController;
+import cl.starlabs.controladores.ProvinciaJpaController;
+import cl.starlabs.controladores.RegionJpaController;
+import cl.starlabs.modelo.Comuna;
+import cl.starlabs.modelo.Pais;
+import cl.starlabs.modelo.Provincia;
+import cl.starlabs.modelo.Region;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
+
+public class AdministradorComunas extends javax.swing.JFrame {
+
+    EntityManagerFactory emf = null;
+    Pais pai = null;
+    Region reg = null;
+    Provincia pro = null;
+    
+    public AdministradorComunas() {
+        initComponents();
+        
+        //EntityManagerFactory
+        emf = Persistence.createEntityManagerFactory("SyncPetPU");
+        
+        //Centrando ventana
+        this.setLocationRelativeTo(null);
+        
+        //deshabilitando campos
+        cmbRegion.setEnabled(false);
+        cmbProvincia.setEnabled(false);
+        lblPais.setEnabled(false);
+        lblPaisNombre.setEnabled(false);
+        lblRegion.setEnabled(false);
+        lblRegionNombre.setEnabled(false);
+        lblProvincia.setEnabled(false);
+        lblProvinciaNombre.setEnabled(false);
+        panelInformacionComuna.setEnabled(false);
+        
+        //rellenando valores
+        rellenarComboPais();
+    }
+
+    
+    public void rellenarComboPais() {
+        for(Pais p : new PaisJpaController(emf).findPaisEntities()) {
+            cmbPais.addItem(p.getIdPais()+": "+p.getNombre());
+        }
+    }
+    
+    public void rellenarRegiones() {
+        if(cmbPais.getSelectedItem().toString().compareToIgnoreCase("seleccione país") == 0) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un país para poder continuar...");
+            cmbPais.requestFocus();
+            cmbRegion.setEnabled(false);
+            cmbProvincia.setEnabled(false);
+            pai = null;
+        }else{
+            pai = new PaisJpaController(emf).findPais(Integer.parseInt(cmbPais.getSelectedItem().toString().split(":")[0]));
+            cmbRegion.removeAllItems();
+            cmbRegion.addItem("Seleccione Región...");
+            for(Region r : pai.getRegionList()) {
+                cmbRegion.addItem(r.getIdRegion()+": "+r.getNombre());
+            }
+            cmbRegion.setEnabled(true);
+            cmbRegion.requestFocus();
+        }
+    }
+    
+    public void rellenaProvincias() {
+        if(cmbRegion.getSelectedItem().toString().compareToIgnoreCase("Seleccione Región...") == 0 || cmbRegion.getSelectedItem().toString().isEmpty()) {
+            cmbProvincia.removeAllItems();
+            cmbRegion.requestFocus();
+            cmbProvincia.setEnabled(false);
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una región para continuar...");
+            reg = null;
+        }else{
+            cmbProvincia.removeAllItems();
+            cmbProvincia.addItem("Seleccione Provincia...");
+            reg = new RegionJpaController(emf).findRegion(Integer.parseInt(cmbRegion.getSelectedItem().toString().split(":")[0]));
+            if(reg != null) {
+                for(Provincia p : reg.getProvinciaList()) {
+                    cmbProvincia.addItem(p.getIdProvincia()+": "+p.getNombre());
+                }
+            }
+            cmbProvincia.setEnabled(true);
+            cmbProvincia.requestFocus();
+        }
+    }
+    
+    public void rellenarTabla() {
+        if(cmbProvincia.getSelectedItem().toString().compareToIgnoreCase("Seleccione Provincia...") == 0 || cmbProvincia.getSelectedItem().toString().isEmpty()) {
+            JOptionPane.showMessageDialog(rootPane, "Debe seleccionar una provincia para continuar");
+            cmbProvincia.requestFocus();
+            pro = null;
+        }else{
+            pro = new ProvinciaJpaController(emf).findProvincia(Integer.parseInt(cmbProvincia.getSelectedItem().toString().split(":")[0]));
+            DefaultTableModel modelo = new DefaultTableModel(new Object [][] { }, new String [] { "ID", "Nombre" });
+            if(pro != null) {
+                for(Comuna c : pro.getComunaList()) {
+                    Object[] fila = new Object[5];
+                    fila[0] = c.getIdComuna();
+                    fila[1] = c.getNombre();
+                    modelo.addRow(fila);
+                }
+            }
+            tablaComunas.setModel(modelo);
+        }
+    }
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+        cmbPais = new javax.swing.JComboBox<>();
+        cmbRegion = new javax.swing.JComboBox<>();
+        cmbProvincia = new javax.swing.JComboBox<>();
+        btnSeleccionarComuna = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaComunas = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        panelInformacionComuna = new javax.swing.JPanel();
+        lblPais = new javax.swing.JLabel();
+        lblRegion = new javax.swing.JLabel();
+        lblProvincia = new javax.swing.JLabel();
+        lblPaisNombre = new javax.swing.JLabel();
+        lblRegionNombre = new javax.swing.JLabel();
+        lblProvinciaNombre = new javax.swing.JLabel();
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("SyncPet :: Administrar Comunas");
+        setResizable(false);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Comunas en el sistema"));
+
+        cmbPais.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione País" }));
+        cmbPais.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cmbPaisFocusLost(evt);
+            }
+        });
+
+        cmbRegion.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cmbRegionFocusLost(evt);
+            }
+        });
+
+        btnSeleccionarComuna.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/find.png"))); // NOI18N
+        btnSeleccionarComuna.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSeleccionarComunaActionPerformed(evt);
+            }
+        });
+
+        tablaComunas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nombre"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tablaComunas);
+        if (tablaComunas.getColumnModel().getColumnCount() > 0) {
+            tablaComunas.getColumnModel().getColumn(0).setResizable(false);
+            tablaComunas.getColumnModel().getColumn(0).setPreferredWidth(25);
+        }
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/add.png"))); // NOI18N
+        jButton1.setToolTipText("Agregar nueva comuna");
+
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/delete.png"))); // NOI18N
+        jButton2.setToolTipText("Eliminar comuna seleccionada");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(cmbPais, 0, 196, Short.MAX_VALUE)
+            .addComponent(cmbRegion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(cmbProvincia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnSeleccionarComuna, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(cmbPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbRegion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSeleccionarComuna, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(13, 13, 13)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addContainerGap())
+        );
+
+        panelInformacionComuna.setBorder(javax.swing.BorderFactory.createTitledBorder("Información de Comuna"));
+
+        lblPais.setText("País");
+
+        lblRegion.setText("Región");
+
+        lblProvincia.setText("Provincia");
+
+        lblPaisNombre.setText("jLabel1");
+
+        lblRegionNombre.setText("jLabel1");
+
+        lblProvinciaNombre.setText("asdada");
+
+        javax.swing.GroupLayout panelInformacionComunaLayout = new javax.swing.GroupLayout(panelInformacionComuna);
+        panelInformacionComuna.setLayout(panelInformacionComunaLayout);
+        panelInformacionComunaLayout.setHorizontalGroup(
+            panelInformacionComunaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelInformacionComunaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelInformacionComunaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelInformacionComunaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelInformacionComunaLayout.createSequentialGroup()
+                            .addComponent(lblRegion)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblRegionNombre))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelInformacionComunaLayout.createSequentialGroup()
+                            .addComponent(lblPais)
+                            .addGap(52, 52, 52)
+                            .addComponent(lblPaisNombre)))
+                    .addGroup(panelInformacionComunaLayout.createSequentialGroup()
+                        .addComponent(lblProvincia)
+                        .addGap(28, 28, 28)
+                        .addComponent(lblProvinciaNombre)))
+                .addContainerGap(112, Short.MAX_VALUE))
+        );
+        panelInformacionComunaLayout.setVerticalGroup(
+            panelInformacionComunaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelInformacionComunaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelInformacionComunaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPais)
+                    .addComponent(lblPaisNombre))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelInformacionComunaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblRegion)
+                    .addComponent(lblRegionNombre))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelInformacionComunaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblProvincia)
+                    .addComponent(lblProvinciaNombre))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelInformacionComuna, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, Short.MAX_VALUE)
+                    .addComponent(panelInformacionComuna, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void cmbPaisFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbPaisFocusLost
+        rellenarRegiones();
+    }//GEN-LAST:event_cmbPaisFocusLost
+
+    private void cmbRegionFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbRegionFocusLost
+        rellenaProvincias();
+    }//GEN-LAST:event_cmbRegionFocusLost
+
+    private void btnSeleccionarComunaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarComunaActionPerformed
+        rellenarTabla();
+    }//GEN-LAST:event_btnSeleccionarComunaActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(AdministradorComunas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(AdministradorComunas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(AdministradorComunas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(AdministradorComunas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new AdministradorComunas().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSeleccionarComuna;
+    private javax.swing.JComboBox<String> cmbPais;
+    private javax.swing.JComboBox<String> cmbProvincia;
+    private javax.swing.JComboBox<String> cmbRegion;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JLabel lblPais;
+    private javax.swing.JLabel lblPaisNombre;
+    private javax.swing.JLabel lblProvincia;
+    private javax.swing.JLabel lblProvinciaNombre;
+    private javax.swing.JLabel lblRegion;
+    private javax.swing.JLabel lblRegionNombre;
+    private javax.swing.JPanel panelInformacionComuna;
+    private javax.swing.JTable tablaComunas;
+    // End of variables declaration//GEN-END:variables
+}
