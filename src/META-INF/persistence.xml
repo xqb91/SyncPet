@@ -38,7 +38,7 @@
     <class>cl.starlabs.modelo.Perfiles</class>
     <class>cl.starlabs.modelo.DetalleUsuarios</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://LC08L1715;databaseName=syncpet"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://NRGSERVER\SQLEXPRESS;databaseName=syncpet;"/>
       <property name="javax.persistence.jdbc.user" value="syncpet"/>
       <property name="javax.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
       <property name="javax.persistence.jdbc.password" value="alfacentauro$$"/>

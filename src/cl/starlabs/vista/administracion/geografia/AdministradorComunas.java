@@ -5,6 +5,7 @@
  */
 package cl.starlabs.vista.administracion.geografia;
 
+import cl.starlabs.controladores.ComunaJpaController;
 import cl.starlabs.controladores.PaisJpaController;
 import cl.starlabs.controladores.ProvinciaJpaController;
 import cl.starlabs.controladores.RegionJpaController;
@@ -24,6 +25,7 @@ public class AdministradorComunas extends javax.swing.JFrame {
     Pais pai = null;
     Region reg = null;
     Provincia pro = null;
+    Comuna com = null;
     
     public AdministradorComunas() {
         initComponents();
@@ -44,6 +46,7 @@ public class AdministradorComunas extends javax.swing.JFrame {
         lblProvincia.setEnabled(false);
         lblProvinciaNombre.setEnabled(false);
         panelInformacionComuna.setEnabled(false);
+        lblNombreComuna.setEnabled(false);
         
         //rellenando valores
         rellenarComboPais();
@@ -127,9 +130,9 @@ public class AdministradorComunas extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
-        cmbPais = new javax.swing.JComboBox<>();
-        cmbRegion = new javax.swing.JComboBox<>();
-        cmbProvincia = new javax.swing.JComboBox<>();
+        cmbPais = new javax.swing.JComboBox<String>();
+        cmbRegion = new javax.swing.JComboBox<String>();
+        cmbProvincia = new javax.swing.JComboBox<String>();
         btnSeleccionarComuna = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaComunas = new javax.swing.JTable();
@@ -142,6 +145,10 @@ public class AdministradorComunas extends javax.swing.JFrame {
         lblPaisNombre = new javax.swing.JLabel();
         lblRegionNombre = new javax.swing.JLabel();
         lblProvinciaNombre = new javax.swing.JLabel();
+        txtNombreComuna = new javax.swing.JTextField();
+        lblNombreComuna = new javax.swing.JLabel();
+        btnAccion = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -162,7 +169,7 @@ public class AdministradorComunas extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Comunas en el sistema"));
 
-        cmbPais.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione País" }));
+        cmbPais.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione País" }));
         cmbPais.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cmbPaisFocusLost(evt);
@@ -196,6 +203,11 @@ public class AdministradorComunas extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tablaComunas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaComunasMouseClicked(evt);
             }
         });
         jScrollPane2.setViewportView(tablaComunas);
@@ -255,11 +267,25 @@ public class AdministradorComunas extends javax.swing.JFrame {
 
         lblProvincia.setText("Provincia");
 
-        lblPaisNombre.setText("jLabel1");
+        lblPaisNombre.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblPaisNombre.setText("No seleccionado");
 
-        lblRegionNombre.setText("jLabel1");
+        lblRegionNombre.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblRegionNombre.setText("No seleccionada");
 
-        lblProvinciaNombre.setText("asdada");
+        lblProvinciaNombre.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblProvinciaNombre.setText("No seleccionada");
+
+        lblNombreComuna.setText("Nombre de Comuna:");
+
+        btnAccion.setText("Registrar");
+
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelInformacionComunaLayout = new javax.swing.GroupLayout(panelInformacionComuna);
         panelInformacionComuna.setLayout(panelInformacionComunaLayout);
@@ -268,20 +294,26 @@ public class AdministradorComunas extends javax.swing.JFrame {
             .addGroup(panelInformacionComunaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelInformacionComunaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelInformacionComunaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelInformacionComunaLayout.createSequentialGroup()
-                            .addComponent(lblRegion)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblRegionNombre))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelInformacionComunaLayout.createSequentialGroup()
-                            .addComponent(lblPais)
-                            .addGap(52, 52, 52)
-                            .addComponent(lblPaisNombre)))
+                    .addComponent(txtNombreComuna)
                     .addGroup(panelInformacionComunaLayout.createSequentialGroup()
-                        .addComponent(lblProvincia)
-                        .addGap(28, 28, 28)
-                        .addComponent(lblProvinciaNombre)))
-                .addContainerGap(112, Short.MAX_VALUE))
+                        .addGap(0, 38, Short.MAX_VALUE)
+                        .addComponent(btnAccion)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCancelar)
+                        .addGap(9, 9, 9))
+                    .addGroup(panelInformacionComunaLayout.createSequentialGroup()
+                        .addGroup(panelInformacionComunaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblNombreComuna)
+                            .addComponent(lblProvincia)
+                            .addComponent(lblRegion)
+                            .addGroup(panelInformacionComunaLayout.createSequentialGroup()
+                                .addComponent(lblPais)
+                                .addGap(52, 52, 52)
+                                .addComponent(lblPaisNombre))
+                            .addComponent(lblProvinciaNombre)
+                            .addComponent(lblRegionNombre))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         panelInformacionComunaLayout.setVerticalGroup(
             panelInformacionComunaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -291,14 +323,21 @@ public class AdministradorComunas extends javax.swing.JFrame {
                     .addComponent(lblPais)
                     .addComponent(lblPaisNombre))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelInformacionComunaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblRegion)
-                    .addComponent(lblRegionNombre))
+                .addComponent(lblRegion)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addComponent(lblRegionNombre)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblProvincia)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblProvinciaNombre)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblNombreComuna)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtNombreComuna, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelInformacionComunaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblProvincia)
-                    .addComponent(lblProvinciaNombre))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnAccion)
+                    .addComponent(btnCancelar)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -306,11 +345,11 @@ public class AdministradorComunas extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelInformacionComuna, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -318,7 +357,9 @@ public class AdministradorComunas extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, Short.MAX_VALUE)
-                    .addComponent(panelInformacionComuna, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(panelInformacionComuna, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         pack();
@@ -335,6 +376,53 @@ public class AdministradorComunas extends javax.swing.JFrame {
     private void btnSeleccionarComunaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarComunaActionPerformed
         rellenarTabla();
     }//GEN-LAST:event_btnSeleccionarComunaActionPerformed
+
+    private void tablaComunasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaComunasMouseClicked
+        if(tablaComunas.getSelectedColumn() >= 0) {
+            //recuperando valores desde la tabla
+            DefaultTableModel modelo = (DefaultTableModel)tablaComunas.getModel();
+            //consultando por el valor a cargar, es recuperado desde el valor seleccionado recuperando el ROW ID
+            com = new ComunaJpaController(emf).findComuna(Integer.parseInt(String.valueOf(modelo.getValueAt(tablaComunas.getSelectedRow(), 0))));
+            //si el pais no fue encontrado
+            if(com == null) {
+                //se informa que el pais no fue encontrado
+                JOptionPane.showMessageDialog(null, "Error: La comuna no pudo ser encontrado por el sistema");
+                com = null;
+            }else{
+                //si el pais es encontrado, se definen valores en campos por defecto
+                txtNombreComuna.setText(com.getNombre());
+                this.panelInformacionComuna.setEnabled(true);
+                lblPais.setEnabled(true);
+                lblPaisNombre.setEnabled(true);
+                lblPaisNombre.setText(pai.getNombre());
+                lblRegion.setEnabled(true);
+                lblRegionNombre.setEnabled(true);
+                lblRegionNombre.setText(reg.getNombre());
+                lblProvincia.setEnabled(true);
+                lblProvinciaNombre.setEnabled(true);
+                lblProvinciaNombre.setText(pro.getNombre());
+                lblNombreComuna.setEnabled(true);
+                btnAccion.setEnabled(true);
+                btnAccion.setText("Actualizar");
+                txtNombreComuna.setEnabled(true);
+                txtNombreComuna.requestFocus();
+                btnCancelar.setEnabled(true);
+                tablaComunas.setEnabled(false);
+            }
+        }
+    }//GEN-LAST:event_tablaComunasMouseClicked
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        lblPais.setEnabled(false);
+        lblPaisNombre.setEnabled(false);
+        lblRegion.setEnabled(false);
+        lblRegionNombre.setEnabled(false);
+        lblProvincia.setEnabled(false);
+        lblProvinciaNombre.setEnabled(false);
+        panelInformacionComuna.setEnabled(false);
+        lblNombreComuna.setEnabled(false);
+        tablaComunas.setEnabled(true);
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -372,6 +460,8 @@ public class AdministradorComunas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAccion;
+    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnSeleccionarComuna;
     private javax.swing.JComboBox<String> cmbPais;
     private javax.swing.JComboBox<String> cmbProvincia;
@@ -382,6 +472,7 @@ public class AdministradorComunas extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
+    private javax.swing.JLabel lblNombreComuna;
     private javax.swing.JLabel lblPais;
     private javax.swing.JLabel lblPaisNombre;
     private javax.swing.JLabel lblProvincia;
@@ -390,5 +481,6 @@ public class AdministradorComunas extends javax.swing.JFrame {
     private javax.swing.JLabel lblRegionNombre;
     private javax.swing.JPanel panelInformacionComuna;
     private javax.swing.JTable tablaComunas;
+    private javax.swing.JTextField txtNombreComuna;
     // End of variables declaration//GEN-END:variables
 }
