@@ -64,7 +64,7 @@ public class AdministradorRegiones extends javax.swing.JFrame {
         tablaResultados = new javax.swing.JTable();
         btnAgregar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
-        slcPais = new javax.swing.JComboBox<>();
+        slcPais = new javax.swing.JComboBox<String>();
         btnSeleccionaPais = new javax.swing.JButton();
         panelInfoRegion = new javax.swing.JPanel();
         lblPais = new javax.swing.JLabel();
@@ -122,7 +122,7 @@ public class AdministradorRegiones extends javax.swing.JFrame {
             }
         });
 
-        slcPais.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione País..." }));
+        slcPais.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione País..." }));
 
         btnSeleccionaPais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/find.png"))); // NOI18N
         btnSeleccionaPais.addActionListener(new java.awt.event.ActionListener() {
@@ -167,6 +167,12 @@ public class AdministradorRegiones extends javax.swing.JFrame {
         lblPais.setText("País");
 
         lblNombre.setText("Nombre");
+
+        txtNombreRegion.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreRegionKeyTyped(evt);
+            }
+        });
 
         btnAccion.setText("Registrar");
         btnAccion.addActionListener(new java.awt.event.ActionListener() {
@@ -405,6 +411,12 @@ public class AdministradorRegiones extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnAccionActionPerformed
+
+    private void txtNombreRegionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreRegionKeyTyped
+        if(txtNombreRegion.getText().length() >= 250) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombreRegionKeyTyped
 
     public void rellenarTabla(String valor) {
         p = new PaisJpaController(emf).findPais(Integer.parseInt(valor));

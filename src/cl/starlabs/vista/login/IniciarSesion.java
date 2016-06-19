@@ -72,13 +72,13 @@ public class IniciarSesion extends javax.swing.JFrame {
 
         panelLogin.setBorder(javax.swing.BorderFactory.createTitledBorder("Iniciar Sesión"));
 
-        lblNombreUsuario.setText("Nombre de Usuario");
         lblNombreUsuario.setText("Nombre Usuario");
 
         lblPassword.setText("Contraseña");
 
         lblSucursal.setText("Sucursal");
 
+        txtNombreUsuario.setText("varaya");
         txtNombreUsuario.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtNombreUsuarioFocusLost(evt);
@@ -87,6 +87,11 @@ public class IniciarSesion extends javax.swing.JFrame {
         txtNombreUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNombreUsuarioActionPerformed(evt);
+            }
+        });
+        txtNombreUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreUsuarioKeyTyped(evt);
             }
         });
 
@@ -113,9 +118,16 @@ public class IniciarSesion extends javax.swing.JFrame {
             }
         });
 
+        txtPassword.setText("123456");
+        txtPassword.setMaximumSize(new java.awt.Dimension(5, 5));
         txtPassword.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtPasswordFocusLost(evt);
+            }
+        });
+        txtPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPasswordKeyTyped(evt);
             }
         });
 
@@ -133,11 +145,10 @@ public class IniciarSesion extends javax.swing.JFrame {
                 .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(slcSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtNombreUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
-                    .addComponent(txtPassword))
+                    .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnIniciarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnIniciarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
                     .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -290,6 +301,18 @@ public class IniciarSesion extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnIniciarSesionActionPerformed
+
+    private void txtNombreUsuarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreUsuarioKeyTyped
+        if(txtNombreUsuario.getText().length() >= 100) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombreUsuarioKeyTyped
+
+    private void txtPasswordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPasswordKeyTyped
+        if(txtPassword.getText().length() >= 250) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtPasswordKeyTyped
 
     /**
      * @param args the command line arguments

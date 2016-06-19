@@ -15,6 +15,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Raza;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -206,6 +207,17 @@ public class EspecieJpaController implements Serializable {
         }
     }
     
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Especie.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((Especie)consulta.getSingleResult()).getIdEspecie()+1;
+        }catch(Exception e)
+        {
+            return 1;
+        }
+    }
+    
     public Especie buscarRaza(String especie) {
         try {
             Query consulta = getEntityManager().createNamedQuery("Especie.findByNombre");
@@ -213,6 +225,39 @@ public class EspecieJpaController implements Serializable {
             return (Especie)consulta.getSingleResult();
         } catch (Exception e) {
             return null;
+        }
+    }
+    
+    public List<Especie> buscarPorNombre(String nombre) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Especie.findByNombre");
+            consulta.setParameter("nombre", nombre);
+            return consulta.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public boolean existeTipoAlergia(String nombre) {
+        try {
+            if(this.buscarPorNombre(nombre).isEmpty()) {
+                return false;
+            }else{
+                return true;
+            }
+        } catch (Exception e) {
+            return true;
+        }
+    }
+    
+    public boolean actualizar(Especie t) {
+        try {
+            getEntityManager().getTransaction().begin();
+            getEntityManager().merge(t);
+            getEntityManager().getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
     

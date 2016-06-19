@@ -30,6 +30,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Raza.findAll", query = "SELECT r FROM Raza r"),
+    @NamedQuery(name = "Raza.findAllDesc", query = "SELECT r FROM Raza r ORDER BY r.idRaza DESC"),
+    @NamedQuery(name = "Raza.findByEspecie", query = "SELECT r FROM Raza r WHERE r.especie = :especie"),
     @NamedQuery(name = "Raza.findByIdRaza", query = "SELECT r FROM Raza r WHERE r.idRaza = :idRaza"),
     @NamedQuery(name = "Raza.findByNombre", query = "SELECT r FROM Raza r WHERE r.nombre = :nombre")})
 public class Raza implements Serializable {
@@ -53,10 +55,11 @@ public class Raza implements Serializable {
     public Raza(Integer idRaza) {
         this.idRaza = idRaza;
     }
-
-    public Raza(Integer idRaza, String nombre) {
+    
+    public Raza(Integer idRaza, String nombre, Especie especie) {
         this.idRaza = idRaza;
         this.nombre = nombre;
+        this.especie = especie;
     }
 
     public Integer getIdRaza() {

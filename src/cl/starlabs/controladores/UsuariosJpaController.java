@@ -93,17 +93,17 @@ public class UsuariosJpaController implements Serializable {
             List<DetalleUsuarios> detalleUsuariosListOld = persistentUsuarios.getDetalleUsuariosList();
             List<DetalleUsuarios> detalleUsuariosListNew = usuarios.getDetalleUsuariosList();
             List<String> illegalOrphanMessages = null;
-            for (DetalleUsuarios detalleUsuariosListOldDetalleUsuarios : detalleUsuariosListOld) {
-                if (!detalleUsuariosListNew.contains(detalleUsuariosListOldDetalleUsuarios)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain DetalleUsuarios " + detalleUsuariosListOldDetalleUsuarios + " since its usuario field is not nullable.");
-                }
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
+            //for (DetalleUsuarios detalleUsuariosListOldDetalleUsuarios : detalleUsuariosListOld) {
+                //if (!detalleUsuariosListNew.contains(detalleUsuariosListOldDetalleUsuarios)) {
+                    //if (illegalOrphanMessages == null) {
+                        //illegalOrphanMessages = new ArrayList<String>();
+                    //}
+                    //illegalOrphanMessages.add("You must retain DetalleUsuarios " + detalleUsuariosListOldDetalleUsuarios + " since its usuario field is not nullable.");
+               // }
+            //}
+           // if (illegalOrphanMessages != null) {
+           //     throw new IllegalOrphanException(illegalOrphanMessages);
+           // }
             if (perfilNew != null) {
                 perfilNew = em.getReference(perfilNew.getClass(), perfilNew.getId());
                 usuarios.setPerfil(perfilNew);
@@ -242,6 +242,42 @@ public class UsuariosJpaController implements Serializable {
             return (Usuarios)consulta.getSingleResult();
         } catch (Exception e) {
             return null;
+        }
+    }
+    
+    public boolean existeUsuario(String usuario) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Usuarios.findByUsuario");
+            consulta.setParameter("usuario", usuario);
+            if(consulta.getResultList().isEmpty()) {
+                return false;
+            }else{
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Usuarios.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((Usuarios)consulta.getSingleResult()).getId()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
+    public void actualizar(Usuarios u) {
+        try {
+            EntityManager em = getEntityManager();
+            em.getTransaction().begin();
+            em.merge(u);
+            em.getTransaction().commit();
+            em.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());;
         }
     }
     

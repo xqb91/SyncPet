@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Usuarios.findAll", query = "SELECT u FROM Usuarios u"),
+    @NamedQuery(name = "Usuarios.findAllDesc", query = "SELECT u FROM Usuarios u ORDER BY u.id DESC"),
     @NamedQuery(name = "Usuarios.findById", query = "SELECT u FROM Usuarios u WHERE u.id = :id"),
     @NamedQuery(name = "Usuarios.findByUsuario", query = "SELECT u FROM Usuarios u WHERE u.usuario = :usuario"),
     @NamedQuery(name = "Usuarios.findByContrasena", query = "SELECT u FROM Usuarios u WHERE u.contrasena = :contrasena"),
@@ -88,6 +89,18 @@ public class Usuarios implements Serializable {
         this.amaterno = amaterno;
         this.correo = correo;
         this.bloqueado = bloqueado;
+    }
+    
+    public Usuarios(Integer id, String usuario, String contrasena, String nombres, String apaterno, String amaterno, String correo, Character bloqueado, Perfiles per) {
+        this.id = id;
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+        this.nombres = nombres;
+        this.apaterno = apaterno;
+        this.amaterno = amaterno;
+        this.correo = correo;
+        this.bloqueado = bloqueado;
+        this.perfil = per;
     }
 
     public Integer getId() {

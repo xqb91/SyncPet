@@ -200,6 +200,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtNombrePais">
+          <Events>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtNombrePaisKeyTyped"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnAccion">
           <Properties>

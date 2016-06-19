@@ -28,6 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Especie.findAll", query = "SELECT e FROM Especie e"),
+    @NamedQuery(name = "Especie.findAllDesc", query = "SELECT e FROM Especie e ORDER BY e.idEspecie DESC"),
     @NamedQuery(name = "Especie.findByIdEspecie", query = "SELECT e FROM Especie e WHERE e.idEspecie = :idEspecie"),
     @NamedQuery(name = "Especie.findByNombre", query = "SELECT e FROM Especie e WHERE e.nombre = :nombre"),
     @NamedQuery(name = "Especie.findByFamilia", query = "SELECT e FROM Especie e WHERE e.familia = :familia")})
@@ -57,6 +58,13 @@ public class Especie implements Serializable {
         this.idEspecie = idEspecie;
         this.nombre = nombre;
         this.familia = familia;
+    }
+    
+    public Especie(Integer idEspecie, String nombre, String familia, List<Raza> raza) {
+        this.idEspecie = idEspecie;
+        this.nombre = nombre;
+        this.familia = familia;
+        this.razaList = raza;
     }
 
     public Integer getIdEspecie() {

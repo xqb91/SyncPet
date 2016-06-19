@@ -7,6 +7,7 @@ package cl.starlabs.vista.administracion.clinica;
 
 import cl.starlabs.controladores.ClinicaJpaController;
 import cl.starlabs.controladores.SucursalJpaController;
+import cl.starlabs.controladores.exceptions.IllegalOrphanException;
 import cl.starlabs.modelo.Clinica;
 import cl.starlabs.modelo.Sucursal;
 import java.awt.Color;
@@ -208,7 +209,7 @@ public class AdministracionClinica extends javax.swing.JFrame {
                         }else{
                             //todo correcto
                             try {
-                                new ClinicaJpaController(emf).edit(new Clinica(suc.getClinica().getIdClinica(), txtNombreFantasia.getText(), txtNombreReal.getText(), Integer.parseInt(((txtRut.getText().replace(".", "")).split("-")[0])), (txtRut.getText().split("-")[0]).charAt(0)));
+                                new ClinicaJpaController(emf).actualizar(new Clinica(suc.getClinica().getIdClinica(), txtNombreFantasia.getText(), txtNombreReal.getText(), Integer.parseInt(((txtRut.getText().replace(".", "")).split("-")[0])), (txtRut.getText().split("-")[0]).charAt(0)));
                                 JOptionPane.showMessageDialog(null, "Datos actualizados con éxito");
                             } catch (Exception e) {
                                 JOptionPane.showMessageDialog(null, "Ocurrió un error al actualizar los datos: "+e.getMessage());

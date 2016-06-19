@@ -229,4 +229,24 @@ public class DetalleUsuariosJpaController implements Serializable {
         }
     }
     
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("DetalleUsuarios.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((DetalleUsuarios)consulta.getSingleResult()).getId()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
+    public List<DetalleUsuarios> buscarPorUsuario(Usuarios u) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("DetalleUsuarios.findByUsuario");
+            consulta.setParameter("usuario", u);
+            return consulta.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
 }

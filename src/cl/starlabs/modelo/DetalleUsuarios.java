@@ -26,6 +26,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "DetalleUsuarios.findAll", query = "SELECT d FROM DetalleUsuarios d"),
+    @NamedQuery(name = "DetalleUsuarios.findAllDesc", query = "SELECT d FROM DetalleUsuarios d ORDER BY d.id DESC"),
+    @NamedQuery(name = "DetalleUsuarios.findByUsuario", query = "SELECT d FROM DetalleUsuarios d WHERE d.usuario = :usuario"),
     @NamedQuery(name = "DetalleUsuarios.findById", query = "SELECT d FROM DetalleUsuarios d WHERE d.id = :id")})
 public class DetalleUsuarios implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -48,6 +50,19 @@ public class DetalleUsuarios implements Serializable {
 
     public DetalleUsuarios(Integer id) {
         this.id = id;
+    }
+    
+     public DetalleUsuarios(Integer id, Usuarios usuario, Sucursal sucursal) {
+        this.id = id;
+        this.usuario = usuario;
+        this.sucursal = sucursal;
+    }
+    
+     public DetalleUsuarios(Integer id, Usuarios usuario, Veterinario veterinario, Sucursal sucursal) {
+        this.id = id;
+        this.usuario = usuario;
+        this.veterinario = veterinario;
+        this.sucursal = sucursal;
     }
 
     public Integer getId() {

@@ -206,4 +206,15 @@ public class ClinicaJpaController implements Serializable {
         }
     }
     
+    public void actualizar(Clinica c) {
+        try {
+            EntityManager em = getEntityManager();
+            getEntityManager().getTransaction().begin();
+            em.merge(c);
+            getEntityManager().getTransaction().commit();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
 }

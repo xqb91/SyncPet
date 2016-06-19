@@ -92,7 +92,7 @@ public class TipoAlergiaJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<Alergias> attachedAlergiasListNew = new ArrayList<Alergias>();
+            /*List<Alergias> attachedAlergiasListNew = new ArrayList<Alergias>();
             for (Alergias alergiasListNewAlergiasToAttach : alergiasListNew) {
                 alergiasListNewAlergiasToAttach = em.getReference(alergiasListNewAlergiasToAttach.getClass(), alergiasListNewAlergiasToAttach.getIdAlergia());
                 attachedAlergiasListNew.add(alergiasListNewAlergiasToAttach);
@@ -110,7 +110,7 @@ public class TipoAlergiaJpaController implements Serializable {
                         oldTipoAlergiaOfAlergiasListNewAlergias = em.merge(oldTipoAlergiaOfAlergiasListNewAlergias);
                     }
                 }
-            }
+            }*/
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -203,6 +203,50 @@ public class TipoAlergiaJpaController implements Serializable {
             return ((Long) q.getSingleResult()).intValue();
         } finally {
             em.close();
+        }
+    }
+    
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("TipoAlergia.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((TipoAlergia)consulta.getSingleResult()).getIdTipoAlergia()+1;
+        }catch(Exception e)
+        {
+            return 1;
+        }
+    }
+    
+    public List<TipoAlergia> buscarPorNombre(String nombre) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("TipoAlergia.findByNombre");
+            consulta.setParameter("nombre", nombre);
+            return consulta.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public boolean existeTipoAlergia(String nombre) {
+        try {
+            if(this.buscarPorNombre(nombre).isEmpty()) {
+                return false;
+            }else{
+                return true;
+            }
+        } catch (Exception e) {
+            return true;
+        }
+    }
+    
+    public boolean actualizar(TipoAlergia t) {
+        try {
+            getEntityManager().getTransaction().begin();
+            getEntityManager().merge(t);
+            getEntityManager().getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
     

@@ -133,6 +133,12 @@ public class AdministradorPaises extends javax.swing.JFrame {
 
         lblNombrePais.setText("Nombre País");
 
+        txtNombrePais.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombrePaisKeyTyped(evt);
+            }
+        });
+
         btnAccion.setText("Actualizar");
         btnAccion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -329,6 +335,12 @@ public class AdministradorPaises extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnAccionActionPerformed
+
+    private void txtNombrePaisKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombrePaisKeyTyped
+        if(txtNombrePais.getText().length() >= 35) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombrePaisKeyTyped
 
     
     public void rellenarTabla() {

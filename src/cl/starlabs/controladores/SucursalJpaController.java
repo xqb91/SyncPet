@@ -382,4 +382,14 @@ public class SucursalJpaController implements Serializable {
             return null;
         }
     }
+    
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Sucursal.findAllById");
+            consulta.setMaxResults(1);
+            return ((Sucursal)consulta.getSingleResult()).getIdSucursal()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
 }

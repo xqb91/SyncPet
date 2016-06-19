@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Sucursal.findAll", query = "SELECT s FROM Sucursal s"),
+    @NamedQuery(name = "Sucursal.findAllById", query = "SELECT s FROM Sucursal s ORDER BY s.idSucursal DESC"),
     @NamedQuery(name = "Sucursal.findByIdSucursal", query = "SELECT s FROM Sucursal s WHERE s.idSucursal = :idSucursal"),
     @NamedQuery(name = "Sucursal.findByClinica", query = "SELECT s FROM Sucursal s WHERE s.clinica = :clinica"),
     @NamedQuery(name = "Sucursal.findByNombre", query = "SELECT s FROM Sucursal s WHERE s.nombre = :nombre"),
@@ -81,6 +82,16 @@ public class Sucursal implements Serializable {
         this.direccion = direccion;
         this.email = email;
         this.telefono = telefono;
+    }
+    
+    public Sucursal(Integer idSucursal, String nombre, String direccion, String email, int telefono, Clinica clinica, Comuna comuna) {
+        this.idSucursal = idSucursal;
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.email = email;
+        this.telefono = telefono;
+        this.clinica = clinica;
+        this.comuna = comuna;
     }
 
     public Integer getIdSucursal() {

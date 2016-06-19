@@ -248,6 +248,12 @@ public class AdministradorProvincias extends javax.swing.JFrame {
 
         lblProvincia.setText("Nombre de Provincia");
 
+        txtNombreProvincia.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreProvinciaKeyTyped(evt);
+            }
+        });
+
         btnAccion.setText("Actualizar");
         btnAccion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -509,6 +515,12 @@ public class AdministradorProvincias extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnAccionActionPerformed
+
+    private void txtNombreProvinciaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreProvinciaKeyTyped
+        if(txtNombreProvincia.getText().length() >= 200) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombreProvinciaKeyTyped
 
     /**
      * @param args the command line arguments

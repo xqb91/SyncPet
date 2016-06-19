@@ -138,7 +138,6 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="btnIniciarSesion" max="32767" attributes="0"/>
-                      <Component id="btnIniciarSesion" pref="100" max="32767" attributes="0"/>
                       <Component id="btnSalir" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -177,7 +176,6 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="lblNombreUsuario">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Nombre de Usuario"/>
             <Property name="text" type="java.lang.String" value="Nombre Usuario"/>
           </Properties>
         </Component>
@@ -192,9 +190,13 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtNombreUsuario">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="varaya"/>
+          </Properties>
           <Events>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtNombreUsuarioFocusLost"/>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtNombreUsuarioActionPerformed"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtNombreUsuarioKeyTyped"/>
           </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="slcSucursal">
@@ -228,8 +230,15 @@
           </Events>
         </Component>
         <Component class="javax.swing.JPasswordField" name="txtPassword">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="123456"/>
+            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[5, 5]"/>
+            </Property>
+          </Properties>
           <Events>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPasswordFocusLost"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPasswordKeyTyped"/>
           </Events>
         </Component>
       </SubComponents>

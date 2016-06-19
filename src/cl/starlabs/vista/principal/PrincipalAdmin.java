@@ -7,11 +7,13 @@ package cl.starlabs.vista.principal;
 
 import cl.starlabs.modelo.Sucursal;
 import cl.starlabs.modelo.Usuarios;
+import cl.starlabs.vista.administracion.clinica.AdministracionClinica;
 import cl.starlabs.vista.administracion.clinica.AdministracionSucursales;
 import cl.starlabs.vista.administracion.geografia.AdministradorComunas;
 import cl.starlabs.vista.administracion.geografia.AdministradorPaises;
 import cl.starlabs.vista.administracion.geografia.AdministradorProvincias;
 import cl.starlabs.vista.administracion.geografia.AdministradorRegiones;
+import cl.starlabs.vista.administracion.trabajadores.AdministradorTrabajadores;
 import cl.starlabs.vista.login.PantallaBloqueo;
 import cl.starlabs.vista.paciente.ListarPacientes;
 import cl.starlabs.vista.paciente.RegistroPaciente;
@@ -118,6 +120,7 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menAdmin_Sucursal = new javax.swing.JMenuItem();
         jMenu8 = new javax.swing.JMenu();
         menAdmin_trabajadores = new javax.swing.JMenuItem();
+        jMenuItem13 = new javax.swing.JMenuItem();
         adminMenuGeografia = new javax.swing.JMenu();
         menAdminPais = new javax.swing.JMenuItem();
         menuAdminRegiones = new javax.swing.JMenuItem();
@@ -125,7 +128,6 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menuAdminComunas = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
@@ -415,6 +417,11 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menAdmin_clinica.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
         menAdmin_clinica.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/building.png"))); // NOI18N
         menAdmin_clinica.setText("Información de Clínica");
+        menAdmin_clinica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menAdmin_clinicaActionPerformed(evt);
+            }
+        });
         jMenu9.add(menAdmin_clinica);
 
         menAdmin_Sucursal.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_J, java.awt.event.InputEvent.CTRL_MASK));
@@ -441,6 +448,10 @@ public class PrincipalAdmin extends javax.swing.JFrame {
             }
         });
         jMenu8.add(menAdmin_trabajadores);
+
+        jMenuItem13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/anchor.png"))); // NOI18N
+        jMenuItem13.setText("Usuarios Vinculados a Veterinarios");
+        jMenu8.add(jMenuItem13);
 
         menAdmin.add(jMenu8);
 
@@ -490,9 +501,6 @@ public class PrincipalAdmin extends javax.swing.JFrame {
 
         jMenuItem1.setText("Administrar Tipo de Alergias");
         jMenu1.add(jMenuItem1);
-
-        jMenuItem2.setText("Administrar Alergias");
-        jMenu1.add(jMenuItem2);
 
         jMenuItem3.setText("Administrar Especies");
         jMenu1.add(jMenuItem3);
@@ -612,12 +620,16 @@ public class PrincipalAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_menuAdminComunasActionPerformed
 
     private void menAdmin_trabajadoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menAdmin_trabajadoresActionPerformed
-        // TODO add your handling code here:
+        new AdministradorTrabajadores(s).setVisible(true);
     }//GEN-LAST:event_menAdmin_trabajadoresActionPerformed
 
     private void menAdmin_SucursalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menAdmin_SucursalActionPerformed
         new AdministracionSucursales(s).setVisible(true);
     }//GEN-LAST:event_menAdmin_SucursalActionPerformed
+
+    private void menAdmin_clinicaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menAdmin_clinicaActionPerformed
+        new AdministracionClinica(s).setVisible(true);
+    }//GEN-LAST:event_menAdmin_clinicaActionPerformed
 
     
     /**
@@ -679,7 +691,7 @@ public class PrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
-    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem13;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;

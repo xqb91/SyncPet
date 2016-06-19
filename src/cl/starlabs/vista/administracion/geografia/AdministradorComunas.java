@@ -287,6 +287,12 @@ public class AdministradorComunas extends javax.swing.JFrame {
         lblProvinciaNombre.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblProvinciaNombre.setText("No seleccionada");
 
+        txtNombreComuna.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreComunaKeyTyped(evt);
+            }
+        });
+
         lblNombreComuna.setText("Nombre de Comuna:");
 
         btnAccion.setText("Registrar");
@@ -555,6 +561,12 @@ public class AdministradorComunas extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnAccionActionPerformed
+
+    private void txtNombreComunaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreComunaKeyTyped
+        if(txtNombreComuna.getText().length() >= 200) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombreComunaKeyTyped
 
     /**
      * @param args the command line arguments

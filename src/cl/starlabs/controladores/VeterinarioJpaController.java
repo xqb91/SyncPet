@@ -742,4 +742,24 @@ public class VeterinarioJpaController implements Serializable {
         }
     }
     
+    public Veterinario buscarVeterinarioPorRut(String rut) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Veterinario.findByRut");
+            consulta.setParameter("rut", rut);
+            return (Veterinario)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Veterinario.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((Veterinario)consulta.getSingleResult()).getIdVeterinario()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
 }
