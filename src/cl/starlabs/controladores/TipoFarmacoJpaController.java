@@ -206,4 +206,31 @@ public class TipoFarmacoJpaController implements Serializable {
         }
     }
     
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("TipoFarmaco.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((TipoFarmaco)consulta.getSingleResult()).getIdFarmaco()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
+    public TipoFarmaco buscarPorNombre(String nombre) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("TipoFarmaco.findByNombreComercial");
+            consulta.setParameter("nombreComercial", nombre);
+            return (TipoFarmaco)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public boolean existeTipo(String nombre) {
+        if(this.buscarPorNombre(nombre) == null) {
+            return false;
+        }else{
+            return true;
+        }
+    }
 }

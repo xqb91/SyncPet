@@ -11,7 +11,10 @@ import cl.starlabs.modelo.Especie;
 import cl.starlabs.modelo.Raza;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
@@ -21,48 +24,28 @@ import javax.swing.table.DefaultTableModel;
  */
 public class AdminRazas extends javax.swing.JFrame {
 
+    Raza tp = null;
     EntityManagerFactory emf = null;
-    Raza r = null;
+    RazaJpaController jpa;
     
     public AdminRazas() {
         initComponents();
-        emf = Persistence.createEntityManagerFactory("SyncPetPU");
-        rellenarTabla();
-        deshabilitaCampos();
+        this.emf = Persistence.createEntityManagerFactory("SyncPetPU");
         this.setLocationRelativeTo(null);
+        this.jpa = new RazaJpaController(emf);
+        rellenarTabla();
+        deshabilitarCampos();
     }
 
-    public void deshabilitaCampos() {
-        lblNombre.setEnabled(false);
-        txtNombre.setEnabled(false);
-        btnAccion.setEnabled(false);
-        cmbEspecies.setEnabled(false);
-        btnCancelar.setEnabled(false);
-    }
-    
-    public void habilitarCampos() {
-        lblNombre.setEnabled(true);
-        txtNombre.setEnabled(true);
-        btnAccion.setEnabled(true);
-        cmbEspecies.setEnabled(true);
-        btnCancelar.setEnabled(true);
-    }
-    
-    public void rellenarEspecies() {
-        for(Especie e : new EspecieJpaController(emf).findEspecieEntities()) {
-            cmbEspecies.addItem(e.getIdEspecie()+": "+e.getNombre());
-        }
-    }
-    
+    //libreria básica de métodos para realizar tareas de CRUD de SyncPet
     public void rellenarTabla() {
-        DefaultTableModel modelo = new DefaultTableModel(new Object [][] { }, new String [] { "ID", "Nombre" });
-        tablaResultados.getColumnModel().getColumn(0).setMinWidth(25);
-        tablaResultados.getColumnModel().getColumn(0).setPreferredWidth(25);
-        tablaResultados.getColumnModel().getColumn(0).setMaxWidth(25);
-        for(Raza r : new RazaJpaController(emf).findRazaEntities()) {
+        DefaultTableModel modelo = new DefaultTableModel(new Object [][] { }, new String [] { "ID", "Raza" });
+        tablaResultados.getColumnModel().getColumn(0).setResizable(false);
+        tablaResultados.getColumnModel().getColumn(1).setResizable(false);
+        for(Raza te : jpa.findRazaEntities()) {
             Object[] obj = new Object[2];
-            obj[0] = r.getIdRaza();
-            obj[1] = r.getNombre();
+            obj[0] = te.getIdRaza();
+            obj[1] = te.getNombre();
             modelo.addRow(obj);
         }
         tablaResultados.setModel(modelo);
@@ -72,6 +55,124 @@ public class AdminRazas extends javax.swing.JFrame {
         txtNombre.setText("");
         cmbEspecies.removeAllItems();
     }
+    
+    public void rellenarCampos(String nombre, String especie) {
+        vaciarCampos();
+        txtNombre.setText(nombre);
+        cmbEspecies.addItem(especie);
+    }
+    
+    public void rellenarEspecies() {
+        for(Especie e : new EspecieJpaController(emf).findEspecieEntities()) {
+            cmbEspecies.addItem(e.getIdEspecie()+": "+e.getNombre());
+        }
+    }
+    
+    public Especie retornaEspecie(){
+        Integer numero = Integer.parseInt(contenido(cmbEspecies).split(":")[0]);
+        Especie e = new EspecieJpaController(emf).findEspecie(numero);
+        if(e == null) {
+            mostrarError("No se encontro la especie");
+            return null;
+        }else{
+            return e;
+        }
+    }
+        
+    public void habilitarCampos() {
+        txtNombre.setEnabled(true);
+        cmbEspecies.setEnabled(true);
+        btnAccion.setEnabled(true);
+        btnCancelar.setEnabled(true);
+        tablaResultados.setEnabled(false);
+        btnAgregar.setEnabled(false);
+        btnRemover.setEnabled(true);
+        txtNombre.requestFocus();
+    }
+    
+    public void deshabilitarCampos() {
+        txtNombre.setEnabled(false);
+        cmbEspecies.setEnabled(false);
+        btnAccion.setEnabled(false);
+        btnCancelar.setEnabled(false);
+        tablaResultados.setEnabled(true);
+        btnAgregar.setEnabled(true);
+        btnRemover.setEnabled(false);
+        tablaResultados.requestFocus();
+    }
+    
+    public void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(null, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(null, mensaje, "SyncPet", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public Integer preguntar(String mensaje) {
+        return JOptionPane.showConfirmDialog(null, mensaje, "SyncPet", JOptionPane.YES_NO_OPTION);
+    }
+    
+    public boolean esVacio(JTextField obj) {
+        if(obj.getText().isEmpty()){
+            this.mostrarError("Hay un campo vacio, por favor rellenelo");
+            obj.requestFocus();
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    public boolean esVacio(JTextArea obj) {
+        if(obj.getText().isEmpty()){
+            this.mostrarError("Hay un campo vacio, por favor rellenelo");
+            obj.requestFocus();
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    public String contenido(JTextField obj) {
+        return obj.getText();
+    }
+    
+    public String contenido(JTextArea obj) {
+        return obj.getText();
+    }
+    
+    public Integer contenidoInt(JTextField obj) throws Exception {
+        try {
+            return Integer.parseInt(obj.getText());
+        } catch (Exception e) {
+            mostrarError("Las letras en un campo numérico no pueden ser convertidos en números");
+            obj.selectAll();
+            obj.requestFocus();
+            return 0;
+        }
+    }
+    
+    public void largoMaximo(JTextField obj ,Integer largo, java.awt.event.KeyEvent evt) {
+        if(contenido(obj).length() > (largo-1)) {
+            evt.consume();
+        }
+    }
+    
+    public String contenido(JComboBox obj) {
+        return obj.getSelectedItem().toString();
+    }
+    
+    public Integer contenidoInt(JComboBox obj) {
+        try {
+            return Integer.parseInt(contenido(obj));
+        } catch (Exception e) {
+            mostrarError("No se pudo transformar el valor seleccionado a integer");
+            obj.requestFocus();
+            return 0;
+        }
+    }
+    // fin libreria básica
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -237,78 +338,95 @@ public class AdminRazas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
-        if(txtNombre.getText().length() > 43) {
-            evt.consume();
-        }
+        largoMaximo(txtNombre, 45, evt);
     }//GEN-LAST:event_txtNombreKeyTyped
 
     private void tablaResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaResultadosMouseClicked
-        if(tablaResultados.getSelectedColumn() >= 0) {
-            //recuperando valores desde la tabla
-            DefaultTableModel modelo = (DefaultTableModel)tablaResultados.getModel();
-            //consultando por el valor a cargar, es recuperado desde el valor seleccionado recuperando el ROW ID
-            r = new RazaJpaController(emf).findRaza(Integer.parseInt(String.valueOf(modelo.getValueAt(tablaResultados.getSelectedRow(), 0))));
-            //si el tipo de alergia no fue encontrado
-            if(r == null) {
-                //se informa que el pais no fue encontrado
-                JOptionPane.showMessageDialog(null, "Error: La raza no pudo ser encontrada por el sistema");
-            }else{
-                //si el pais es encontrado, se definen valores en campos por defecto
-                habilitarCampos();
-                txtNombre.setText(r.getNombre());
-                cmbEspecies.addItem(r.getEspecie().getIdEspecie()+": "+r.getEspecie().getNombre());
-                rellenarEspecies();
-                btnAccion.setText("Actualizar");
-            }
+        DefaultTableModel modelo = (DefaultTableModel)tablaResultados.getModel();
+        //consultando por el valor a cargar, es recuperado desde el valor seleccionado recuperando el ROW ID
+        tp = jpa.findRaza(Integer.parseInt(String.valueOf(modelo.getValueAt(tablaResultados.getSelectedRow(), 0))));
+        if(tp == null) {
+            this.mostrarError("La raza no pudo ser hallada por el sistema");
+        }else{
+            habilitarCampos();
+            rellenarCampos(tp.getNombre(), tp.getEspecie().getIdEspecie()+": "+tp.getEspecie().getNombre());
+            rellenarEspecies();
+            btnAccion.setText("Actualizar");
         }
     }//GEN-LAST:event_tablaResultadosMouseClicked
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         habilitarCampos();
-        vaciarCampos();
-        txtNombre.requestFocus();
         rellenarEspecies();
-        btnAccion.setText("Guardar");
+        btnRemover.setEnabled(false);
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnAccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionActionPerformed
         if(btnAccion.getText().compareToIgnoreCase("guardar") == 0) {
-            //crear
-            if(txtNombre.getText().isEmpty()){
-                JOptionPane.showMessageDialog(null, "El campo de nombre de tipo de alergia se encuentra vacío");
-                txtNombre.requestFocus();
-            }else{
-                try {
-                    RazaJpaController tjc = new RazaJpaController(emf);
-                    if(!tjc.existeTipoAlergia(txtNombre.getText())) {
-                        Especie e = new EspecieJpaController(emf).findEspecie(Integer.parseInt(cmbEspecies.getSelectedItem().toString().split(":")[0]));
-                        tjc.create(new Raza(tjc.ultimo(), txtNombre.getText(), e));
-                        JOptionPane.showMessageDialog(null, "Raza registrada con éxito");
-                        btnCancelarActionPerformed(evt);
-                    }else{
-                        JOptionPane.showMessageDialog(null, "La raza ya se encuentra registrado");
-                        txtNombre.setText("");
-                        txtNombre.requestFocus();
+            // NUEVO
+            if(!esVacio(txtNombre)) {
+                if(jpa.existeTipo(txtNombre.getText())) {
+                    this.mostrarError("El tipo de procedimiento "+contenido(txtNombre)+" ya se encuentra registrado en la base de datos");
+                    txtNombre.selectAll();
+                    txtNombre.requestFocus();
+                }else{
+                    try {
+                        if(retornaEspecie() != null) {
+                            jpa.create(new Raza(jpa.ultimo(), contenido(txtNombre), retornaEspecie()));
+                            mostrarMensaje("Raza guardada");
+                            btnCancelarActionPerformed(evt);
+                        }else{
+                            btnCancelarActionPerformed(evt);
+                        }
+                    }catch(Exception e) {
+                        mostrarError("Ocurrió un error al intentar registrar el tipo de procedimiento en el sistema: "+e.getMessage());
                     }
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Ocurrió un problema al intentar registrar una nueva raza: "+e.getMessage());
                 }
             }
         }else{
-            //actualizar
-            if(txtNombre.getText().isEmpty()){
-                JOptionPane.showMessageDialog(null, "El campo de nombre de tipo de raza se encuentra vacío");
-                txtNombre.requestFocus();
-            }else{
-                try {
-                    RazaJpaController tjc = new RazaJpaController(emf);
-                    Especie e = new EspecieJpaController(emf).findEspecie(Integer.parseInt(cmbEspecies.getSelectedItem().toString().split(":")[0]));
-                    new RazaJpaController(emf).edit(new Raza(r.getIdRaza(), txtNombre.getText(), e));
-                    JOptionPane.showMessageDialog(null, "Raza actualizada con éxito");
+            //update
+            if(!esVacio(txtNombre)) {
+                if(retornaEspecie() != null) {
+                    if(jpa.existeTipo(txtNombre.getText())) {
+                        try {
+                            if(jpa.buscarPorNombre(contenido(txtNombre)) == null) {
+                                tp.setNombre(contenido(txtNombre));
+                                tp.setEspecie(retornaEspecie());
+                                jpa.edit(tp);
+                                mostrarMensaje("Actualizado");
+                                tp = null;
+                                btnCancelarActionPerformed(evt);
+                            }else{
+                                if(jpa.buscarPorNombre(contenido(txtNombre)).getIdRaza()== tp.getIdRaza()) {
+                                    tp.setNombre(contenido(txtNombre));
+                                    tp.setEspecie(retornaEspecie());
+                                    jpa.edit(tp);
+                                    mostrarMensaje("Actualizado");
+                                    tp = null;
+                                    btnCancelarActionPerformed(evt);
+                                }else{
+                                    mostrarError("El tipo de raza ya se encuentra registrado en la base de datos");
+                                    txtNombre.selectAll();
+                                    txtNombre.requestFocus();
+                                }
+                            }
+                        }catch(Exception e) {
+                            mostrarError("Ha ocurrido un error al intentar actualizar el tipo de raza: "+e.getMessage());
+                        }
+                    }else{
+                        try {
+                            tp.setNombre(contenido(txtNombre));
+                            tp.setEspecie(retornaEspecie());
+                            jpa.edit(tp);
+                            mostrarMensaje("Actualizado");
+                            tp = null;
+                            btnCancelarActionPerformed(evt);
+                        }catch(Exception e) {
+                            mostrarError("Ha ocurrido un error al intentar actualizar el tipo de raza: "+e.getMessage());
+                        }
+                    }
+                }else{
                     btnCancelarActionPerformed(evt);
-                    r = null;
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Ocurrió un problema al intentar actualizar la raza: "+e.getMessage());
                 }
             }
         }
@@ -316,36 +434,33 @@ public class AdminRazas extends javax.swing.JFrame {
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         vaciarCampos();
+        deshabilitarCampos();
         rellenarTabla();
-        deshabilitaCampos();
+        tp = null;
+        btnAccion.setText("Guardar");
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
-        if(tablaResultados.getSelectedColumn() >= 0) {
-            //recuperando valores desde la tabla
-            DefaultTableModel modelo = (DefaultTableModel)tablaResultados.getModel();
-            //consultando por el valor a cargar, es recuperado desde el valor seleccionado recuperando el ROW ID
-            r = new RazaJpaController(emf).findRaza(Integer.parseInt(String.valueOf(modelo.getValueAt(tablaResultados.getSelectedRow(), 0))));
-            //si el tipo de alergia no fue encontrado
-            int opcion = JOptionPane.showConfirmDialog(null, "¿Esta seguro de eliminar la raza seleccionada?");
+        DefaultTableModel modelo = (DefaultTableModel)tablaResultados.getModel();
+        //consultando por el valor a cargar, es recuperado desde el valor seleccionado recuperando el ROW ID
+        if(jpa.findRaza(Integer.parseInt(String.valueOf(modelo.getValueAt(tablaResultados.getSelectedRow(), 0)))) != null) {
+            int opcion = preguntar("¿Esta seguro de eliminar la raza?");
             if(opcion == 0) {
-                //se informa que el pais no fue encontrado
                 try {
-                    new RazaJpaController(emf).destroy(r.getIdRaza());
-                    JOptionPane.showMessageDialog(null, "Eliminada");
+                    jpa.destroy(Integer.parseInt(String.valueOf(modelo.getValueAt(tablaResultados.getSelectedRow(), 0))));
+                    mostrarMensaje("Eliminado");
                     btnCancelarActionPerformed(evt);
                 }catch(Exception e) {
-                    JOptionPane.showMessageDialog(null, "Ocurrió un error al intentar eliminar la raza");
+                    mostrarError("No se pudo encontrar la raza en la base de datos porque ya no existe");
+                    btnCancelarActionPerformed(evt);
                 }
-            }else{
-                btnCancelarActionPerformed(evt);
             }
+        }else{
+            mostrarError("No se pudo encontrar la raza en la base de datos porque ya no existe");
+            btnCancelarActionPerformed(evt);          
         }
     }//GEN-LAST:event_btnRemoverActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

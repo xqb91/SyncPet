@@ -206,4 +206,32 @@ public class TipoContraindicacionJpaController implements Serializable {
         }
     }
     
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("TipoContraindicacion.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((TipoContraindicacion)consulta.getSingleResult()).getIdTipoContraindicacion()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
+    public TipoContraindicacion buscarPorNombre(String nombre) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("TipoContraindicacion.findByNombreContraindicacion");
+            consulta.setParameter("nombreContraindicacion", nombre);
+            return (TipoContraindicacion)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public boolean existeTipo(String nombre) {
+        if(this.buscarPorNombre(nombre) == null) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
 }

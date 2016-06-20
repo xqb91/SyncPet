@@ -216,4 +216,32 @@ public class CaracterJpaController implements Serializable {
         }
     }
     
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Caracter.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((Caracter)consulta.getSingleResult()).getIdCaracter()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
+    public Caracter buscarPorNombre(String nombre) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Caracter.findByNombre");
+            consulta.setParameter("nombre", nombre);
+            return (Caracter)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public boolean existeTipo(String nombre) {
+        if(this.buscarPorNombre(nombre) == null) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
 }

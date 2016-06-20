@@ -216,4 +216,32 @@ public class HabitadJpaController implements Serializable {
         }
     }
     
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Habitad.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((Habitad)consulta.getSingleResult()).getIdHabitad()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
+    public Habitad buscarPorNombre(String nombre) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Habitad.findByNombre");
+            consulta.setParameter("nombre", nombre);
+            return (Habitad)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public boolean existeTipo(String nombre) {
+        if(this.buscarPorNombre(nombre) == null) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
 }

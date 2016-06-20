@@ -206,4 +206,32 @@ public class TipoProcedimientoJpaController implements Serializable {
         }
     }
     
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("TipoProcedimiento.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((TipoProcedimiento)consulta.getSingleResult()).getIdTipoProcedimiento()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
+    public TipoProcedimiento buscarPorNombre(String nombre) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("TipoProcedimiento.findByNombreProcedimiento");
+            consulta.setParameter("nombreProcedimiento", nombre);
+            return (TipoProcedimiento)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public boolean existeTipo(String nombre) {
+        if(this.buscarPorNombre(nombre) == null) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
 }

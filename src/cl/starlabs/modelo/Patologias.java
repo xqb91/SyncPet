@@ -53,7 +53,7 @@ public class Patologias implements Serializable {
     private Mascota mascota;
     @JoinColumn(name = "tipo_patologia", referencedColumnName = "id_tipo_patologia", nullable = false)
     @ManyToOne(optional = false)
-    private TipoPatología tipoPatologia;
+    private TipoPatologia tipoPatologia;
     @JoinColumn(name = "veterinario", referencedColumnName = "id_veterinario", nullable = false)
     @ManyToOne(optional = false)
     private Veterinario veterinario;
@@ -110,11 +110,11 @@ public class Patologias implements Serializable {
         this.mascota = mascota;
     }
 
-    public TipoPatología getTipoPatologia() {
+    public TipoPatologia getTipoPatologia() {
         return tipoPatologia;
     }
 
-    public void setTipoPatologia(TipoPatología tipoPatologia) {
+    public void setTipoPatologia(TipoPatologia tipoPatologia) {
         this.tipoPatologia = tipoPatologia;
     }
 

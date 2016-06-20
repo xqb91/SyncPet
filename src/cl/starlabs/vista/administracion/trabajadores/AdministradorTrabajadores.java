@@ -537,67 +537,6 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
         txtUsuario.requestFocus();
     }//GEN-LAST:event_btnAgregarActionPerformed
 
-    private void cmbTipoUsuarioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbTipoUsuarioItemStateChanged
-        if(cmbTipoUsuario.getItemCount() != 0) {
-            if(cmbTipoUsuario.getSelectedItem().toString().split(":")[0].compareToIgnoreCase("2") == 0) {
-                txtEspecialidad.setEnabled(true);
-                lblEspecialidad.setEnabled(true);
-                txtRun.requestFocus();
-                txtRun.setEnabled(true);
-                lblRun.setEnabled(true);
-                
-            }else{
-                txtEspecialidad.setEnabled(false);
-                lblEspecialidad.setEnabled(false);
-                txtRun.setEnabled(false);
-                lblRun.setEnabled(false);
-            }
-        }
-    }//GEN-LAST:event_cmbTipoUsuarioItemStateChanged
-
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        //volviendo la ventana a su estado original
-        lblUsuario.setEnabled(false);
-        lblPassword.setEnabled(false);
-        lblNombres.setEnabled(false);
-        lblApaterno.setEnabled(false);
-        lblAmaterno.setEnabled(false);
-        lblCorreo.setEnabled(false);
-        lblEstado.setEnabled(false);
-        lblTipoUsuario.setEnabled(false);
-        lblEspecialidad.setEnabled(false);
-        lblRun.setEnabled(false);
-        txtUsuario.setEnabled(false);
-        txtContrasena.setEnabled(false);
-        txtNombres.setEnabled(false);
-        txtApaterno.setEnabled(false);
-        txtAmaterno.setEnabled(false);
-        txtCorreo.setEnabled(false);
-        txtRun.setEnabled(false);
-        cmbTipoUsuario.setEnabled(false);
-        txtEspecialidad.setEnabled(false);
-        cmbEstado.setEnabled(false);
-        btnAccion.setEnabled(false);
-        btnCancelar.setEnabled(false);
-        btnAgregar.setEnabled(true);
-        btnRemover.setEnabled(true);
-        btnAccion.setText("Guardar");
-        txtUsuario.setBackground(Color.white);
-        
-        tablaResultados.setEnabled(true);
-        btnRemover.setEnabled(true);
-        cmbEstado.removeAllItems();
-        
-        //vaciando campos
-        limpiarCampos();
-        
-        tablaResultados.requestFocus();
-        
-        us = null;
-        
-        rellenarTabla();
-    }//GEN-LAST:event_btnCancelarActionPerformed
-
     private void tablaResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaResultadosMouseClicked
         if(tablaResultados.getSelectedColumn() >= 0) {
             //recuperando valores desde la tabla
@@ -649,6 +588,90 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
             }
         }
     }//GEN-LAST:event_tablaResultadosMouseClicked
+
+    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
+        int opcion = JOptionPane.showConfirmDialog(null, "¿Esta Seguro de eliminar el usuario?");
+        if(opcion == 0)
+        {
+            try {
+                try {
+                    for(DetalleUsuarios dt : new DetalleUsuariosJpaController(emf).buscarPorUsuario(us)) {
+                        new DetalleUsuariosJpaController(emf).destroy(dt.getId());
+                    }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Ocurrió un error eliminando el detalle del usuario "+e.getMessage());
+                }
+                new UsuariosJpaController(emf).destroy(us.getId());
+                JOptionPane.showMessageDialog(null, "Usuario Eliminado");
+                btnCancelarActionPerformed(evt); 
+            }catch(Exception ex) {
+                JOptionPane.showMessageDialog(null, "Ocurrió un error generalizado al intentar eliminar el usuario: "+ex.getMessage());
+            }
+        }else{
+            btnCancelarActionPerformed(evt);
+        }
+    }//GEN-LAST:event_btnRemoverActionPerformed
+
+    private void cmbTipoUsuarioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbTipoUsuarioItemStateChanged
+        if(cmbTipoUsuario.getItemCount() != 0) {
+            if(cmbTipoUsuario.getSelectedItem().toString().split(":")[0].compareToIgnoreCase("2") == 0) {
+                txtEspecialidad.setEnabled(true);
+                lblEspecialidad.setEnabled(true);
+                txtRun.requestFocus();
+                txtRun.setEnabled(true);
+                lblRun.setEnabled(true);
+
+            }else{
+                txtEspecialidad.setEnabled(false);
+                lblEspecialidad.setEnabled(false);
+                txtRun.setEnabled(false);
+                lblRun.setEnabled(false);
+            }
+        }
+    }//GEN-LAST:event_cmbTipoUsuarioItemStateChanged
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        //volviendo la ventana a su estado original
+        lblUsuario.setEnabled(false);
+        lblPassword.setEnabled(false);
+        lblNombres.setEnabled(false);
+        lblApaterno.setEnabled(false);
+        lblAmaterno.setEnabled(false);
+        lblCorreo.setEnabled(false);
+        lblEstado.setEnabled(false);
+        lblTipoUsuario.setEnabled(false);
+        lblEspecialidad.setEnabled(false);
+        lblRun.setEnabled(false);
+        txtUsuario.setEnabled(false);
+        txtContrasena.setEnabled(false);
+        txtNombres.setEnabled(false);
+        txtApaterno.setEnabled(false);
+        txtAmaterno.setEnabled(false);
+        txtCorreo.setEnabled(false);
+        txtRun.setEnabled(false);
+        cmbTipoUsuario.setEnabled(false);
+        txtEspecialidad.setEnabled(false);
+        cmbEstado.setEnabled(false);
+        btnAccion.setEnabled(false);
+        btnCancelar.setEnabled(false);
+        btnAgregar.setEnabled(true);
+        btnRemover.setEnabled(true);
+        btnAccion.setText("Guardar");
+        txtUsuario.setBackground(Color.white);
+
+        tablaResultados.setEnabled(true);
+        btnRemover.setEnabled(true);
+        cmbEstado.removeAllItems();
+
+        //vaciando campos
+        limpiarCampos();
+
+        tablaResultados.requestFocus();
+
+        us = null;
+
+        rellenarTabla();
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnAccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionActionPerformed
         if(btnAccion.getText().compareToIgnoreCase("Guardar") == 0) {
@@ -745,27 +768,27 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
                                     }
                                 }else{
                                     JOptionPane.showMessageDialog(null, "Debe especificar el correo electrónico del usuario");
-                                    txtCorreo.requestFocus(); 
+                                    txtCorreo.requestFocus();
                                 }
                             }else{
                                 JOptionPane.showMessageDialog(null, "Debe especificar el apellido materno del usuario");
-                                txtAmaterno.requestFocus(); 
+                                txtAmaterno.requestFocus();
                             }
                         }else{
                             JOptionPane.showMessageDialog(null, "Debe especificar el apellido paterno del usuario");
-                            txtApaterno.requestFocus(); 
+                            txtApaterno.requestFocus();
                         }
                     }else{
                         JOptionPane.showMessageDialog(null, "Debe especificar los nombres del usuario");
-                        txtNombres.requestFocus(); 
+                        txtNombres.requestFocus();
                     }
                 }else{
                     JOptionPane.showMessageDialog(null, "Debe especificar una contraseña para el usuario");
-                    txtContrasena.requestFocus(); 
+                    txtContrasena.requestFocus();
                 }
             }else{
                 JOptionPane.showMessageDialog(null, "Debe especificar el nickname del usuario");
-                txtUsuario.requestFocus(); 
+                txtUsuario.requestFocus();
             }
         }else{
             //actualizar usuario
@@ -794,7 +817,7 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
                                             //creando registros!!!
                                             //1... guardando usuario
                                             new UsuariosJpaController(emf).actualizar(user);
-                                            
+
                                             JOptionPane.showMessageDialog(null, "Usuario Actualizado");
                                             btnCancelarActionPerformed(evt);
                                         }
@@ -804,30 +827,114 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
                                     }
                                 }else{
                                     JOptionPane.showMessageDialog(null, "Debe especificar el correo electrónico del usuario");
-                                    txtCorreo.requestFocus(); 
+                                    txtCorreo.requestFocus();
                                 }
                             }else{
                                 JOptionPane.showMessageDialog(null, "Debe especificar el apellido materno del usuario");
-                                txtAmaterno.requestFocus(); 
+                                txtAmaterno.requestFocus();
                             }
                         }else{
                             JOptionPane.showMessageDialog(null, "Debe especificar el apellido paterno del usuario");
-                            txtApaterno.requestFocus(); 
+                            txtApaterno.requestFocus();
                         }
                     }else{
                         JOptionPane.showMessageDialog(null, "Debe especificar los nombres del usuario");
-                        txtNombres.requestFocus(); 
+                        txtNombres.requestFocus();
                     }
                 }else{
                     JOptionPane.showMessageDialog(null, "Debe especificar una contraseña para el usuario");
-                    txtContrasena.requestFocus(); 
+                    txtContrasena.requestFocus();
                 }
             }else{
                 JOptionPane.showMessageDialog(null, "Debe especificar el nickname del usuario");
-                txtUsuario.requestFocus(); 
+                txtUsuario.requestFocus();
             }
         }
     }//GEN-LAST:event_btnAccionActionPerformed
+
+    private void cmbEstadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmbEstadoMouseClicked
+
+    }//GEN-LAST:event_cmbEstadoMouseClicked
+
+    private void cmbEstadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbEstadoFocusLost
+        if(cmbEstado.getSelectedItem().toString().compareToIgnoreCase("deshabilitado") == 0) {
+            int opcion = JOptionPane.showConfirmDialog(null, "Si deshabilita al usuario "+txtUsuario.getText()+" este no podrá iniciar sesión hasta que sea habilitado su ingreso. ¿Esta seguro de continuar?");
+            if(opcion != 0){
+                for(int i = 0; i < cmbEstado.getItemCount(); i++)
+                {
+                    if(cmbEstado.getItemAt(i).toString().compareToIgnoreCase("Habilitado") == 0) {
+                        cmbEstado.setSelectedIndex(i);
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_cmbEstadoFocusLost
+
+    private void cmbEstadoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbEstadoItemStateChanged
+
+    }//GEN-LAST:event_cmbEstadoItemStateChanged
+
+    private void txtCorreoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCorreoFocusLost
+        if(!txtCorreo.getText().isEmpty()) {
+            if(!cl.starlabs.herramientas.HerramientasCorreo.validarEmail(txtCorreo.getText())) {
+                lblCorreo.setForeground(Color.red);
+                txtCorreo.setForeground(Color.white);
+                txtCorreo.setBackground(Color.red);
+                txtCorreo.requestFocus();
+            }else{
+                lblCorreo.setForeground(Color.black);
+                txtCorreo.setForeground(Color.black);
+                txtCorreo.setBackground(Color.white);
+            }
+        }
+    }//GEN-LAST:event_txtCorreoFocusLost
+
+    private void txtAmaternoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAmaternoKeyTyped
+        if(txtAmaterno.getText().length() > 73) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtAmaternoKeyTyped
+
+    private void txtApaternoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApaternoKeyTyped
+        if(txtApaterno.getText().length() > 73) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtApaternoKeyTyped
+
+    private void txtNombresKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombresKeyTyped
+        if(txtNombres.getText().length() > 73) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombresKeyTyped
+
+    private void txtContrasenaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContrasenaKeyTyped
+        if(txtContrasena.getText().length() > 248) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtContrasenaKeyTyped
+
+    private void txtContrasenaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtContrasenaFocusLost
+        if(!txtContrasena.getText().isEmpty()) {
+            if(txtContrasena.getText().length() <= 6) {
+                txtContrasena.setForeground(Color.white);
+                txtContrasena.setBackground(Color.red);
+                lblPassword.setForeground(Color.red);
+                txtContrasena.requestFocus();
+                JOptionPane.showMessageDialog(null, "La contraseña para el usuario "+txtUsuario.getText()+ " debe tener al menos 7 carácteres!");
+            }else{
+                txtContrasena.setForeground(Color.black);
+                txtContrasena.setBackground(Color.white);
+                lblPassword.setForeground(Color.black);
+            }
+        }
+    }//GEN-LAST:event_txtContrasenaFocusLost
+
+    private void txtUsuarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsuarioKeyTyped
+        update = false;
+        if(txtUsuario.getText().length() > 98) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtUsuarioKeyTyped
 
     private void txtUsuarioFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtUsuarioFocusLost
         if(!update) {
@@ -855,43 +962,11 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
         }
     }//GEN-LAST:event_txtUsuarioFocusLost
 
-    private void txtContrasenaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtContrasenaFocusLost
-        if(!txtContrasena.getText().isEmpty()) {
-            if(txtContrasena.getText().length() <= 6) {
-                txtContrasena.setForeground(Color.white);
-                txtContrasena.setBackground(Color.red);
-                lblPassword.setForeground(Color.red);
-                txtContrasena.requestFocus();
-                JOptionPane.showMessageDialog(null, "La contraseña para el usuario "+txtUsuario.getText()+ " debe tener al menos 7 carácteres!");
-            }else{
-                txtContrasena.setForeground(Color.black);
-                txtContrasena.setBackground(Color.white);
-                lblPassword.setForeground(Color.black);
-            }
+    private void txtEspecialidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEspecialidadKeyTyped
+        if(txtEspecialidad.getText().length() > 109) {
+            evt.consume();
         }
-    }//GEN-LAST:event_txtContrasenaFocusLost
-
-    private void cmbEstadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmbEstadoMouseClicked
-
-    }//GEN-LAST:event_cmbEstadoMouseClicked
-
-    private void cmbEstadoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbEstadoItemStateChanged
-
-    }//GEN-LAST:event_cmbEstadoItemStateChanged
-
-    private void cmbEstadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbEstadoFocusLost
-        if(cmbEstado.getSelectedItem().toString().compareToIgnoreCase("deshabilitado") == 0) {
-            int opcion = JOptionPane.showConfirmDialog(null, "Si deshabilita al usuario "+txtUsuario.getText()+" este no podrá iniciar sesión hasta que sea habilitado su ingreso. ¿Esta seguro de continuar?");
-            if(opcion != 0){
-                for(int i = 0; i < cmbEstado.getItemCount(); i++)
-                {
-                    if(cmbEstado.getItemAt(i).toString().compareToIgnoreCase("Habilitado") == 0) {
-                        cmbEstado.setSelectedIndex(i);
-                    }
-                }
-            }
-        }
-    }//GEN-LAST:event_cmbEstadoFocusLost
+    }//GEN-LAST:event_txtEspecialidadKeyTyped
 
     private void txtRunKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRunKeyTyped
         if(txtRun.getText().length() > 8) {
@@ -919,81 +994,6 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
             }
         }
     }//GEN-LAST:event_txtRunFocusLost
-
-    private void txtCorreoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCorreoFocusLost
-        if(!txtCorreo.getText().isEmpty()) {
-            if(!cl.starlabs.herramientas.HerramientasCorreo.validarEmail(txtCorreo.getText())) {
-                lblCorreo.setForeground(Color.red);
-                txtCorreo.setForeground(Color.white);
-                txtCorreo.setBackground(Color.red);
-                txtCorreo.requestFocus();
-            }else{
-                lblCorreo.setForeground(Color.black);
-                txtCorreo.setForeground(Color.black);
-                txtCorreo.setBackground(Color.white);
-            }
-        }
-    }//GEN-LAST:event_txtCorreoFocusLost
-
-    private void txtEspecialidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEspecialidadKeyTyped
-        if(txtEspecialidad.getText().length() > 109) {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txtEspecialidadKeyTyped
-
-    private void txtAmaternoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAmaternoKeyTyped
-        if(txtAmaterno.getText().length() > 73) {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txtAmaternoKeyTyped
-
-    private void txtApaternoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApaternoKeyTyped
-        if(txtApaterno.getText().length() > 73) {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txtApaternoKeyTyped
-
-    private void txtNombresKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombresKeyTyped
-        if(txtNombres.getText().length() > 73) {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txtNombresKeyTyped
-
-    private void txtContrasenaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContrasenaKeyTyped
-        if(txtContrasena.getText().length() > 248) {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txtContrasenaKeyTyped
-
-    private void txtUsuarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsuarioKeyTyped
-        update = false;
-        if(txtUsuario.getText().length() > 98) {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txtUsuarioKeyTyped
-
-    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
-        int opcion = JOptionPane.showConfirmDialog(null, "¿Esta Seguro de eliminar el usuario?");
-        if(opcion == 0)
-        {
-            try {
-                try {
-                    for(DetalleUsuarios dt : new DetalleUsuariosJpaController(emf).buscarPorUsuario(us)) {
-                        new DetalleUsuariosJpaController(emf).destroy(dt.getId());
-                    }
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Ocurrió un error eliminando el detalle del usuario "+e.getMessage());
-                }
-                new UsuariosJpaController(emf).destroy(us.getId());
-                JOptionPane.showMessageDialog(null, "Usuario Eliminado");
-                btnCancelarActionPerformed(evt); 
-            }catch(Exception ex) {
-                JOptionPane.showMessageDialog(null, "Ocurrió un error generalizado al intentar eliminar el usuario: "+ex.getMessage());
-            }
-        }else{
-            btnCancelarActionPerformed(evt);
-        }
-    }//GEN-LAST:event_btnRemoverActionPerformed
 
 
     public static void main(String args[]) {

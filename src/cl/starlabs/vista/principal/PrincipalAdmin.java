@@ -9,6 +9,17 @@ import cl.starlabs.modelo.Sucursal;
 import cl.starlabs.modelo.Usuarios;
 import cl.starlabs.vista.administracion.clinica.AdministracionClinica;
 import cl.starlabs.vista.administracion.clinica.AdministracionSucursales;
+import cl.starlabs.vista.administracion.config.AdminCaracter;
+import cl.starlabs.vista.administracion.config.AdminContraindicaciones;
+import cl.starlabs.vista.administracion.config.AdminEspecies;
+import cl.starlabs.vista.administracion.config.AdminExamenes;
+import cl.starlabs.vista.administracion.config.AdminFarmacos;
+import cl.starlabs.vista.administracion.config.AdminHabitad;
+import cl.starlabs.vista.administracion.config.AdminPatologia;
+import cl.starlabs.vista.administracion.config.AdminProcedimientos;
+import cl.starlabs.vista.administracion.config.AdminRazas;
+import cl.starlabs.vista.administracion.config.AdminTipoAlergias;
+import cl.starlabs.vista.administracion.config.AdminVacunas;
 import cl.starlabs.vista.administracion.geografia.AdministradorComunas;
 import cl.starlabs.vista.administracion.geografia.AdministradorPaises;
 import cl.starlabs.vista.administracion.geografia.AdministradorProvincias;
@@ -127,17 +138,17 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menuAdminProvincias = new javax.swing.JMenuItem();
         menuAdminComunas = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
-        jMenuItem6 = new javax.swing.JMenuItem();
-        jMenuItem7 = new javax.swing.JMenuItem();
-        jMenuItem8 = new javax.swing.JMenuItem();
-        jMenuItem9 = new javax.swing.JMenuItem();
-        jMenuItem10 = new javax.swing.JMenuItem();
-        jMenuItem11 = new javax.swing.JMenuItem();
-        jMenuItem12 = new javax.swing.JMenuItem();
+        confAdminAlergias = new javax.swing.JMenuItem();
+        confAdminEspecies = new javax.swing.JMenuItem();
+        confAdminRazas = new javax.swing.JMenuItem();
+        confAdminCaracter = new javax.swing.JMenuItem();
+        confAdminHabitad = new javax.swing.JMenuItem();
+        confAdminVacunas = new javax.swing.JMenuItem();
+        confAdminExamenes = new javax.swing.JMenuItem();
+        confAdminPatologias = new javax.swing.JMenuItem();
+        confAdminContraindicacion = new javax.swing.JMenuItem();
+        confAdminFarmacos = new javax.swing.JMenuItem();
+        confAdminProcedimientos = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("SyncPet :: conectado como usuario@nombre_clínica (Sucursal)");
@@ -499,38 +510,93 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/sistema/logo_mini.png"))); // NOI18N
         jMenu1.setText("Configuración de Términos");
 
-        jMenuItem1.setText("Administrar Tipo de Alergias");
-        jMenu1.add(jMenuItem1);
+        confAdminAlergias.setText("Administrar Tipo de Alergias");
+        confAdminAlergias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confAdminAlergiasActionPerformed(evt);
+            }
+        });
+        jMenu1.add(confAdminAlergias);
 
-        jMenuItem3.setText("Administrar Especies");
-        jMenu1.add(jMenuItem3);
+        confAdminEspecies.setText("Administrar Especies");
+        confAdminEspecies.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confAdminEspeciesActionPerformed(evt);
+            }
+        });
+        jMenu1.add(confAdminEspecies);
 
-        jMenuItem4.setText("Administrar Razas");
-        jMenu1.add(jMenuItem4);
+        confAdminRazas.setText("Administrar Razas");
+        confAdminRazas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confAdminRazasActionPerformed(evt);
+            }
+        });
+        jMenu1.add(confAdminRazas);
 
-        jMenuItem5.setText("Administrar Carácter");
-        jMenu1.add(jMenuItem5);
+        confAdminCaracter.setText("Administrar Carácter");
+        confAdminCaracter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confAdminCaracterActionPerformed(evt);
+            }
+        });
+        jMenu1.add(confAdminCaracter);
 
-        jMenuItem6.setText("Administrar Habitad");
-        jMenu1.add(jMenuItem6);
+        confAdminHabitad.setText("Administrar Habitad");
+        confAdminHabitad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confAdminHabitadActionPerformed(evt);
+            }
+        });
+        jMenu1.add(confAdminHabitad);
 
-        jMenuItem7.setText("Administrar Vacunas");
-        jMenu1.add(jMenuItem7);
+        confAdminVacunas.setText("Administrar Vacunas");
+        confAdminVacunas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confAdminVacunasActionPerformed(evt);
+            }
+        });
+        jMenu1.add(confAdminVacunas);
 
-        jMenuItem8.setText("Administrar Examenes");
-        jMenu1.add(jMenuItem8);
+        confAdminExamenes.setText("Administrar Examenes");
+        confAdminExamenes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confAdminExamenesActionPerformed(evt);
+            }
+        });
+        jMenu1.add(confAdminExamenes);
 
-        jMenuItem9.setText("Administrar Patologías");
-        jMenu1.add(jMenuItem9);
+        confAdminPatologias.setText("Administrar Patologías");
+        confAdminPatologias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confAdminPatologiasActionPerformed(evt);
+            }
+        });
+        jMenu1.add(confAdminPatologias);
 
-        jMenuItem10.setText("Administrar Contraindicaciones");
-        jMenu1.add(jMenuItem10);
+        confAdminContraindicacion.setText("Administrar Contraindicaciones");
+        confAdminContraindicacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confAdminContraindicacionActionPerformed(evt);
+            }
+        });
+        jMenu1.add(confAdminContraindicacion);
 
-        jMenuItem11.setText("Administrar Farmacos");
-        jMenu1.add(jMenuItem11);
+        confAdminFarmacos.setText("Administrar Farmacos");
+        confAdminFarmacos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confAdminFarmacosActionPerformed(evt);
+            }
+        });
+        jMenu1.add(confAdminFarmacos);
 
-        jMenuItem12.setText("Administrar Procedimientos");
-        jMenu1.add(jMenuItem12);
+        confAdminProcedimientos.setText("Administrar Procedimientos");
+        confAdminProcedimientos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confAdminProcedimientosActionPerformed(evt);
+            }
+        });
+        jMenu1.add(confAdminProcedimientos);
 
         menAdmin.add(jMenu1);
 
@@ -631,6 +697,50 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         new AdministracionClinica(s).setVisible(true);
     }//GEN-LAST:event_menAdmin_clinicaActionPerformed
 
+    private void confAdminAlergiasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confAdminAlergiasActionPerformed
+        new AdminTipoAlergias().setVisible(true);
+    }//GEN-LAST:event_confAdminAlergiasActionPerformed
+
+    private void confAdminEspeciesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confAdminEspeciesActionPerformed
+        new AdminEspecies().setVisible(true);
+    }//GEN-LAST:event_confAdminEspeciesActionPerformed
+
+    private void confAdminRazasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confAdminRazasActionPerformed
+        new AdminRazas().setVisible(true);
+    }//GEN-LAST:event_confAdminRazasActionPerformed
+
+    private void confAdminCaracterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confAdminCaracterActionPerformed
+        new AdminCaracter().setVisible(true);
+    }//GEN-LAST:event_confAdminCaracterActionPerformed
+
+    private void confAdminHabitadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confAdminHabitadActionPerformed
+        new AdminHabitad().setVisible(true);
+    }//GEN-LAST:event_confAdminHabitadActionPerformed
+
+    private void confAdminVacunasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confAdminVacunasActionPerformed
+        new AdminVacunas().setVisible(true);
+    }//GEN-LAST:event_confAdminVacunasActionPerformed
+
+    private void confAdminExamenesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confAdminExamenesActionPerformed
+        new AdminExamenes().setVisible(true);
+    }//GEN-LAST:event_confAdminExamenesActionPerformed
+
+    private void confAdminPatologiasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confAdminPatologiasActionPerformed
+        new AdminPatologia().setVisible(true);
+    }//GEN-LAST:event_confAdminPatologiasActionPerformed
+
+    private void confAdminContraindicacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confAdminContraindicacionActionPerformed
+        new AdminContraindicaciones().setVisible(true);
+    }//GEN-LAST:event_confAdminContraindicacionActionPerformed
+
+    private void confAdminFarmacosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confAdminFarmacosActionPerformed
+        new AdminFarmacos().setVisible(true);
+    }//GEN-LAST:event_confAdminFarmacosActionPerformed
+
+    private void confAdminProcedimientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confAdminProcedimientosActionPerformed
+        new AdminProcedimientos().setVisible(true);
+    }//GEN-LAST:event_confAdminProcedimientosActionPerformed
+
     
     /**
      * @param args the command line arguments
@@ -678,6 +788,17 @@ public class PrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JButton btnAddPropietario;
     private javax.swing.JButton btnBloquearTerminal;
     private javax.swing.JButton btnCambiarSucursal;
+    private javax.swing.JMenuItem confAdminAlergias;
+    private javax.swing.JMenuItem confAdminCaracter;
+    private javax.swing.JMenuItem confAdminContraindicacion;
+    private javax.swing.JMenuItem confAdminEspecies;
+    private javax.swing.JMenuItem confAdminExamenes;
+    private javax.swing.JMenuItem confAdminFarmacos;
+    private javax.swing.JMenuItem confAdminHabitad;
+    private javax.swing.JMenuItem confAdminPatologias;
+    private javax.swing.JMenuItem confAdminProcedimientos;
+    private javax.swing.JMenuItem confAdminRazas;
+    private javax.swing.JMenuItem confAdminVacunas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -687,18 +808,7 @@ public class PrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu8;
     private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem10;
-    private javax.swing.JMenuItem jMenuItem11;
-    private javax.swing.JMenuItem jMenuItem12;
     private javax.swing.JMenuItem jMenuItem13;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jMenuItem7;
-    private javax.swing.JMenuItem jMenuItem8;
-    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblHoraSistema;
     private javax.swing.JLabel lblNumCumpleaños;

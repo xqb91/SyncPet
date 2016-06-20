@@ -28,6 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Caracter.findAll", query = "SELECT c FROM Caracter c"),
+    @NamedQuery(name = "Caracter.findAllDesc", query = "SELECT c FROM Caracter c ORDER BY c.idCaracter DESC"),
     @NamedQuery(name = "Caracter.findByIdCaracter", query = "SELECT c FROM Caracter c WHERE c.idCaracter = :idCaracter"),
     @NamedQuery(name = "Caracter.findByNombre", query = "SELECT c FROM Caracter c WHERE c.nombre = :nombre")})
 public class Caracter implements Serializable {

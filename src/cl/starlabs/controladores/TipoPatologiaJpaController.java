@@ -14,7 +14,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Patologias;
-import cl.starlabs.modelo.TipoPatología;
+import cl.starlabs.modelo.TipoPatologia;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -24,9 +24,9 @@ import javax.persistence.EntityManagerFactory;
  *
  * @author Victor Manuel Araya
  */
-public class TipoPatologíaJpaController implements Serializable {
+public class TipoPatologiaJpaController implements Serializable {
 
-    public TipoPatologíaJpaController(EntityManagerFactory emf) {
+    public TipoPatologiaJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -35,24 +35,24 @@ public class TipoPatologíaJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(TipoPatología tipoPatología) throws PreexistingEntityException, Exception {
-        if (tipoPatología.getPatologiasList() == null) {
-            tipoPatología.setPatologiasList(new ArrayList<Patologias>());
+    public void create(TipoPatologia tipoPatologia) throws PreexistingEntityException, Exception {
+        if (tipoPatologia.getPatologiasList() == null) {
+            tipoPatologia.setPatologiasList(new ArrayList<Patologias>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             List<Patologias> attachedPatologiasList = new ArrayList<Patologias>();
-            for (Patologias patologiasListPatologiasToAttach : tipoPatología.getPatologiasList()) {
+            for (Patologias patologiasListPatologiasToAttach : tipoPatologia.getPatologiasList()) {
                 patologiasListPatologiasToAttach = em.getReference(patologiasListPatologiasToAttach.getClass(), patologiasListPatologiasToAttach.getIdPatologia());
                 attachedPatologiasList.add(patologiasListPatologiasToAttach);
             }
-            tipoPatología.setPatologiasList(attachedPatologiasList);
-            em.persist(tipoPatología);
-            for (Patologias patologiasListPatologias : tipoPatología.getPatologiasList()) {
-                TipoPatología oldTipoPatologiaOfPatologiasListPatologias = patologiasListPatologias.getTipoPatologia();
-                patologiasListPatologias.setTipoPatologia(tipoPatología);
+            tipoPatologia.setPatologiasList(attachedPatologiasList);
+            em.persist(tipoPatologia);
+            for (Patologias patologiasListPatologias : tipoPatologia.getPatologiasList()) {
+                TipoPatologia oldTipoPatologiaOfPatologiasListPatologias = patologiasListPatologias.getTipoPatologia();
+                patologiasListPatologias.setTipoPatologia(tipoPatologia);
                 patologiasListPatologias = em.merge(patologiasListPatologias);
                 if (oldTipoPatologiaOfPatologiasListPatologias != null) {
                     oldTipoPatologiaOfPatologiasListPatologias.getPatologiasList().remove(patologiasListPatologias);
@@ -61,8 +61,8 @@ public class TipoPatologíaJpaController implements Serializable {
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (findTipoPatología(tipoPatología.getIdTipoPatologia()) != null) {
-                throw new PreexistingEntityException("TipoPatolog\u00eda " + tipoPatología + " already exists.", ex);
+            if (findTipoPatologia(tipoPatologia.getIdTipoPatologia()) != null) {
+                throw new PreexistingEntityException("TipoPatologia " + tipoPatologia + " already exists.", ex);
             }
             throw ex;
         } finally {
@@ -72,14 +72,14 @@ public class TipoPatologíaJpaController implements Serializable {
         }
     }
 
-    public void edit(TipoPatología tipoPatología) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(TipoPatologia tipoPatologia) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            TipoPatología persistentTipoPatología = em.find(TipoPatología.class, tipoPatología.getIdTipoPatologia());
-            List<Patologias> patologiasListOld = persistentTipoPatología.getPatologiasList();
-            List<Patologias> patologiasListNew = tipoPatología.getPatologiasList();
+            TipoPatologia persistentTipoPatologia = em.find(TipoPatologia.class, tipoPatologia.getIdTipoPatologia());
+            List<Patologias> patologiasListOld = persistentTipoPatologia.getPatologiasList();
+            List<Patologias> patologiasListNew = tipoPatologia.getPatologiasList();
             List<String> illegalOrphanMessages = null;
             for (Patologias patologiasListOldPatologias : patologiasListOld) {
                 if (!patologiasListNew.contains(patologiasListOldPatologias)) {
@@ -98,14 +98,14 @@ public class TipoPatologíaJpaController implements Serializable {
                 attachedPatologiasListNew.add(patologiasListNewPatologiasToAttach);
             }
             patologiasListNew = attachedPatologiasListNew;
-            tipoPatología.setPatologiasList(patologiasListNew);
-            tipoPatología = em.merge(tipoPatología);
+            tipoPatologia.setPatologiasList(patologiasListNew);
+            tipoPatologia = em.merge(tipoPatologia);
             for (Patologias patologiasListNewPatologias : patologiasListNew) {
                 if (!patologiasListOld.contains(patologiasListNewPatologias)) {
-                    TipoPatología oldTipoPatologiaOfPatologiasListNewPatologias = patologiasListNewPatologias.getTipoPatologia();
-                    patologiasListNewPatologias.setTipoPatologia(tipoPatología);
+                    TipoPatologia oldTipoPatologiaOfPatologiasListNewPatologias = patologiasListNewPatologias.getTipoPatologia();
+                    patologiasListNewPatologias.setTipoPatologia(tipoPatologia);
                     patologiasListNewPatologias = em.merge(patologiasListNewPatologias);
-                    if (oldTipoPatologiaOfPatologiasListNewPatologias != null && !oldTipoPatologiaOfPatologiasListNewPatologias.equals(tipoPatología)) {
+                    if (oldTipoPatologiaOfPatologiasListNewPatologias != null && !oldTipoPatologiaOfPatologiasListNewPatologias.equals(tipoPatologia)) {
                         oldTipoPatologiaOfPatologiasListNewPatologias.getPatologiasList().remove(patologiasListNewPatologias);
                         oldTipoPatologiaOfPatologiasListNewPatologias = em.merge(oldTipoPatologiaOfPatologiasListNewPatologias);
                     }
@@ -115,9 +115,9 @@ public class TipoPatologíaJpaController implements Serializable {
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = tipoPatología.getIdTipoPatologia();
-                if (findTipoPatología(id) == null) {
-                    throw new NonexistentEntityException("The tipoPatolog\u00eda with id " + id + " no longer exists.");
+                Integer id = tipoPatologia.getIdTipoPatologia();
+                if (findTipoPatologia(id) == null) {
+                    throw new NonexistentEntityException("The tipoPatologia with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -133,25 +133,25 @@ public class TipoPatologíaJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            TipoPatología tipoPatología;
+            TipoPatologia tipoPatologia;
             try {
-                tipoPatología = em.getReference(TipoPatología.class, id);
-                tipoPatología.getIdTipoPatologia();
+                tipoPatologia = em.getReference(TipoPatologia.class, id);
+                tipoPatologia.getIdTipoPatologia();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The tipoPatolog\u00eda with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The tipoPatologia with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<Patologias> patologiasListOrphanCheck = tipoPatología.getPatologiasList();
+            List<Patologias> patologiasListOrphanCheck = tipoPatologia.getPatologiasList();
             for (Patologias patologiasListOrphanCheckPatologias : patologiasListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This TipoPatolog\u00eda (" + tipoPatología + ") cannot be destroyed since the Patologias " + patologiasListOrphanCheckPatologias + " in its patologiasList field has a non-nullable tipoPatologia field.");
+                illegalOrphanMessages.add("This TipoPatologia (" + tipoPatologia + ") cannot be destroyed since the Patologias " + patologiasListOrphanCheckPatologias + " in its patologiasList field has a non-nullable tipoPatologia field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            em.remove(tipoPatología);
+            em.remove(tipoPatologia);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -160,19 +160,19 @@ public class TipoPatologíaJpaController implements Serializable {
         }
     }
 
-    public List<TipoPatología> findTipoPatologíaEntities() {
-        return findTipoPatologíaEntities(true, -1, -1);
+    public List<TipoPatologia> findTipoPatologiaEntities() {
+        return findTipoPatologiaEntities(true, -1, -1);
     }
 
-    public List<TipoPatología> findTipoPatologíaEntities(int maxResults, int firstResult) {
-        return findTipoPatologíaEntities(false, maxResults, firstResult);
+    public List<TipoPatologia> findTipoPatologiaEntities(int maxResults, int firstResult) {
+        return findTipoPatologiaEntities(false, maxResults, firstResult);
     }
 
-    private List<TipoPatología> findTipoPatologíaEntities(boolean all, int maxResults, int firstResult) {
+    private List<TipoPatologia> findTipoPatologiaEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(TipoPatología.class));
+            cq.select(cq.from(TipoPatologia.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -184,25 +184,53 @@ public class TipoPatologíaJpaController implements Serializable {
         }
     }
 
-    public TipoPatología findTipoPatología(Integer id) {
+    public TipoPatologia findTipoPatologia(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(TipoPatología.class, id);
+            return em.find(TipoPatologia.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getTipoPatologíaCount() {
+    public int getTipoPatologiaCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<TipoPatología> rt = cq.from(TipoPatología.class);
+            Root<TipoPatologia> rt = cq.from(TipoPatologia.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
         } finally {
             em.close();
+        }
+    }
+    
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("TipoPatologia.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((TipoPatologia)consulta.getSingleResult()).getIdTipoPatologia()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
+    public TipoPatologia buscarPorNombre(String nombre) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("TipoPatologia.findByNombrePatologia");
+            consulta.setParameter("nombre", nombre);
+            return (TipoPatologia)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public boolean existeTipo(String nombre) {
+        if(this.buscarPorNombre(nombre) == null) {
+            return false;
+        }else{
+            return true;
         }
     }
     

@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Habitad.findAll", query = "SELECT h FROM Habitad h"),
+    @NamedQuery(name = "Habitad.findAllDesc", query = "SELECT h FROM Habitad h ORDER BY h.idHabitad DESC"),
     @NamedQuery(name = "Habitad.findByIdHabitad", query = "SELECT h FROM Habitad h WHERE h.idHabitad = :idHabitad"),
     @NamedQuery(name = "Habitad.findByNombre", query = "SELECT h FROM Habitad h WHERE h.nombre = :nombre")})
 public class Habitad implements Serializable {

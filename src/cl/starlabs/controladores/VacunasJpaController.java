@@ -206,4 +206,32 @@ public class VacunasJpaController implements Serializable {
         }
     }
     
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Vacunas.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((Vacunas)consulta.getSingleResult()).getIdVacuna()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
+    public Vacunas buscarPorNombre(String nombre) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Vacunas.findByNombre");
+            consulta.setParameter("nombre", nombre);
+            return (Vacunas)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public boolean existeTipo(String nombre) {
+        if(this.buscarPorNombre(nombre) == null) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
 }

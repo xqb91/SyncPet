@@ -28,6 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TipoProcedimiento.findAll", query = "SELECT t FROM TipoProcedimiento t"),
+    @NamedQuery(name = "TipoProcedimiento.findAllDesc", query = "SELECT t FROM TipoProcedimiento t ORDER BY t.idTipoProcedimiento DESC"),
     @NamedQuery(name = "TipoProcedimiento.findByIdTipoProcedimiento", query = "SELECT t FROM TipoProcedimiento t WHERE t.idTipoProcedimiento = :idTipoProcedimiento"),
     @NamedQuery(name = "TipoProcedimiento.findByClasificacion", query = "SELECT t FROM TipoProcedimiento t WHERE t.clasificacion = :clasificacion"),
     @NamedQuery(name = "TipoProcedimiento.findByNombreProcedimiento", query = "SELECT t FROM TipoProcedimiento t WHERE t.nombreProcedimiento = :nombreProcedimiento"),

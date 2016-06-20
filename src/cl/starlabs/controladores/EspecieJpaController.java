@@ -207,17 +207,6 @@ public class EspecieJpaController implements Serializable {
         }
     }
     
-    public Integer ultimo() {
-        try {
-            Query consulta = getEntityManager().createNamedQuery("Especie.findAllDesc");
-            consulta.setMaxResults(1);
-            return ((Especie)consulta.getSingleResult()).getIdEspecie()+1;
-        }catch(Exception e)
-        {
-            return 1;
-        }
-    }
-    
     public Especie buscarRaza(String especie) {
         try {
             Query consulta = getEntityManager().createNamedQuery("Especie.findByNombre");
@@ -228,7 +217,8 @@ public class EspecieJpaController implements Serializable {
         }
     }
     
-    public List<Especie> buscarPorNombre(String nombre) {
+    //eliminado version anterior
+    /*public List<Especie> buscarPorNombre(String nombre) {
         try {
             Query consulta = getEntityManager().createNamedQuery("Especie.findByNombre");
             consulta.setParameter("nombre", nombre);
@@ -236,11 +226,11 @@ public class EspecieJpaController implements Serializable {
         } catch (Exception e) {
             return null;
         }
-    }
+    }*/
     
     public boolean existeTipoAlergia(String nombre) {
         try {
-            if(this.buscarPorNombre(nombre).isEmpty()) {
+            if(this.buscarPorNombre(nombre).getNombre().isEmpty()) {
                 return false;
             }else{
                 return true;
@@ -250,14 +240,31 @@ public class EspecieJpaController implements Serializable {
         }
     }
     
-    public boolean actualizar(Especie t) {
+    public Integer ultimo() {
         try {
-            getEntityManager().getTransaction().begin();
-            getEntityManager().merge(t);
-            getEntityManager().getTransaction().commit();
-            return true;
+            Query consulta = getEntityManager().createNamedQuery("Especie.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((Especie)consulta.getSingleResult()).getIdEspecie()+1;
         } catch (Exception e) {
+            return 1;
+        }
+    }
+    
+    public Especie buscarPorNombre(String nombre) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Especie.findByNombre");
+            consulta.setParameter("nombre", nombre);
+            return (Especie)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public boolean existeTipo(String nombre) {
+        if(this.buscarPorNombre(nombre) == null) {
             return false;
+        }else{
+            return true;
         }
     }
     

@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Vacunas.findAll", query = "SELECT v FROM Vacunas v"),
+    @NamedQuery(name = "Vacunas.findAllDesc", query = "SELECT v FROM Vacunas v ORDER BY v.idVacuna DESC"),
     @NamedQuery(name = "Vacunas.findByIdVacuna", query = "SELECT v FROM Vacunas v WHERE v.idVacuna = :idVacuna"),
     @NamedQuery(name = "Vacunas.findByNombre", query = "SELECT v FROM Vacunas v WHERE v.nombre = :nombre"),
     @NamedQuery(name = "Vacunas.findByCompuestoActivo", query = "SELECT v FROM Vacunas v WHERE v.compuestoActivo = :compuestoActivo")})
@@ -61,6 +62,13 @@ public class Vacunas implements Serializable {
         this.idVacuna = idVacuna;
         this.nombre = nombre;
         this.compuestoActivo = compuestoActivo;
+    }
+    
+    public Vacunas(Integer idVacuna, String nombre, String descripcion, String compuestoActivo) {
+        this.idVacuna = idVacuna;
+        this.nombre = nombre;
+        this.compuestoActivo = compuestoActivo;
+        this.descripcion = descripcion;
     }
 
     public Integer getIdVacuna() {

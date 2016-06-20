@@ -2,7 +2,6 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="SyncPetPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>cl.starlabs.modelo.TipoPatología</class>
     <class>cl.starlabs.modelo.Raza</class>
     <class>cl.starlabs.modelo.Region</class>
     <class>cl.starlabs.modelo.Vacunas</class>
@@ -37,6 +36,7 @@
     <class>cl.starlabs.modelo.Usuarios</class>
     <class>cl.starlabs.modelo.Perfiles</class>
     <class>cl.starlabs.modelo.DetalleUsuarios</class>
+    <class>cl.starlabs.modelo.TipoPatologia</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://NRGSERVER\SQLEXPRESS;databaseName=syncpet;"/>
       <property name="javax.persistence.jdbc.user" value="syncpet"/>

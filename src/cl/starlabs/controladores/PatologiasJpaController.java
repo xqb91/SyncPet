@@ -15,7 +15,7 @@ import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Hospitalizacion;
 import cl.starlabs.modelo.Mascota;
 import cl.starlabs.modelo.Patologias;
-import cl.starlabs.modelo.TipoPatología;
+import cl.starlabs.modelo.TipoPatologia;
 import cl.starlabs.modelo.Veterinario;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -51,7 +51,7 @@ public class PatologiasJpaController implements Serializable {
                 mascota = em.getReference(mascota.getClass(), mascota.getIdMascota());
                 patologias.setMascota(mascota);
             }
-            TipoPatología tipoPatologia = patologias.getTipoPatologia();
+            TipoPatologia tipoPatologia = patologias.getTipoPatologia();
             if (tipoPatologia != null) {
                 tipoPatologia = em.getReference(tipoPatologia.getClass(), tipoPatologia.getIdTipoPatologia());
                 patologias.setTipoPatologia(tipoPatologia);
@@ -101,8 +101,8 @@ public class PatologiasJpaController implements Serializable {
             Hospitalizacion hospitalizacionNew = patologias.getHospitalizacion();
             Mascota mascotaOld = persistentPatologias.getMascota();
             Mascota mascotaNew = patologias.getMascota();
-            TipoPatología tipoPatologiaOld = persistentPatologias.getTipoPatologia();
-            TipoPatología tipoPatologiaNew = patologias.getTipoPatologia();
+            TipoPatologia tipoPatologiaOld = persistentPatologias.getTipoPatologia();
+            TipoPatologia tipoPatologiaNew = patologias.getTipoPatologia();
             Veterinario veterinarioOld = persistentPatologias.getVeterinario();
             Veterinario veterinarioNew = patologias.getVeterinario();
             if (hospitalizacionNew != null) {
@@ -193,7 +193,7 @@ public class PatologiasJpaController implements Serializable {
                 mascota.getPatologiasList().remove(patologias);
                 mascota = em.merge(mascota);
             }
-            TipoPatología tipoPatologia = patologias.getTipoPatologia();
+            TipoPatologia tipoPatologia = patologias.getTipoPatologia();
             if (tipoPatologia != null) {
                 tipoPatologia.getPatologiasList().remove(patologias);
                 tipoPatologia = em.merge(tipoPatologia);

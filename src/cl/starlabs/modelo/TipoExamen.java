@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TipoExamen.findAll", query = "SELECT t FROM TipoExamen t"),
+    @NamedQuery(name = "TipoExamen.findAllDesc", query = "SELECT t FROM TipoExamen t ORDER BY t.idTipoExamen DESC"),
     @NamedQuery(name = "TipoExamen.findByIdTipoExamen", query = "SELECT t FROM TipoExamen t WHERE t.idTipoExamen = :idTipoExamen"),
     @NamedQuery(name = "TipoExamen.findByNombreExamen", query = "SELECT t FROM TipoExamen t WHERE t.nombreExamen = :nombreExamen"),
     @NamedQuery(name = "TipoExamen.findByCosto", query = "SELECT t FROM TipoExamen t WHERE t.costo = :costo")})
@@ -62,6 +63,14 @@ public class TipoExamen implements Serializable {
         this.nombreExamen = nombreExamen;
         this.costo = costo;
     }
+    
+    public TipoExamen(Integer idTipoExamen, String nombreExamen, String descripcion, int costo) {
+        this.idTipoExamen = idTipoExamen;
+        this.nombreExamen = nombreExamen;
+        this.descripcióm = descripcion;
+        this.costo = costo;
+    }
+
 
     public Integer getIdTipoExamen() {
         return idTipoExamen;

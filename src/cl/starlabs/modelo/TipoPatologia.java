@@ -25,21 +25,22 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Victor Manuel Araya
  */
 @Entity
-@Table(name = "Tipo_Patolog\u00eda", catalog = "syncpet", schema = "dbo")
+@Table(name = "Tipo_Patologia", catalog = "syncpet", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TipoPatolog\u00eda.findAll", query = "SELECT t FROM TipoPatolog\u00eda t"),
-    @NamedQuery(name = "TipoPatolog\u00eda.findByIdTipoPatologia", query = "SELECT t FROM TipoPatolog\u00eda t WHERE t.idTipoPatologia = :idTipoPatologia"),
-    @NamedQuery(name = "TipoPatolog\u00eda.findByNombrePatolog\u00eda", query = "SELECT t FROM TipoPatolog\u00eda t WHERE t.nombrePatolog\u00eda = :nombrePatolog\u00eda")})
-public class TipoPatología implements Serializable {
+    @NamedQuery(name = "TipoPatologia.findAll", query = "SELECT t FROM TipoPatologia t"),
+    @NamedQuery(name = "TipoPatologia.findAllDesc", query = "SELECT t FROM TipoPatologia t ORDER BY t.idTipoPatologia DESC"),
+    @NamedQuery(name = "TipoPatologia.findByIdTipoPatologia", query = "SELECT t FROM TipoPatologia t WHERE t.idTipoPatologia = :idTipoPatologia"),
+    @NamedQuery(name = "TipoPatologia.findByNombrePatologia", query = "SELECT t FROM TipoPatologia t WHERE t.nombrePatologia = :nombre")})
+public class TipoPatologia implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id_tipo_patologia", nullable = false)
     private Integer idTipoPatologia;
     @Basic(optional = false)
-    @Column(name = "nombre_patolog\u00eda", nullable = false, length = 250)
-    private String nombrePatología;
+    @Column(name = "nombre_patologia", nullable = false, length = 250)
+    private String nombrePatologia;
     @Basic(optional = false)
     @Lob
     @Column(nullable = false, length = 2147483647)
@@ -55,16 +56,16 @@ public class TipoPatología implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoPatologia")
     private List<Patologias> patologiasList;
 
-    public TipoPatología() {
+    public TipoPatologia() {
     }
 
-    public TipoPatología(Integer idTipoPatologia) {
+    public TipoPatologia(Integer idTipoPatologia) {
         this.idTipoPatologia = idTipoPatologia;
     }
 
-    public TipoPatología(Integer idTipoPatologia, String nombrePatología, String etiologia, String patogenia, String morfologia) {
+    public TipoPatologia(Integer idTipoPatologia, String nombrePatologia, String etiologia, String patogenia, String morfologia) {
         this.idTipoPatologia = idTipoPatologia;
-        this.nombrePatología = nombrePatología;
+        this.nombrePatologia = nombrePatologia;
         this.etiologia = etiologia;
         this.patogenia = patogenia;
         this.morfologia = morfologia;
@@ -78,12 +79,12 @@ public class TipoPatología implements Serializable {
         this.idTipoPatologia = idTipoPatologia;
     }
 
-    public String getNombrePatología() {
-        return nombrePatología;
+    public String getNombrePatologia() {
+        return nombrePatologia;
     }
 
-    public void setNombrePatología(String nombrePatología) {
-        this.nombrePatología = nombrePatología;
+    public void setNombrePatologia(String nombrePatologia) {
+        this.nombrePatologia = nombrePatologia;
     }
 
     public String getEtiologia() {
@@ -129,10 +130,10 @@ public class TipoPatología implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TipoPatología)) {
+        if (!(object instanceof TipoPatologia)) {
             return false;
         }
-        TipoPatología other = (TipoPatología) object;
+        TipoPatologia other = (TipoPatologia) object;
         if ((this.idTipoPatologia == null && other.idTipoPatologia != null) || (this.idTipoPatologia != null && !this.idTipoPatologia.equals(other.idTipoPatologia))) {
             return false;
         }

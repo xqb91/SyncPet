@@ -251,42 +251,26 @@ public class RazaJpaController implements Serializable {
             Query consulta = getEntityManager().createNamedQuery("Raza.findAllDesc");
             consulta.setMaxResults(1);
             return ((Raza)consulta.getSingleResult()).getIdRaza()+1;
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             return 1;
         }
     }
     
-    public List<Raza> buscarPorNombre(String nombre) {
+    public Raza buscarPorNombre(String nombre) {
         try {
             Query consulta = getEntityManager().createNamedQuery("Raza.findByNombre");
             consulta.setParameter("nombre", nombre);
-            return consulta.getResultList();
+            return (Raza)consulta.getSingleResult();
         } catch (Exception e) {
             return null;
         }
     }
     
-    public boolean existeTipoAlergia(String nombre) {
-        try {
-            if(this.buscarPorNombre(nombre).isEmpty()) {
-                return false;
-            }else{
-                return true;
-            }
-        } catch (Exception e) {
-            return true;
-        }
-    }
-    
-    public boolean actualizar(Raza t) {
-        try {
-            getEntityManager().getTransaction().begin();
-            getEntityManager().merge(t);
-            getEntityManager().getTransaction().commit();
-            return true;
-        } catch (Exception e) {
+    public boolean existeTipo(String nombre) {
+        if(this.buscarPorNombre(nombre) == null) {
             return false;
+        }else{
+            return true;
         }
     }
     
