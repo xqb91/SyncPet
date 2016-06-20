@@ -47,7 +47,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="jPanel1" max="32767" attributes="0"/>
-                  <Component id="panelInfoCuenta" min="-2" pref="336" max="-2" attributes="0"/>
+                  <Component id="panelInfoCuenta" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -207,12 +207,9 @@
                       <Component id="lblCorreo" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="lblEstado" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="lblTipoUsuario" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblEspecialidad" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblRun" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="25" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="txtEspecialidad" max="32767" attributes="0"/>
                       <Component id="txtApaterno" alignment="1" max="32767" attributes="0"/>
                       <Component id="txtUsuario" alignment="1" max="32767" attributes="0"/>
                       <Component id="txtNombres" alignment="1" max="32767" attributes="0"/>
@@ -221,16 +218,15 @@
                       <Component id="txtCorreo" alignment="0" max="32767" attributes="0"/>
                       <Component id="cmbEstado" pref="178" max="32767" attributes="0"/>
                       <Component id="cmbTipoUsuario" max="32767" attributes="0"/>
-                      <Component id="txtRun" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
                   <Component id="btnAccion" min="-2" pref="96" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                   <Component id="btnCancelar" pref="103" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -276,22 +272,12 @@
                       <Component id="cmbTipoUsuario" min="-2" max="-2" attributes="0"/>
                       <Component id="lblTipoUsuario" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblRun" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtRun" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txtEspecialidad" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblEspecialidad" alignment="0" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnAccion" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnCancelar" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="36" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -411,27 +397,6 @@
           </Properties>
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbTipoUsuarioItemStateChanged"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblEspecialidad">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Especialidad"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtEspecialidad">
-          <Events>
-            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtEspecialidadKeyTyped"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblRun">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="RUN"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtRun">
-          <Events>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtRunFocusLost"/>
-            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtRunKeyTyped"/>
           </Events>
         </Component>
       </SubComponents>

@@ -21,7 +21,11 @@ import java.awt.Color;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
@@ -33,8 +37,8 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
 
     EntityManagerFactory emf = null;
     Sucursal suc = null;
-    Usuarios us  = null;
-    boolean update = false;
+    Usuarios tp = null;
+    UsuariosJpaController jpa;
     
     public AdministradorTrabajadores() {
         initComponents();
@@ -42,105 +46,180 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
     
     public AdministradorTrabajadores(Sucursal suc) {
         initComponents();
-        emf = Persistence.createEntityManagerFactory("SyncPetPU");
-        this.suc = suc;
-        this.setTitle("SyncPet :: Administrador de Trabajadores -- "+suc.getClinica().getNombreReal()+" --");
+        this.emf = Persistence.createEntityManagerFactory("SyncPetPU");
         this.setLocationRelativeTo(null);
-        
-        //deshabilitar campos
-        lblUsuario.setEnabled(false);
-        lblPassword.setEnabled(false);
-        lblNombres.setEnabled(false);
-        lblApaterno.setEnabled(false);
-        lblAmaterno.setEnabled(false);
-        lblCorreo.setEnabled(false);
-        lblEstado.setEnabled(false);
-        lblTipoUsuario.setEnabled(false);
-        lblEspecialidad.setEnabled(false);
-        lblRun.setEnabled(false);
-        txtUsuario.setEnabled(false);
-        txtContrasena.setEnabled(false);
-        txtNombres.setEnabled(false);
-        txtApaterno.setEnabled(false);
-        txtAmaterno.setEnabled(false);
-        txtCorreo.setEnabled(false);
-        txtRun.setEnabled(false);
-        cmbTipoUsuario.setEnabled(false);
-        txtEspecialidad.setEnabled(false);
-        cmbEstado.setEnabled(false);
-        btnAccion.setEnabled(false);
-        btnCancelar.setEnabled(false);
-        
-        //rellenando valores
+        this.jpa = new UsuariosJpaController(emf);
         rellenarTabla();
-        
+        deshabilitarCampos();
+        this.suc = suc;
+        this.setTitle("SyncPet :: Administrador de Trabajadores -- "+suc.getClinica().getNombreReal()+" --");       
     }
 
-    
+    //libreria básica de métodos para realizar tareas de CRUD de SyncPet
     public void rellenarTabla() {
-        DefaultTableModel modelo = new DefaultTableModel(new Object [][] { }, new String [] { "ID", "Usuario", "Nombre" });
+        DefaultTableModel modelo = new DefaultTableModel(new Object [][] { }, new String [] { "ID", "Usuario" });
         tablaResultados.getColumnModel().getColumn(0).setResizable(false);
-        tablaResultados.getColumnModel().getColumn(0).setPreferredWidth(10);
         tablaResultados.getColumnModel().getColumn(1).setResizable(false);
-        tablaResultados.getColumnModel().getColumn(1).setPreferredWidth(25);
-        tablaResultados.getColumnModel().getColumn(2).setResizable(false);
-        for(Usuarios us : new UsuariosJpaController(emf).findUsuariosEntities()) {
-            Object[] obj = new Object[3];
-            obj[0] = us.getId();
-            obj[1] = us.getUsuario();
-            obj[2] = us.getApaterno()+" "+us.getNombres().split(" ")[0];
+        for(Usuarios te : jpa.findUsuariosEntities()) {
+            Object[] obj = new Object[2];
+            obj[0] = te.getId();
+            obj[1] = te.getUsuario();
             modelo.addRow(obj);
         }
         tablaResultados.setModel(modelo);
     }
     
-    public void rellenarTipoUsuario() {
-        cmbTipoUsuario.removeAllItems();
-        if(us != null)
-        {
-            cmbTipoUsuario.addItem(us.getPerfil().getId()+": "+us.getPerfil().getPerfil());
-            for(Perfiles p : new PerfilesJpaController(emf).findPerfilesEntities() )
-            {
-                if(p.getPerfil().compareToIgnoreCase(us.getPerfil().getPerfil()) != 0) {
-                    cmbTipoUsuario.addItem(p.getId()+": "+p.getPerfil());
-                }
-            }
-        }else {
-            for(Perfiles p : new PerfilesJpaController(emf).findPerfilesEntities() )
-            {
-                cmbTipoUsuario.addItem(p.getId()+": "+p.getPerfil());
-            }
-        }
-    }
-    
-    public void limpiarCampos() {
-        //vaciando campos
+    public void vaciarCampos() {
         txtUsuario.setText("");
         txtContrasena.setText("");
         txtNombres.setText("");
         txtApaterno.setText("");
         txtAmaterno.setText("");
         txtCorreo.setText("");
-        txtRun.setText("");
-        txtEspecialidad.setText("");
-        
-        //limpiando comboboxs
+        cmbEstado.removeAllItems();
         cmbTipoUsuario.removeAllItems();
     }
     
-    public void rellenarEstados() {
-        if(cmbEstado.getItemCount() == 0) {    
-            cmbEstado.addItem("Habilitado");
-            cmbEstado.addItem("Deshabilitado");
-        }else{
-            if(cmbEstado.getItemAt(0).toString().compareToIgnoreCase("Habilitado") == 0) {
-                cmbEstado.addItem("Deshabilitado");
-            }else{
-                cmbEstado.addItem("Habilitado");
-            }
+    public void rellenarCombos(){
+        cmbEstado.addItem("Habilitado");
+        cmbEstado.addItem("Deshabilitado");
+        for(Perfiles p : new PerfilesJpaController(emf).findPerfilesEntities()) {
+            cmbTipoUsuario.addItem(p.getId()+": "+p.getPerfil());
         }
     }
     
+    public void rellenarCampos(String usuario, String contrasena, String nombres, String apaterno, String amaterno, String correo, String estado, String tipo) {
+        vaciarCampos();
+        txtUsuario.setText(usuario);
+        txtContrasena.setText(contrasena);
+        txtNombres.setText(nombres);
+        txtApaterno.setText(apaterno);
+        txtAmaterno.setText(amaterno);
+        txtCorreo.setText(correo);
+        cmbEstado.addItem(estado);
+        cmbTipoUsuario.addItem(tipo);
+        rellenarCombos();
+    }
+        
+    public void habilitarCampos() {
+        txtUsuario.setEnabled(true);
+        txtContrasena.setEnabled(true);
+        txtNombres.setEnabled(true);
+        txtApaterno.setEnabled(true);
+        txtAmaterno.setEnabled(true);
+        txtCorreo.setEnabled(true);
+        cmbEstado.setEnabled(true);
+        cmbTipoUsuario.setEnabled(true);
+        btnAccion.setEnabled(true);
+        btnCancelar.setEnabled(true);
+        tablaResultados.setEnabled(false);
+        btnAgregar.setEnabled(false);
+        btnRemover.setEnabled(true);
+        txtUsuario.requestFocus();
+        rellenarCombos();
+    }
+    
+    public void deshabilitarCampos() {
+        txtUsuario.setEnabled(false);
+        txtContrasena.setEnabled(false);
+        txtNombres.setEnabled(false);
+        txtApaterno.setEnabled(false);
+        txtAmaterno.setEnabled(false);
+        txtCorreo.setEnabled(false);
+        cmbEstado.setEnabled(false);
+        cmbTipoUsuario.setEnabled(false);
+        btnAccion.setEnabled(false);
+        btnCancelar.setEnabled(false);
+        tablaResultados.setEnabled(true);
+        btnAgregar.setEnabled(true);
+        btnRemover.setEnabled(false);
+        tablaResultados.requestFocus();
+    }
+    
+    public void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(null, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(null, mensaje, "SyncPet", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public Integer preguntar(String mensaje) {
+        return JOptionPane.showConfirmDialog(null, mensaje, "SyncPet", JOptionPane.YES_NO_OPTION);
+    }
+    
+    public boolean esVacio(JTextField obj) {
+        if(obj.getText().isEmpty()){
+            this.mostrarError("Hay un campo vacio, por favor rellenelo");
+            obj.requestFocus();
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    public boolean esVacio(JTextArea obj) {
+        if(obj.getText().isEmpty()){
+            this.mostrarError("Hay un campo vacio, por favor rellenelo");
+            obj.requestFocus();
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    public String contenido(JTextField obj) {
+        return obj.getText();
+    }
+    
+    public String contenido(JPasswordField obj) {
+        return obj.getText();
+    }
+    
+    public String contenido(JTextArea obj) {
+        return obj.getText();
+    }
+    
+    public Integer contenidoInt(JTextField obj) throws Exception {
+        try {
+            return Integer.parseInt(obj.getText());
+        } catch (Exception e) {
+            mostrarError("Las letras en un campo numérico no pueden ser convertidos en números");
+            obj.selectAll();
+            obj.requestFocus();
+            return 0;
+        }
+    }
+    
+    public void largoMaximo(JTextField obj ,Integer largo, java.awt.event.KeyEvent evt) {
+        if(contenido(obj).length() > (largo-1)) {
+            evt.consume();
+        }
+    }
+    
+    public String contenido(JComboBox obj) {
+        return obj.getSelectedItem().toString();
+    }
+    
+    public Integer contenidoInt(JComboBox obj) {
+        try {
+            return Integer.parseInt(contenido(obj).split(":")[0]);
+        } catch (Exception e) {
+            mostrarError("No se pudo transformar el valor seleccionado a integer");
+            obj.requestFocus();
+            return 0;
+        }
+    }
+    
+        public Integer primerValorCombo(JComboBox obj) {
+        try {
+            return Integer.parseInt(contenido(obj).split(":")[0]);
+        } catch (Exception e) {
+            mostrarError("No se pudo transformar el valor seleccionado a integer");
+            obj.requestFocus();
+            return 0;
+        }
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -173,10 +252,6 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
         btnCancelar = new javax.swing.JButton();
         lblTipoUsuario = new javax.swing.JLabel();
         cmbTipoUsuario = new javax.swing.JComboBox();
-        lblEspecialidad = new javax.swing.JLabel();
-        txtEspecialidad = new javax.swing.JTextField();
-        lblRun = new javax.swing.JLabel();
-        txtRun = new javax.swing.JTextField();
 
         jButton3.setText("jButton3");
 
@@ -369,27 +444,6 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
             }
         });
 
-        lblEspecialidad.setText("Especialidad");
-
-        txtEspecialidad.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtEspecialidadKeyTyped(evt);
-            }
-        });
-
-        lblRun.setText("RUN");
-
-        txtRun.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtRunFocusLost(evt);
-            }
-        });
-        txtRun.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtRunKeyTyped(evt);
-            }
-        });
-
         javax.swing.GroupLayout panelInfoCuentaLayout = new javax.swing.GroupLayout(panelInfoCuenta);
         panelInfoCuenta.setLayout(panelInfoCuentaLayout);
         panelInfoCuentaLayout.setHorizontalGroup(
@@ -404,12 +458,9 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
                     .addComponent(lblAmaterno)
                     .addComponent(lblCorreo)
                     .addComponent(lblEstado)
-                    .addComponent(lblTipoUsuario)
-                    .addComponent(lblEspecialidad)
-                    .addComponent(lblRun))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTipoUsuario))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addGroup(panelInfoCuentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtEspecialidad)
                     .addComponent(txtApaterno, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtUsuario, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtNombres, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -417,15 +468,14 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
                     .addComponent(txtAmaterno)
                     .addComponent(txtCorreo)
                     .addComponent(cmbEstado, 0, 178, Short.MAX_VALUE)
-                    .addComponent(cmbTipoUsuario, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtRun))
+                    .addComponent(cmbTipoUsuario, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(panelInfoCuentaLayout.createSequentialGroup()
                 .addGap(42, 42, 42)
                 .addComponent(btnAccion, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(49, 49, 49)
+                .addGap(45, 45, 45)
                 .addComponent(btnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                .addGap(21, 21, 21))
+                .addGap(25, 25, 25))
         );
         panelInfoCuentaLayout.setVerticalGroup(
             panelInfoCuentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -461,19 +511,11 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
                 .addGroup(panelInfoCuentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cmbTipoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblTipoUsuario))
-                .addGap(5, 5, 5)
-                .addGroup(panelInfoCuentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblRun)
-                    .addComponent(txtRun, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelInfoCuentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblEspecialidad))
-                .addGap(27, 27, 27)
+                .addGap(49, 49, 49)
                 .addGroup(panelInfoCuentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAccion)
                     .addComponent(btnCancelar))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -493,7 +535,7 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelInfoCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelInfoCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -501,353 +543,184 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        limpiarCampos();
-        
-        //deshabilitando campos innecesarios y habilitando campos necesarios
-        lblUsuario.setEnabled(true);
-        lblPassword.setEnabled(true);
-        lblNombres.setEnabled(true);
-        lblApaterno.setEnabled(true);
-        lblAmaterno.setEnabled(true);
-        lblCorreo.setEnabled(true);
-        lblEstado.setEnabled(true);
-        lblTipoUsuario.setEnabled(true);
-        lblEspecialidad.setEnabled(false);
-        lblRun.setEnabled(false);
-        txtUsuario.setEnabled(true);
-        txtContrasena.setEnabled(true);
-        txtNombres.setEnabled(true);
-        txtApaterno.setEnabled(true);
-        txtAmaterno.setEnabled(true);
-        txtCorreo.setEnabled(true);
-        txtRun.setEnabled(false);
-        cmbTipoUsuario.setEnabled(true);
-        txtEspecialidad.setEnabled(false);
-        cmbEstado.setEnabled(true);
-        btnAccion.setEnabled(true);
-        btnCancelar.setEnabled(true);
-        btnAccion.setText("Guardar");
-        
-        tablaResultados.setEnabled(false);
-        btnRemover.setEnabled(false);
-        
-        //rellenando campos necesarios
-        rellenarTipoUsuario();
-        
-        txtUsuario.requestFocus();
+        habilitarCampos();
+        btnRemover.setEnabled(false);       
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void tablaResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaResultadosMouseClicked
-        if(tablaResultados.getSelectedColumn() >= 0) {
-            //recuperando valores desde la tabla
-            DefaultTableModel modelo = (DefaultTableModel)tablaResultados.getModel();
-            //consultando por el valor a cargar, es recuperado desde el valor seleccionado recuperando el ROW ID
-            us = new UsuariosJpaController(emf).findUsuarios(Integer.parseInt(String.valueOf(modelo.getValueAt(tablaResultados.getSelectedRow(), 0))));
-            //si el pais no fue encontrado
-            if(us == null) {
-                //se informa que el pais no fue encontrado
-                JOptionPane.showMessageDialog(null, "Error: El usuario no pudo ser encontrado por el sistema");
-                us = null;
+        DefaultTableModel modelo = (DefaultTableModel)tablaResultados.getModel();
+        //consultando por el valor a cargar, es recuperado desde el valor seleccionado recuperando el ROW ID
+        tp = jpa.findUsuarios(Integer.parseInt(String.valueOf(modelo.getValueAt(tablaResultados.getSelectedRow(), 0))));
+        if(tp == null) {
+            this.mostrarError("El tipo de fármaco no pudo ser hallado por el sistema");
+        }else{
+            habilitarCampos();
+            String habilitado;
+            if(tp.getBloqueado() == '0'){
+                habilitado = "Habilitado";
             }else{
-                //si el pais es encontrado, se definen valores en campos por defecto
-                btnAgregarActionPerformed(new java.awt.event.ActionEvent(us, WIDTH, null));
-                limpiarCampos();
-                cmbEstado.removeAllItems();
-                //seteando valores
-                txtUsuario.setText(us.getUsuario());
-                txtContrasena.setText(us.getContrasena());
-                txtNombres.setText(us.getNombres());
-                txtApaterno.setText(us.getApaterno());
-                txtAmaterno.setText(us.getAmaterno());
-                txtCorreo.setText(us.getCorreo());
-                if(us.getBloqueado() == '0') {
-                    cmbEstado.addItem("Habilitado");
-                }else{
-                    cmbEstado.addItem("Deshabilitado");
-                }
-                rellenarEstados();
-                rellenarTipoUsuario();
-                
-                txtRun.setText("");
-                txtRun.setEnabled(false);
-                lblRun.setEnabled(false);
-                txtEspecialidad.setEnabled(false);
-                txtEspecialidad.setText("");
-                lblEspecialidad.setEnabled(false);
-                
-                btnAccion.setEnabled(true);
-                btnAccion.setText("Actualizar");
-                btnCancelar.setEnabled(true);
-                //--------------------------
-                tablaResultados.setEnabled(false);
-                btnAgregar.setEnabled(false);
-                btnRemover.setEnabled(true);
-                
-                update = true;
-                
+                habilitado = "Deshabilitado";
             }
+            rellenarCampos(tp.getUsuario(), tp.getContrasena(), tp.getNombres(), tp.getApaterno(), tp.getAmaterno(), tp.getCorreo(), habilitado, tp.getPerfil().getId()+": "+tp.getPerfil().getPerfil());
+            btnAccion.setText("Actualizar");
         }
     }//GEN-LAST:event_tablaResultadosMouseClicked
 
     private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
-        int opcion = JOptionPane.showConfirmDialog(null, "¿Esta Seguro de eliminar el usuario?");
-        if(opcion == 0)
-        {
-            try {
+        DefaultTableModel modelo = (DefaultTableModel)tablaResultados.getModel();
+        //consultando por el valor a cargar, es recuperado desde el valor seleccionado recuperando el ROW ID
+        if(jpa.findUsuarios(Integer.parseInt(String.valueOf(modelo.getValueAt(tablaResultados.getSelectedRow(), 0)))) != null) {
+            int opcion = preguntar("¿Esta seguro de eliminar el usuario "+contenido(txtUsuario)+"?");
+            if(opcion == 0) {
                 try {
-                    for(DetalleUsuarios dt : new DetalleUsuariosJpaController(emf).buscarPorUsuario(us)) {
-                        new DetalleUsuariosJpaController(emf).destroy(dt.getId());
-                    }
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Ocurrió un error eliminando el detalle del usuario "+e.getMessage());
+                    jpa.destroy(Integer.parseInt(String.valueOf(modelo.getValueAt(tablaResultados.getSelectedRow(), 0))));
+                    mostrarMensaje("Eliminado");
+                    btnCancelarActionPerformed(evt);
+                }catch(Exception e) {
+                    mostrarError("No se pudo encontrar el usuario en la base de datos porque ya no existe");
+                    btnCancelarActionPerformed(evt);
                 }
-                new UsuariosJpaController(emf).destroy(us.getId());
-                JOptionPane.showMessageDialog(null, "Usuario Eliminado");
-                btnCancelarActionPerformed(evt); 
-            }catch(Exception ex) {
-                JOptionPane.showMessageDialog(null, "Ocurrió un error generalizado al intentar eliminar el usuario: "+ex.getMessage());
             }
         }else{
-            btnCancelarActionPerformed(evt);
+            mostrarError("No se pudo encontrar el usuario en la base de datos porque ya no existe");
+            btnCancelarActionPerformed(evt);          
         }
     }//GEN-LAST:event_btnRemoverActionPerformed
 
     private void cmbTipoUsuarioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbTipoUsuarioItemStateChanged
-        if(cmbTipoUsuario.getItemCount() != 0) {
-            if(cmbTipoUsuario.getSelectedItem().toString().split(":")[0].compareToIgnoreCase("2") == 0) {
-                txtEspecialidad.setEnabled(true);
-                lblEspecialidad.setEnabled(true);
-                txtRun.requestFocus();
-                txtRun.setEnabled(true);
-                lblRun.setEnabled(true);
 
-            }else{
-                txtEspecialidad.setEnabled(false);
-                lblEspecialidad.setEnabled(false);
-                txtRun.setEnabled(false);
-                lblRun.setEnabled(false);
-            }
-        }
     }//GEN-LAST:event_cmbTipoUsuarioItemStateChanged
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        //volviendo la ventana a su estado original
-        lblUsuario.setEnabled(false);
-        lblPassword.setEnabled(false);
-        lblNombres.setEnabled(false);
-        lblApaterno.setEnabled(false);
-        lblAmaterno.setEnabled(false);
-        lblCorreo.setEnabled(false);
-        lblEstado.setEnabled(false);
-        lblTipoUsuario.setEnabled(false);
-        lblEspecialidad.setEnabled(false);
-        lblRun.setEnabled(false);
-        txtUsuario.setEnabled(false);
-        txtContrasena.setEnabled(false);
-        txtNombres.setEnabled(false);
-        txtApaterno.setEnabled(false);
-        txtAmaterno.setEnabled(false);
-        txtCorreo.setEnabled(false);
-        txtRun.setEnabled(false);
-        cmbTipoUsuario.setEnabled(false);
-        txtEspecialidad.setEnabled(false);
-        cmbEstado.setEnabled(false);
-        btnAccion.setEnabled(false);
-        btnCancelar.setEnabled(false);
-        btnAgregar.setEnabled(true);
-        btnRemover.setEnabled(true);
-        btnAccion.setText("Guardar");
-        txtUsuario.setBackground(Color.white);
-
-        tablaResultados.setEnabled(true);
-        btnRemover.setEnabled(true);
-        cmbEstado.removeAllItems();
-
-        //vaciando campos
-        limpiarCampos();
-
-        tablaResultados.requestFocus();
-
-        us = null;
-
+        vaciarCampos();
+        deshabilitarCampos();
         rellenarTabla();
+        tp = null;
+        btnAccion.setText("Guardar");
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnAccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionActionPerformed
-        if(btnAccion.getText().compareToIgnoreCase("Guardar") == 0) {
-            //crear nuevo usuario
-            //comprobando campos
-            if(!txtUsuario.getText().isEmpty()) {
-                if(!txtContrasena.getText().isEmpty()) {
-                    if(!txtNombres.getText().isEmpty()) {
-                        if(!txtApaterno.getText().isEmpty()) {
-                            if(!txtAmaterno.getText().isEmpty()) {
-                                if(!txtCorreo.getText().isEmpty()) {
-                                    if(cmbTipoUsuario.getSelectedItem().toString().split(":")[0].compareToIgnoreCase("2") == 0) {
-                                        //comprobacion para registro de veterinario
-                                        if(!txtRun.getText().isEmpty()) {
-                                            if(!txtEspecialidad.getText().isEmpty()) {
-                                                try {
-                                                    //creando veterinario
-                                                    boolean existe = false;
-                                                    Veterinario vet = new VeterinarioJpaController(emf).buscarVeterinarioPorRut(txtRun.getText().split("-")[0]);
-                                                    if(vet == null)
-                                                    {
-                                                        vet = new Veterinario(new VeterinarioJpaController(emf).ultimo(), txtRun.getText().replace(".", "").split("-")[0], txtRun.getText().split("-")[1].charAt(0), txtNombres.getText(), txtApaterno.getText(), txtAmaterno.getText(), txtEspecialidad.getText());
-                                                    }else{
-                                                        JOptionPane.showMessageDialog(null, "El veterinario ya se encuentra registrado y será vinculado al usuario");
-                                                        existe = true;
-                                                    }
-                                                    //crear el usuario
-                                                    //rescatando el perfil
-                                                    Perfiles per = new PerfilesJpaController(emf).findPerfiles(Integer.parseInt(cmbTipoUsuario.getSelectedItem().toString().split(":")[0]));
-                                                    if(per == null) {
-                                                        JOptionPane.showMessageDialog(null, "ERROR: El perfil de usuario no pudo ser encontrado");
-                                                    }else{
-                                                        //continua operaciones
-                                                        //creando usuario
-                                                        char bloqueo;
-                                                        if(cmbEstado.getSelectedItem().toString().compareToIgnoreCase("Habilitado") == 0) {
-                                                            bloqueo = '0';
-                                                        }else{
-                                                            bloqueo = '1';
-                                                        }
-                                                        us = new Usuarios(new UsuariosJpaController(emf).ultimo(), txtUsuario.getText(), txtContrasena.getText(), txtNombres.getText(), txtApaterno.getText(), txtAmaterno.getText(), txtCorreo.getText(), bloqueo, per);
-                                                        //creando registros!!!
-                                                        //1... guardando usuario
-                                                        new UsuariosJpaController(emf).create(us);
-                                                        //2... creando veterinario
-                                                        if(!existe) {
-                                                            new VeterinarioJpaController(emf).create(vet);
-                                                        }
-                                                        //3... creando detalle de usuario
-                                                        new DetalleUsuariosJpaController(emf).create(new DetalleUsuarios(new DetalleUsuariosJpaController(emf).ultimo(), us, vet, suc));
-                                                        JOptionPane.showMessageDialog(null, "Usuario registrado");
-                                                        btnCancelarActionPerformed(evt);
-                                                    }
-                                                }catch(Exception e)
-                                                {
-                                                    JOptionPane.showMessageDialog(null, "Error: Al intentar registrar el usuario ocurrió lo siguiente... "+e.getMessage());
-                                                }
-                                            }else{
-                                                JOptionPane.showMessageDialog(null, "Debe especificar la especialidad del médico veterinario");
-                                                txtEspecialidad.requestFocus();
-                                            }
-                                        }else{
-                                            JOptionPane.showMessageDialog(null, "Debe especificar el RUN del médico veterinario");
-                                            txtRun.requestFocus();
-                                        }
+        if(btnAccion.getText().compareToIgnoreCase("guardar") == 0) {
+            // NUEVO
+            if(!esVacio(txtUsuario)) {
+                if(!esVacio(txtContrasena)) {
+                    if(!esVacio(txtNombres)) {
+                        if(!esVacio(txtApaterno)) {
+                            if(!esVacio(txtAmaterno)) {
+                                if(!esVacio(txtCorreo)) {
+                                    if(jpa.buscarUsuarioPorNickname(contenido(txtUsuario)) != null) {
+                                        this.mostrarError("El usuario "+contenido(txtUsuario)+" ya se encuentra registrado en la base de datos");
+                                        txtUsuario.selectAll();
+                                        txtUsuario.requestFocus();
                                     }else{
-                                        //registro comun
                                         try {
-                                            Perfiles per = new PerfilesJpaController(emf).findPerfiles(Integer.parseInt(cmbTipoUsuario.getSelectedItem().toString().split(":")[0]));
-                                            if(per == null) {
-                                                JOptionPane.showMessageDialog(null, "ERROR: El perfil de usuario no pudo ser encontrado");
-                                            }else{
-                                                //continua operaciones
-                                                //creando usuario
-                                                char bloqueo;
-                                                if(cmbEstado.getSelectedItem().toString().compareToIgnoreCase("Habilitado") == 0) {
-                                                    bloqueo = '0';
-                                                }else{
-                                                    bloqueo = '1';
-                                                }
-                                                us = new Usuarios(new UsuariosJpaController(emf).ultimo(), txtUsuario.getText(), txtContrasena.getText(), txtNombres.getText(), txtApaterno.getText(), txtAmaterno.getText(), txtCorreo.getText(), bloqueo, per);
-                                                //creando registros!!!
-                                                //1... guardando usuario
-                                                new UsuariosJpaController(emf).create(us);
-                                                //2... creando detalle de usuario
-                                                new DetalleUsuariosJpaController(emf).create(new DetalleUsuarios(new DetalleUsuariosJpaController(emf).ultimo(), us, suc));
-                                                JOptionPane.showMessageDialog(null, "Usuario registrado");
-                                                btnCancelarActionPerformed(evt);
-                                            }
-                                        }catch(Exception e)
-                                        {
-                                            JOptionPane.showMessageDialog(null, "Error: Al intentar registrar el usuario ocurrió lo siguiente... "+e.getMessage());
+                                            char c;
+                                            if(contenido(cmbEstado).compareToIgnoreCase("Habilitado") == 0)
+                                                c = '0';
+                                            else
+                                                c = '1';
+                                            
+                                            Perfiles p = new PerfilesJpaController(emf).findPerfiles(contenidoInt(cmbTipoUsuario));
+                                            jpa.create(new Usuarios(jpa.ultimo(),contenido(txtUsuario), contenido(txtContrasena), contenido(txtNombres), contenido(txtApaterno), contenido(txtAmaterno), contenido(txtCorreo), c, p));
+                                            mostrarMensaje("Usuario guardado");
+                                            btnCancelarActionPerformed(evt);
+                                        }catch(Exception e) {
+                                            mostrarError("Ocurrió un error al intentar registrar el usuario en el sistema: "+e.getMessage());
                                         }
                                     }
-                                }else{
-                                    JOptionPane.showMessageDialog(null, "Debe especificar el correo electrónico del usuario");
-                                    txtCorreo.requestFocus();
                                 }
-                            }else{
-                                JOptionPane.showMessageDialog(null, "Debe especificar el apellido materno del usuario");
-                                txtAmaterno.requestFocus();
                             }
-                        }else{
-                            JOptionPane.showMessageDialog(null, "Debe especificar el apellido paterno del usuario");
-                            txtApaterno.requestFocus();
                         }
-                    }else{
-                        JOptionPane.showMessageDialog(null, "Debe especificar los nombres del usuario");
-                        txtNombres.requestFocus();
                     }
-                }else{
-                    JOptionPane.showMessageDialog(null, "Debe especificar una contraseña para el usuario");
-                    txtContrasena.requestFocus();
                 }
-            }else{
-                JOptionPane.showMessageDialog(null, "Debe especificar el nickname del usuario");
-                txtUsuario.requestFocus();
             }
         }else{
-            //actualizar usuario
-            //comprobando campos
-            if(!txtUsuario.getText().isEmpty()) {
-                if(!txtContrasena.getText().isEmpty()) {
-                    if(!txtNombres.getText().isEmpty()) {
-                        if(!txtApaterno.getText().isEmpty()) {
-                            if(!txtAmaterno.getText().isEmpty()) {
-                                if(!txtCorreo.getText().isEmpty()) {
-                                    //actualizacion comun
-                                    try {
-                                        Perfiles per = new PerfilesJpaController(emf).findPerfiles(Integer.parseInt(cmbTipoUsuario.getSelectedItem().toString().split(":")[0]));
-                                        if(per == null) {
-                                            JOptionPane.showMessageDialog(null, "ERROR: El perfil de usuario no pudo ser encontrado");
-                                        }else{
-                                            //continua operaciones
-                                            //editando usuario usuario
-                                            char bloqueo;
-                                            if(cmbEstado.getSelectedItem().toString().compareToIgnoreCase("Habilitado") == 0) {
-                                                bloqueo = '0';
+            //update
+            if(!esVacio(txtUsuario)) {
+                if(!esVacio(txtContrasena)) {
+                    if(!esVacio(txtNombres)) {
+                        if(!esVacio(txtApaterno)) {
+                            if(!esVacio(txtAmaterno)) {
+                                if(!esVacio(txtCorreo)) {
+                                    if(jpa.buscarUsuarioPorNickname(contenido(txtUsuario)) != null) {
+                                        try {
+                                            if(jpa.buscarUsuarioPorNickname(contenido(txtUsuario)) == null) {
+                                                tp.setUsuario(contenido(txtUsuario));
+                                                tp.setContrasena(contenido(txtContrasena));
+                                                tp.setNombres(contenido(txtNombres));
+                                                tp.setApaterno(contenido(txtApaterno));
+                                                tp.setAmaterno(contenido(txtAmaterno));
+                                                tp.setCorreo(contenido(txtCorreo));
+                                                char c;
+                                                if(contenido(cmbEstado).compareToIgnoreCase("Habilitado") == 0)
+                                                    c = '0';
+                                                else
+                                                c = '1';
+                                                tp.setBloqueado(c);
+                                                Perfiles p = new PerfilesJpaController(emf).findPerfiles(contenidoInt(cmbTipoUsuario));
+                                                tp.setPerfil(p);
+                                                jpa.edit(tp);
+                                                mostrarMensaje("Actualizado");
+                                                tp = null;
+                                                btnCancelarActionPerformed(evt);
                                             }else{
-                                                bloqueo = '1';
+                                                if(jpa.buscarUsuarioPorNickname(contenido(txtUsuario)).getId()== tp.getId()) {
+                                                    tp.setUsuario(contenido(txtUsuario));
+                                                    tp.setContrasena(contenido(txtContrasena));
+                                                    tp.setNombres(contenido(txtNombres));
+                                                    tp.setApaterno(contenido(txtApaterno));
+                                                    tp.setAmaterno(contenido(txtAmaterno));
+                                                    tp.setCorreo(contenido(txtCorreo));
+                                                    char c;
+                                                    if(contenido(cmbEstado).compareToIgnoreCase("Habilitado") == 0)
+                                                        c = '0';
+                                                    else
+                                                    c = '1';
+                                                    tp.setBloqueado(c);
+                                                    Perfiles p = new PerfilesJpaController(emf).findPerfiles(contenidoInt(cmbTipoUsuario));
+                                                    tp.setPerfil(p);
+                                                    jpa.edit(tp);
+                                                    mostrarMensaje("Actualizado");
+                                                    tp = null;
+                                                    btnCancelarActionPerformed(evt);
+                                                }else{
+                                                    mostrarError("El usuario ya se encuentra registrado en la base de datos");
+                                                    txtUsuario.selectAll();
+                                                    txtUsuario.requestFocus();
+                                                }
                                             }
-                                            Usuarios user = new Usuarios(us.getId(), txtUsuario.getText(), txtContrasena.getText(), txtNombres.getText(), txtApaterno.getText(), txtAmaterno.getText(), txtCorreo.getText(), bloqueo, per);
-                                            //creando registros!!!
-                                            //1... guardando usuario
-                                            new UsuariosJpaController(emf).actualizar(user);
-
-                                            JOptionPane.showMessageDialog(null, "Usuario Actualizado");
-                                            btnCancelarActionPerformed(evt);
+                                        }catch(Exception e) {
+                                            mostrarError("Ha ocurrido un error al intentar actualizar el usuario: "+e.getMessage());
                                         }
-                                    }catch(Exception e)
-                                    {
-                                        JOptionPane.showMessageDialog(null, "Error: Al intentar registrar el usuario ocurrió lo siguiente... "+e.getMessage());
+                                    }else{
+                                        try {
+                                            tp.setUsuario(contenido(txtUsuario));
+                                            tp.setContrasena(contenido(txtContrasena));
+                                            tp.setNombres(contenido(txtNombres));
+                                            tp.setApaterno(contenido(txtApaterno));
+                                            tp.setAmaterno(contenido(txtAmaterno));
+                                            tp.setCorreo(contenido(txtCorreo));
+                                            char c;
+                                            if(contenido(cmbEstado).compareToIgnoreCase("Habilitado") == 0)
+                                                c = '0';
+                                            else
+                                            c = '1';
+                                            tp.setBloqueado(c);
+                                            Perfiles p = new PerfilesJpaController(emf).findPerfiles(contenidoInt(cmbTipoUsuario));
+                                            tp.setPerfil(p);
+                                            jpa.edit(tp);
+                                            mostrarMensaje("Actualizado");
+                                            tp = null;
+                                            btnCancelarActionPerformed(evt);
+                                        }catch(Exception e) {
+                                            mostrarError("Ha ocurrido un error al intentar actualizar el usuario: "+e.getMessage());
+                                        }
                                     }
-                                }else{
-                                    JOptionPane.showMessageDialog(null, "Debe especificar el correo electrónico del usuario");
-                                    txtCorreo.requestFocus();
                                 }
-                            }else{
-                                JOptionPane.showMessageDialog(null, "Debe especificar el apellido materno del usuario");
-                                txtAmaterno.requestFocus();
                             }
-                        }else{
-                            JOptionPane.showMessageDialog(null, "Debe especificar el apellido paterno del usuario");
-                            txtApaterno.requestFocus();
                         }
-                    }else{
-                        JOptionPane.showMessageDialog(null, "Debe especificar los nombres del usuario");
-                        txtNombres.requestFocus();
                     }
-                }else{
-                    JOptionPane.showMessageDialog(null, "Debe especificar una contraseña para el usuario");
-                    txtContrasena.requestFocus();
                 }
-            }else{
-                JOptionPane.showMessageDialog(null, "Debe especificar el nickname del usuario");
-                txtUsuario.requestFocus();
             }
         }
     }//GEN-LAST:event_btnAccionActionPerformed
@@ -857,17 +730,7 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
     }//GEN-LAST:event_cmbEstadoMouseClicked
 
     private void cmbEstadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbEstadoFocusLost
-        if(cmbEstado.getSelectedItem().toString().compareToIgnoreCase("deshabilitado") == 0) {
-            int opcion = JOptionPane.showConfirmDialog(null, "Si deshabilita al usuario "+txtUsuario.getText()+" este no podrá iniciar sesión hasta que sea habilitado su ingreso. ¿Esta seguro de continuar?");
-            if(opcion != 0){
-                for(int i = 0; i < cmbEstado.getItemCount(); i++)
-                {
-                    if(cmbEstado.getItemAt(i).toString().compareToIgnoreCase("Habilitado") == 0) {
-                        cmbEstado.setSelectedIndex(i);
-                    }
-                }
-            }
-        }
+
     }//GEN-LAST:event_cmbEstadoFocusLost
 
     private void cmbEstadoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbEstadoItemStateChanged
@@ -875,125 +738,36 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
     }//GEN-LAST:event_cmbEstadoItemStateChanged
 
     private void txtCorreoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCorreoFocusLost
-        if(!txtCorreo.getText().isEmpty()) {
-            if(!cl.starlabs.herramientas.HerramientasCorreo.validarEmail(txtCorreo.getText())) {
-                lblCorreo.setForeground(Color.red);
-                txtCorreo.setForeground(Color.white);
-                txtCorreo.setBackground(Color.red);
-                txtCorreo.requestFocus();
-            }else{
-                lblCorreo.setForeground(Color.black);
-                txtCorreo.setForeground(Color.black);
-                txtCorreo.setBackground(Color.white);
-            }
-        }
+
     }//GEN-LAST:event_txtCorreoFocusLost
 
     private void txtAmaternoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAmaternoKeyTyped
-        if(txtAmaterno.getText().length() > 73) {
-            evt.consume();
-        }
+
     }//GEN-LAST:event_txtAmaternoKeyTyped
 
     private void txtApaternoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApaternoKeyTyped
-        if(txtApaterno.getText().length() > 73) {
-            evt.consume();
-        }
+
     }//GEN-LAST:event_txtApaternoKeyTyped
 
     private void txtNombresKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombresKeyTyped
-        if(txtNombres.getText().length() > 73) {
-            evt.consume();
-        }
+
     }//GEN-LAST:event_txtNombresKeyTyped
 
     private void txtContrasenaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContrasenaKeyTyped
-        if(txtContrasena.getText().length() > 248) {
-            evt.consume();
-        }
+
     }//GEN-LAST:event_txtContrasenaKeyTyped
 
     private void txtContrasenaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtContrasenaFocusLost
-        if(!txtContrasena.getText().isEmpty()) {
-            if(txtContrasena.getText().length() <= 6) {
-                txtContrasena.setForeground(Color.white);
-                txtContrasena.setBackground(Color.red);
-                lblPassword.setForeground(Color.red);
-                txtContrasena.requestFocus();
-                JOptionPane.showMessageDialog(null, "La contraseña para el usuario "+txtUsuario.getText()+ " debe tener al menos 7 carácteres!");
-            }else{
-                txtContrasena.setForeground(Color.black);
-                txtContrasena.setBackground(Color.white);
-                lblPassword.setForeground(Color.black);
-            }
-        }
+
     }//GEN-LAST:event_txtContrasenaFocusLost
 
     private void txtUsuarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsuarioKeyTyped
-        update = false;
-        if(txtUsuario.getText().length() > 98) {
-            evt.consume();
-        }
+
     }//GEN-LAST:event_txtUsuarioKeyTyped
 
     private void txtUsuarioFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtUsuarioFocusLost
-        if(!update) {
-            if(!txtUsuario.getText().isEmpty()) {
-                if(txtUsuario.getText().contains("@")) {
-                    if(txtUsuario.getText().split("@")[1].compareToIgnoreCase(suc.getClinica().getNombreFantasia()) != 0) {
-                        txtUsuario.setText(txtUsuario.getText()+"@"+suc.getClinica().getNombreFantasia());
-                    }
-                }else{
-                    txtUsuario.setText(txtUsuario.getText()+"@"+suc.getClinica().getNombreFantasia());
-                }
-                if(new UsuariosJpaController(emf).existeUsuario(txtUsuario.getText())) {
-                    txtUsuario.setForeground(Color.white);
-                    txtUsuario.setBackground(Color.red);
-                    lblUsuario.setForeground(Color.red);
-                    txtUsuario.requestFocus();
-                    JOptionPane.showMessageDialog(null, "El usuario "+txtUsuario.getText()+ " ya se encuentra registrado!");
-                    txtUsuario.setText("");
-                }else{
-                    txtUsuario.setForeground(Color.black);
-                    txtUsuario.setBackground(Color.green);
-                    lblUsuario.setForeground(Color.black);
-                }
-            }
-        }
+
     }//GEN-LAST:event_txtUsuarioFocusLost
-
-    private void txtEspecialidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEspecialidadKeyTyped
-        if(txtEspecialidad.getText().length() > 109) {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txtEspecialidadKeyTyped
-
-    private void txtRunKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRunKeyTyped
-        if(txtRun.getText().length() > 8) {
-            evt.consume();
-        }
-        char c = evt.getKeyChar();
-        if((!Character.isDigit(c)) && (!((c == 'K') || (c == 'k') || (c == '-') || (c == '.'))))
-        {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txtRunKeyTyped
-
-    private void txtRunFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtRunFocusLost
-        if(!txtRun.getText().isEmpty()) {
-            txtRun.setText(cl.starlabs.herramientas.HerramientasRut.formatear(txtRun.getText()));
-            if(!cl.starlabs.herramientas.HerramientasRut.validar(txtRun.getText())) {
-                lblRun.setForeground(Color.red);
-                txtRun.setForeground(Color.white);
-                txtRun.setBackground(Color.red);
-                txtRun.requestFocus();
-            }else{
-                lblRun.setForeground(Color.black);
-                txtRun.setForeground(Color.black);
-                txtRun.setBackground(Color.white);
-            }
-        }
-    }//GEN-LAST:event_txtRunFocusLost
 
 
     public static void main(String args[]) {
@@ -1042,12 +816,10 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
     private javax.swing.JLabel lblApaterno;
     private javax.swing.JLabel lblClinica;
     private javax.swing.JLabel lblCorreo;
-    private javax.swing.JLabel lblEspecialidad;
     private javax.swing.JLabel lblEstado;
     private javax.swing.JLabel lblNombreClinica;
     private javax.swing.JLabel lblNombres;
     private javax.swing.JLabel lblPassword;
-    private javax.swing.JLabel lblRun;
     private javax.swing.JLabel lblTipoUsuario;
     private javax.swing.JLabel lblUsuario;
     private javax.swing.JPanel panelInfoCuenta;
@@ -1056,9 +828,7 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
     private javax.swing.JTextField txtApaterno;
     private javax.swing.JPasswordField txtContrasena;
     private javax.swing.JTextField txtCorreo;
-    private javax.swing.JTextField txtEspecialidad;
     private javax.swing.JTextField txtNombres;
-    private javax.swing.JTextField txtRun;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 }
