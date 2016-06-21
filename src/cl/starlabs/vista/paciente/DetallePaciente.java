@@ -5,24 +5,117 @@
  */
 package cl.starlabs.vista.paciente;
 
-/**
- *
- * @author Victor Manuel Araya
- */
+import cl.starlabs.controladores.MascotaJpaController;
+import cl.starlabs.modelo.Mascota;
+import javax.swing.UIManager;
+import cl.starlabs.herramientas.*;
+import cl.starlabs.vista.propietario.DetallesPropietario;
+import java.util.GregorianCalendar;
+import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
+
 public class DetallePaciente extends javax.swing.JFrame {
 
-    /**
-     * Creates new form DetallePaciente
-     */
+    Mascota m;
+    //ventanas que ocupan la aplicación
+    BuscarPaciente buscar = null;
+    ListarPacientes listar = null;
+    //declarando herramientas
+    HerramientasRapidas hr = new HerramientasRapidas();
+    
     public DetallePaciente() {
         initComponents();
+        this.setLocationRelativeTo(null);
+    }
+    
+    public DetallePaciente(Mascota m, BuscarPaciente buscar) {
+        initComponents();
+        this.setLocationRelativeTo(null);
+        this.m = m;
+        this.buscar = buscar;
+        //rellenando informacion
+        hr.insertarTexto(lblNombrePaciente, m.getNombre());
+        int dias;
+        if(m.getDefuncion() == null) {
+            dias = hr.fechasdiferenciaendias(m.getFechaNacimiento(), new GregorianCalendar().getTime());
+        }else{
+            dias = hr.fechasdiferenciaendias(m.getFechaNacimiento(), m.getDefuncion());
+            btnDeclararDefuncion.setEnabled(false);
+        }
+        hr.insertarTexto(lblEdadPaciente, Math.abs((dias/365))+" años "+Math.abs((dias/365/12))+" meses "+((dias/365/12/24))+" días");
+        if(m.getSexo() == 'H') {
+            hr.insertarTexto(lblSexoPaciente, "Hembra");
+        }else if(m.getSexo() == 'M') {
+            hr.insertarTexto(lblSexoPaciente, "Macho");
+        }else{
+            hr.insertarTexto(lblSexoPaciente, "Hermafrodita");
+        }
+        hr.insertarTexto(lblRazaPaciente, m.getRaza().getNombre());
+        hr.insertarTexto(lblIdentificador, m.getIdMascota()+"");
+        hr.insertarTexto(lblNumeroChip, m.getNumeroChip()+"");
+        hr.insertarTexto(lblGrupoSanguineo, m.getGrupoSanguineo());
+        
+        //info propietario
+        hr.insertarTexto(lblNombrePropietario, m.getPropietario().getNombres());
+        hr.insertarTexto(lblApellidosPropietario, m.getPropietario().getApaterno()+" "+m.getPropietario().getAmaterno());
+        hr.insertarTexto(lblRunPropietario, m.getPropietario().getRut()+"-"+m.getPropietario().getDv());
+        
+        //info progenitores
+        if(m.getMadre() != null) {
+            hr.insertarTexto(lblInfoMadrePaciente, "Nombre: "+m.getMadre().getNombre()+" Identificador: "+m.getMadre().getIdMascota()+" Propietario: "+m.getMadre().getPropietario().getNombres()+" "+m.getMadre().getPropietario().getApaterno()+" "+m.getMadre().getPropietario().getAmaterno());
+        }
+        
+        if(m.getPadre()!= null) {
+            hr.insertarTexto(lblInfoPadrePaciente, "Nombre: "+m.getPadre().getNombre()+" Identificador: "+m.getPadre().getIdMascota()+" Propietario: "+m.getPadre().getPropietario().getNombres()+" "+m.getPadre().getPropietario().getApaterno()+" "+m.getPadre().getPropietario().getAmaterno());
+        }
+    }
+    
+    public DetallePaciente(Mascota m, ListarPacientes listar) {
+        initComponents();
+        this.setLocationRelativeTo(null);
+        this.m = m;
+        this.listar = listar;
+        //rellenando informacion
+        hr.insertarTexto(lblNombrePaciente, m.getNombre());
+        int dias;
+        if(m.getDefuncion() != null) {
+            dias = hr.fechasdiferenciaendias(m.getFechaNacimiento(), new GregorianCalendar().getTime());
+        }else{
+            dias = hr.fechasdiferenciaendias(m.getFechaNacimiento(), m.getDefuncion());
+            btnDeclararDefuncion.setEnabled(false);
+        }
+        hr.insertarTexto(lblEdadPaciente, Math.abs((dias/365))+" años "+Math.abs((dias/365/12))+" meses "+((dias/365/12/24))+" días");
+        if(m.getSexo() == 'H') {
+            hr.insertarTexto(lblSexoPaciente, "Hembra");
+        }else if(m.getSexo() == 'M') {
+            hr.insertarTexto(lblSexoPaciente, "Macho");
+        }else{
+            hr.insertarTexto(lblSexoPaciente, "Hermafrodita");
+        }
+        hr.insertarTexto(lblRazaPaciente, m.getRaza().getNombre());
+        hr.insertarTexto(lblIdentificador, m.getIdMascota()+"");
+        hr.insertarTexto(lblNumeroChip, m.getNumeroChip()+"");
+        hr.insertarTexto(lblGrupoSanguineo, m.getGrupoSanguineo());
+        
+        //info propietario
+        hr.insertarTexto(lblNombrePropietario, m.getPropietario().getNombres());
+        hr.insertarTexto(lblApellidosPropietario, m.getPropietario().getApaterno()+" "+m.getPropietario().getAmaterno());
+        hr.insertarTexto(lblRunPropietario, m.getPropietario().getRut()+"-"+m.getPropietario().getDv());
+        
+        //info progenitores
+        if(m.getMadre() != null) {
+            hr.insertarTexto(lblInfoMadrePaciente, "Nombre: "+m.getMadre().getNombre()+" Identificador: "+m.getMadre().getIdMascota()+" Propietario: "+m.getMadre().getPropietario().getNombres()+" "+m.getMadre().getPropietario().getApaterno()+" "+m.getMadre().getPropietario().getAmaterno());
+        }
+        
+        if(m.getPadre()!= null) {
+            hr.insertarTexto(lblInfoPadrePaciente, "Nombre: "+m.getPadre().getNombre()+" Identificador: "+m.getPadre().getIdMascota()+" Propietario: "+m.getPadre().getPropietario().getNombres()+" "+m.getPadre().getPropietario().getApaterno()+" "+m.getPadre().getPropietario().getAmaterno());
+        }
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+    public void actualizarDatos() {
+        
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -42,11 +135,9 @@ public class DetallePaciente extends javax.swing.JFrame {
         lblIdentificador = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         lblImagenPropietario = new javax.swing.JLabel();
-        lblEstadoCivil = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         lblNombrePropietario = new javax.swing.JLabel();
         lblRunPropietario = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
         lblApellidosPropietario = new javax.swing.JLabel();
         btnVerPropietario = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
@@ -58,7 +149,7 @@ public class DetallePaciente extends javax.swing.JFrame {
         lblInfoPadrePaciente = new javax.swing.JLabel();
         btnEditarPaciente = new javax.swing.JButton();
         btnDeclararDefuncion = new javax.swing.JButton();
-        btnCambiarPropietario = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
         btnEliminarPaciente = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -162,9 +253,6 @@ public class DetallePaciente extends javax.swing.JFrame {
 
         lblImagenPropietario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/sistema/usuario_desconocido.jpg"))); // NOI18N
 
-        lblEstadoCivil.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        lblEstadoCivil.setText("Soltero");
-
         jLabel13.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel13.setText("Nombre Completo");
 
@@ -174,13 +262,15 @@ public class DetallePaciente extends javax.swing.JFrame {
         lblRunPropietario.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         lblRunPropietario.setText("Run");
 
-        jLabel17.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel17.setText("Estado Civil");
-
         lblApellidosPropietario.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         lblApellidosPropietario.setText("Apellidos");
 
         btnVerPropietario.setText("Ver Propietario");
+        btnVerPropietario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerPropietarioActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -191,10 +281,6 @@ public class DetallePaciente extends javax.swing.JFrame {
                 .addComponent(lblImagenPropietario)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel17)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblEstadoCivil))
                     .addComponent(lblRunPropietario)
                     .addComponent(jLabel13)
                     .addComponent(lblNombrePropietario)
@@ -217,11 +303,7 @@ public class DetallePaciente extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblApellidosPropietario)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblRunPropietario)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel17)
-                            .addComponent(lblEstadoCivil)))
+                        .addComponent(lblRunPropietario))
                     .addComponent(lblImagenPropietario))
                 .addGap(7, 7, 7)
                 .addComponent(btnVerPropietario))
@@ -285,15 +367,35 @@ public class DetallePaciente extends javax.swing.JFrame {
 
         btnEditarPaciente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/pencil.png"))); // NOI18N
         btnEditarPaciente.setText("Editar Paciente");
+        btnEditarPaciente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarPacienteActionPerformed(evt);
+            }
+        });
 
         btnDeclararDefuncion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/emoticon_unhappy.png"))); // NOI18N
         btnDeclararDefuncion.setText("Declarar Defunción");
+        btnDeclararDefuncion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeclararDefuncionActionPerformed(evt);
+            }
+        });
 
-        btnCambiarPropietario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/group.png"))); // NOI18N
-        btnCambiarPropietario.setText("Cambiar Propietario");
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/cancel.png"))); // NOI18N
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         btnEliminarPaciente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/delete.png"))); // NOI18N
         btnEliminarPaciente.setText("Eliminar");
+        btnEliminarPaciente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarPacienteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -302,19 +404,21 @@ public class DetallePaciente extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnEditarPaciente)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnDeclararDefuncion)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCambiarPropietario)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnEliminarPaciente)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCancelar)
+                        .addGap(0, 24, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -329,7 +433,7 @@ public class DetallePaciente extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEditarPaciente)
                     .addComponent(btnDeclararDefuncion)
-                    .addComponent(btnCambiarPropietario)
+                    .addComponent(btnCancelar)
                     .addComponent(btnEliminarPaciente))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
@@ -337,9 +441,55 @@ public class DetallePaciente extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
+    private void btnVerPropietarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerPropietarioActionPerformed
+        new DetallesPropietario(m.getPropietario()).setVisible(true);
+    }//GEN-LAST:event_btnVerPropietarioActionPerformed
+
+    private void btnEditarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarPacienteActionPerformed
+        new RegistroPaciente(null, m, m.getPropietario(), this).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnEditarPacienteActionPerformed
+
+    private void btnDeclararDefuncionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeclararDefuncionActionPerformed
+        try {
+            m.setDefuncion(new GregorianCalendar().getTime());
+            new MascotaJpaController(Persistence.createEntityManagerFactory("SyncPetPU")).edit(m);
+            hr.mostrarMensaje("Se registró la defunción del paciente");
+            this.setEnabled(false);
+        } catch (Exception e) {
+            hr.mostrarError("Ocurrió un error al registrar la defunción: "+e.getMessage());
+            this.setEnabled(true);
+        }
+    }//GEN-LAST:event_btnDeclararDefuncionActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        if(buscar != null) {
+            buscar.setVisible(true);
+            buscar.actualizarTabla();
+            this.dispose();
+        }
+        if(listar != null) {
+            listar.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnEliminarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarPacienteActionPerformed
+        int opcion = JOptionPane.showConfirmDialog(null, "¿Esta seguro de eliminar este paciente?", "Error", JOptionPane.OK_CANCEL_OPTION);
+        if(opcion == 0) {
+            try {
+                m.setDefuncion(new GregorianCalendar().getTime());
+                new MascotaJpaController(Persistence.createEntityManagerFactory("SyncPetPU")).destroy(m.getIdMascota());
+                hr.mostrarMensaje("Paciente eliminado");
+                this.setEnabled(false);
+                btnCancelarActionPerformed(evt);
+            } catch (Exception e) {
+                hr.mostrarError("Ocurrió un error al eliminar al paciente: "+e.getMessage());
+                this.setEnabled(true);
+            }
+        }
+    }//GEN-LAST:event_btnEliminarPacienteActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -349,7 +499,7 @@ public class DetallePaciente extends javax.swing.JFrame {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    javax.swing.UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                     break;
                 }
             }
@@ -373,14 +523,13 @@ public class DetallePaciente extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCambiarPropietario;
+    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnDeclararDefuncion;
     private javax.swing.JButton btnEditarPaciente;
     private javax.swing.JButton btnEliminarPaciente;
     private javax.swing.JButton btnVerPropietario;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
@@ -391,7 +540,6 @@ public class DetallePaciente extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lblApellidosPropietario;
     private javax.swing.JLabel lblEdadPaciente;
-    private javax.swing.JLabel lblEstadoCivil;
     private javax.swing.JLabel lblGrupoSanguineo;
     private javax.swing.JLabel lblIdentificador;
     private javax.swing.JLabel lblImagenMadrePaciente;

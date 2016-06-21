@@ -5,17 +5,33 @@
  */
 package cl.starlabs.vista.propietario;
 
+import cl.starlabs.herramientas.*;
+import cl.starlabs.modelo.Propietario;
+
 /**
  *
  * @author Janno
  */
 public class DetallesPropietario extends javax.swing.JFrame {
 
-    /**
-     * Creates new form DetallesPropietario
-     */
+    Propietario prop;
+    HerramientasRapidas hr = new HerramientasRapidas();
+    HerramientasTelefono ht = new HerramientasTelefono();
     public DetallesPropietario() {
         initComponents();
+    }
+    
+    public DetallesPropietario(Propietario prop) {
+        initComponents();
+        this.prop = prop;
+        this.setLocationRelativeTo(null);
+        hr.insertarTexto(lblNombres, prop.getNombres());
+        hr.insertarTexto(lblApellidos, prop.getApaterno()+" "+prop.getAmaterno());
+        hr.insertarTexto(lblRun, prop.getRut()+"-"+prop.getDv());
+        hr.insertarTexto(lblCorreo, prop.getEmail());
+        hr.insertarTexto(lblTelefono, ht.formatearTelefono(prop.getTelefono()+""));
+        hr.insertarTexto(lblcelular, ht.formatearCelular(prop.getCelular()+""));
+        hr.insertarTexto(lblDireccion, prop.getDireccion()+", "+prop.getComuna().getNombre()+", "+prop.getComuna().getProvincia().getNombre()+", "+prop.getComuna().getProvincia().getRegion().getNombre()+", "+prop.getComuna().getProvincia().getRegion().getPais().getNombre());
     }
 
     /**
@@ -30,11 +46,9 @@ public class DetallesPropietario extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         lblImagenUsuario = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
+        lblNombres = new javax.swing.JLabel();
+        lblApellidos = new javax.swing.JLabel();
+        lblRun = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -42,10 +56,10 @@ public class DetallesPropietario extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
+        lblCorreo = new javax.swing.JLabel();
+        lblTelefono = new javax.swing.JLabel();
+        lblcelular = new javax.swing.JLabel();
+        lblDireccion = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("SyncPet :: Detalle de Propietario");
@@ -58,20 +72,14 @@ public class DetallesPropietario extends javax.swing.JFrame {
 
         lblImagenUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/sistema/usuario_desconocido.jpg"))); // NOI18N
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel2.setText("Nombres");
+        lblNombres.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        lblNombres.setText("Nombres");
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel3.setText("Apellidos");
+        lblApellidos.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        lblApellidos.setText("Apellidos");
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel4.setText("Run");
-
-        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel9.setText("Estado Civil");
-
-        jLabel10.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel10.setText("Soltero");
+        lblRun.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        lblRun.setText("Run");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -83,13 +91,9 @@ public class DetallesPropietario extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel10)))
+                    .addComponent(lblNombres)
+                    .addComponent(lblApellidos)
+                    .addComponent(lblRun))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -100,15 +104,11 @@ public class DetallesPropietario extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
+                        .addComponent(lblNombres)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
+                        .addComponent(lblApellidos)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel10)))
+                        .addComponent(lblRun))
                     .addComponent(lblImagenUsuario))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -133,17 +133,17 @@ public class DetallesPropietario extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel8.setText("Dirección Particular");
 
-        jLabel11.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel11.setText("Correo Electrónico no especificado");
+        lblCorreo.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        lblCorreo.setText("Correo Electrónico no especificado");
 
-        jLabel12.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel12.setText("Teléfono fijo no especificado");
+        lblTelefono.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        lblTelefono.setText("Teléfono fijo no especificado");
 
-        jLabel13.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel13.setText("Teléfono Celular no especificado");
+        lblcelular.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        lblcelular.setText("Teléfono Celular no especificado");
 
-        jLabel14.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel14.setText("Dirección particular no especificada");
+        lblDireccion.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        lblDireccion.setText("Dirección particular no especificada");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -160,10 +160,10 @@ public class DetallesPropietario extends javax.swing.JFrame {
                             .addComponent(jLabel8))
                         .addGap(26, 26, 26)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel13)
-                            .addComponent(jLabel12)
-                            .addComponent(jLabel11)))
-                    .addComponent(jLabel14))
+                            .addComponent(lblcelular)
+                            .addComponent(lblTelefono)
+                            .addComponent(lblCorreo)))
+                    .addComponent(lblDireccion))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -172,19 +172,19 @@ public class DetallesPropietario extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jLabel11))
+                    .addComponent(lblCorreo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jLabel12))
+                    .addComponent(lblTelefono))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jLabel13))
+                    .addComponent(lblcelular))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel14)
+                .addComponent(lblDireccion)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -259,21 +259,19 @@ public class DetallesPropietario extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel lblApellidos;
+    private javax.swing.JLabel lblCorreo;
+    private javax.swing.JLabel lblDireccion;
     private javax.swing.JLabel lblImagenUsuario;
+    private javax.swing.JLabel lblNombres;
+    private javax.swing.JLabel lblRun;
+    private javax.swing.JLabel lblTelefono;
+    private javax.swing.JLabel lblcelular;
     // End of variables declaration//GEN-END:variables
 }

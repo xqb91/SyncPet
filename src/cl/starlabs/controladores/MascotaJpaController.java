@@ -1016,9 +1016,9 @@ public class MascotaJpaController implements Serializable {
         }
     }
     
-    public Integer ultimoRegistro() {
+    public Integer ultimo() {
         try {
-            Query consulta = getEntityManager().createNamedQuery("Mascota.findAll");
+            Query consulta = getEntityManager().createNamedQuery("Mascota.findAllDesc");
             consulta.setMaxResults(1);
             return ((Mascota)consulta.getSingleResult()).getIdMascota()+1;
         } catch (Exception e) {
@@ -1033,5 +1033,5 @@ public class MascotaJpaController implements Serializable {
             return null;
         }
     }*/
-    
+
 }

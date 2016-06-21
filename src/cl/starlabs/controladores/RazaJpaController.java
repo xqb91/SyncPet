@@ -274,4 +274,14 @@ public class RazaJpaController implements Serializable {
         }
     }
     
+    public List<Raza> buscarPorEspecie(Especie es) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Raza.findByEspecie");
+            consulta.setParameter("especie", es);
+            return consulta.getResultList();
+        }catch (Exception e) {
+            return null;
+        }
+    }
+    
 }

@@ -71,7 +71,6 @@ public class ListarPacientes extends javax.swing.JFrame {
                         fila[1] = m.getNombre();
                         fila[2] = m.getRaza().getNombre();
                         fila[3] = p.getNombres().split(" ")[0]+" "+p.getApaterno();
-                        fila[4] = "Detalles";
                         modelo.addRow(fila);
                     }
                 }
@@ -79,8 +78,6 @@ public class ListarPacientes extends javax.swing.JFrame {
         }
         //aplicando el modelo a la tabla actual
         resultados.setModel(modelo);
-        resultados.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
-        resultados.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JTextField()));
     }
 
     /**
@@ -152,11 +149,11 @@ public class ListarPacientes extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre", "Raza", "Propietario", "Acciones"
+                "ID", "Nombre", "Raza", "Propietario"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

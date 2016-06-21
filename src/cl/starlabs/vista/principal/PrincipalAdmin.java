@@ -26,6 +26,7 @@ import cl.starlabs.vista.administracion.geografia.AdministradorProvincias;
 import cl.starlabs.vista.administracion.geografia.AdministradorRegiones;
 import cl.starlabs.vista.administracion.trabajadores.AdministradorTrabajadores;
 import cl.starlabs.vista.login.PantallaBloqueo;
+import cl.starlabs.vista.paciente.BuscarPaciente;
 import cl.starlabs.vista.paciente.ListarPacientes;
 import cl.starlabs.vista.paciente.RegistroPaciente;
 import java.awt.Image;
@@ -113,7 +114,6 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menPropietarios_add = new javax.swing.JMenuItem();
         menPropietarios_find = new javax.swing.JMenuItem();
         menPropietarios_admin = new javax.swing.JMenuItem();
-        menPropietarios_paciente = new javax.swing.JMenuItem();
         menAgenda = new javax.swing.JMenu();
         menAgenda_calendario = new javax.swing.JMenuItem();
         menAgenda_hoy = new javax.swing.JMenuItem();
@@ -321,6 +321,11 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menPacientes_find.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_MASK));
         menPacientes_find.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/find.png"))); // NOI18N
         menPacientes_find.setText("Buscar Paciente");
+        menPacientes_find.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menPacientes_findActionPerformed(evt);
+            }
+        });
         menPacientes.add(menPacientes_find);
 
         menPacientes_admin.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
@@ -357,11 +362,6 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menPropietarios_admin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/application.png"))); // NOI18N
         menPropietarios_admin.setText("Administrar Propietarios");
         menPropietarios.add(menPropietarios_admin);
-
-        menPropietarios_paciente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
-        menPropietarios_paciente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/pet.png"))); // NOI18N
-        menPropietarios_paciente.setText("Asociar Paciente");
-        menPropietarios.add(menPropietarios_paciente);
 
         jMenuBar1.add(menPropietarios);
 
@@ -741,6 +741,10 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         new AdminProcedimientos().setVisible(true);
     }//GEN-LAST:event_confAdminProcedimientosActionPerformed
 
+    private void menPacientes_findActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPacientes_findActionPerformed
+        new BuscarPaciente(u);
+    }//GEN-LAST:event_menPacientes_findActionPerformed
+
     
     /**
      * @param args the command line arguments
@@ -839,7 +843,6 @@ public class PrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JMenuItem menPropietarios_add;
     private javax.swing.JMenuItem menPropietarios_admin;
     private javax.swing.JMenuItem menPropietarios_find;
-    private javax.swing.JMenuItem menPropietarios_paciente;
     private javax.swing.JMenu menRep;
     private javax.swing.JMenuItem menuAdminComunas;
     private javax.swing.JMenuItem menuAdminProvincias;
