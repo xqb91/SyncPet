@@ -33,7 +33,7 @@
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnCancelar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="btnFiltrar" min="-2" pref="107" max="-2" attributes="0"/>
                   </Group>
@@ -49,10 +49,10 @@
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnCancelar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnFiltrar" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="20" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -65,14 +65,20 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Filtrar"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFiltrarActionPerformed"/>
+      </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="btnCancelar">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/cl/starlabs/imagenes/iconos/cancel.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Cancelar"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelarActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JPanel" name="jPanel1">
       <Properties>
@@ -118,18 +124,15 @@
         <Component class="javax.swing.JComboBox" name="cmbCampoFiltro">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="11">
+              <StringArray count="8">
                 <StringItem index="0" value="Filtrar por..."/>
                 <StringItem index="1" value="Run"/>
                 <StringItem index="2" value="Nombres"/>
                 <StringItem index="3" value="Apellido Paterno"/>
                 <StringItem index="4" value="Apellido Materno"/>
-                <StringItem index="5" value="Nombre Completo"/>
-                <StringItem index="6" value="Estado Civil"/>
-                <StringItem index="7" value="Correo Electr&#xf3;nico"/>
-                <StringItem index="8" value="T&#xe9;fono Fijo"/>
-                <StringItem index="9" value="Tel&#xe9;fono Celular"/>
-                <StringItem index="10" value="Ciudad"/>
+                <StringItem index="5" value="Correo Electr&#xf3;nico"/>
+                <StringItem index="6" value="T&#xe9;fono Fijo"/>
+                <StringItem index="7" value="Tel&#xe9;fono Celular"/>
               </StringArray>
             </Property>
           </Properties>
@@ -141,6 +144,11 @@
           </AuxValues>
         </Component>
         <Component class="javax.swing.JTextField" name="txtFiltro">
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtFiltroFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtFiltroFocusLost"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtFiltroKeyTyped"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblNombreFiltro">
         </Component>

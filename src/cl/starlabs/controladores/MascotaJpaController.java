@@ -1033,5 +1033,17 @@ public class MascotaJpaController implements Serializable {
             return null;
         }
     }*/
+    
+    public boolean editar(Mascota ma) {
+        try {
+            getEntityManager().getTransaction().begin();
+            getEntityManager().merge(ma);
+            getEntityManager().getTransaction().commit();
+            getEntityManager().close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
 }

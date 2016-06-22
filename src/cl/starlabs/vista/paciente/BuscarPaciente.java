@@ -38,6 +38,10 @@ public class BuscarPaciente extends javax.swing.JFrame {
     HerramientasRut hrut = new HerramientasRut();
     HerramientasTelefono ht = new HerramientasTelefono();
     
+    //aplicaciones que usan esta aplicacion
+    DetalleProgenitores det;
+    String tipo;
+    
     public BuscarPaciente() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -58,6 +62,19 @@ public class BuscarPaciente extends javax.swing.JFrame {
         this.us = us;
         rellenarTabla();
     }
+    
+      public BuscarPaciente(DetalleProgenitores det, String tipo) {
+        this.tipo = "";
+        initComponents();
+        this.setLocationRelativeTo(null);
+        this.emf = Persistence.createEntityManagerFactory("SyncPetPU");
+        this.setLocationRelativeTo(null);
+        this.jpa = new PropietarioJpaController(emf);
+        this.jpb = new MascotaJpaController(emf);
+        this.det = det;
+        this.tipo = tipo;
+        rellenarTabla();
+    }  
 
     public void rellenarTabla() {
         if(!hr.contenido(txtRut).isEmpty()) {
@@ -300,16 +317,41 @@ public class BuscarPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void tablaResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaResultadosMouseClicked
-        DefaultTableModel modelo = (DefaultTableModel)tablaResultados.getModel();
-        //consultando por el valor a cargar, es recuperado desde el valor seleccionado recuperando el ROW ID
-        tq = jpb.findMascota(Integer.parseInt(String.valueOf(modelo.getValueAt(tablaResultados.getSelectedRow(), 0))));
-        if(tq == null) {
-            hr.mostrarError("El paciente no pudo ser hallado por el sistema");
+        if(tipo == null && det == null) {
+            DefaultTableModel modelo = (DefaultTableModel)tablaResultados.getModel();
+            //consultando por el valor a cargar, es recuperado desde el valor seleccionado recuperando el ROW ID
+            tq = jpb.findMascota(Integer.parseInt(String.valueOf(modelo.getValueAt(tablaResultados.getSelectedRow(), 0))));
+            if(tq == null) {
+                hr.mostrarError("El paciente no pudo ser hallado por el sistema");
+            }else{
+                //new RegistroPaciente(us, tq, tq.getPropietario()).setVisible(true);
+                new DetallePaciente(tq, this).setVisible(true);
+                this.rut = hr.contenido(txtRut);
+                this.dispose();
+            }
         }else{
-            //new RegistroPaciente(us, tq, tq.getPropietario()).setVisible(true);
-            new DetallePaciente(tq, this).setVisible(true);
-            this.rut = hr.contenido(txtRut);
-            this.dispose();
+            if(tipo.compareToIgnoreCase("paciente") == 0) {
+                DefaultTableModel modelo = (DefaultTableModel)tablaResultados.getModel();
+                //consultando por el valor a cargar, es recuperado desde el valor seleccionado recuperando el ROW ID
+                tq = jpb.findMascota(Integer.parseInt(String.valueOf(modelo.getValueAt(tablaResultados.getSelectedRow(), 0))));
+                det.setPaciente(tq);
+                det.setVisible(true);
+                this.dispose();
+            }else if(tipo.compareToIgnoreCase("padre") == 0) {
+                DefaultTableModel modelo = (DefaultTableModel)tablaResultados.getModel();
+                //consultando por el valor a cargar, es recuperado desde el valor seleccionado recuperando el ROW ID
+                tq = jpb.findMascota(Integer.parseInt(String.valueOf(modelo.getValueAt(tablaResultados.getSelectedRow(), 0))));
+                det.setPadre(tq);
+                det.setVisible(true);
+                this.dispose();
+            }else if(tipo.compareToIgnoreCase("madre") == 0){
+                DefaultTableModel modelo = (DefaultTableModel)tablaResultados.getModel();
+                //consultando por el valor a cargar, es recuperado desde el valor seleccionado recuperando el ROW ID
+                tq = jpb.findMascota(Integer.parseInt(String.valueOf(modelo.getValueAt(tablaResultados.getSelectedRow(), 0))));
+                det.setMadre(tq);
+                det.setVisible(true);
+                this.dispose();
+            }
         }
     }//GEN-LAST:event_tablaResultadosMouseClicked
 

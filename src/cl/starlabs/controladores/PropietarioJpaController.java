@@ -298,4 +298,69 @@ public class PropietarioJpaController implements Serializable {
         }
     }
     
+    public List<Propietario> buscarMultiple(String campo, String valor) {
+        switch(campo) {
+            case "Run":
+                try {
+                    Query consulta = getEntityManager().createNamedQuery("Propietario.findByRut");
+                    Integer numero = Integer.parseInt(valor.replace(".", "").split("-")[0]);
+                    consulta.setParameter("rut", numero);
+                    return consulta.getResultList();
+                } catch (Exception e) {
+                    return null;
+                }
+            case "Nombres":
+                try {
+                    Query consulta = getEntityManager().createNamedQuery("Propietario.findByNombres");
+                    consulta.setParameter("nombres", valor);
+                    return consulta.getResultList();
+                } catch (Exception e) {
+                    return null;
+                }
+            case "Apellido Paterno":
+                try {
+                    Query consulta = getEntityManager().createNamedQuery("Propietario.findByApaterno");
+                    consulta.setParameter("apaterno", valor);
+                    return consulta.getResultList();
+                } catch (Exception e) {
+                    return null;
+                }
+            case "Apellido Materno":
+                try {
+                    Query consulta = getEntityManager().createNamedQuery("Propietario.findByAmaterno");
+                    consulta.setParameter("amaterno", valor);
+                    return consulta.getResultList();
+                } catch (Exception e) {
+                    return null;
+                }
+            case "Correo Electrónico":
+                try {
+                    Query consulta = getEntityManager().createNamedQuery("Propietario.findByCorreo");
+                    consulta.setParameter("email", valor);
+                    return consulta.getResultList();
+                } catch (Exception e) {
+                    return null;
+                }
+            case "Téfono Fijo":
+                try {
+                    Query consulta = getEntityManager().createNamedQuery("Propietario.findByTelefono");
+                    consulta.setParameter("telefono", Integer.parseInt(valor.replace("+", "")));
+                    return consulta.getResultList();
+                } catch (Exception e) {
+                    return null;
+                }
+            case "Teléfono Celular":
+                try {
+                    Query consulta = getEntityManager().createNamedQuery("Propietario.findByCelular");
+                    consulta.setParameter("celular", Integer.parseInt(valor.replace("+", "")));
+                    return consulta.getResultList();
+                } catch (Exception e) {
+                    return null;
+                }
+
+            default:
+                return null;
+        }
+    }
+    
 }

@@ -5,6 +5,7 @@
  */
 package cl.starlabs.vista.paciente;
 
+import cl.starlabs.controladores.MascotaJpaController;
 import cl.starlabs.controladores.PropietarioJpaController;
 import cl.starlabs.modelo.Mascota;
 import cl.starlabs.modelo.Propietario;
@@ -25,6 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import cl.starlabs.herramientas.*;
 
 /**
  *
@@ -35,6 +37,7 @@ public class ListarPacientes extends javax.swing.JFrame {
     Usuarios u = null;
     Sucursal s = null;
     EntityManagerFactory emf = null;
+    HerramientasRapidas hr = new HerramientasRapidas();
     
     public ListarPacientes() {
         initComponents();
@@ -109,6 +112,11 @@ public class ListarPacientes extends javax.swing.JFrame {
                 txtRutFocusLost(evt);
             }
         });
+        txtRut.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtRutKeyTyped(evt);
+            }
+        });
 
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/find.png"))); // NOI18N
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -158,6 +166,11 @@ public class ListarPacientes extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        resultados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                resultadosMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(resultados);
@@ -227,43 +240,54 @@ public class ListarPacientes extends javax.swing.JFrame {
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         //buscar datos de propietario
         Propietario p = new PropietarioJpaController(emf).buscarPorRut(txtRut.getText());
-        if(p.getMascotaList().size() == 0) {
-            JOptionPane.showMessageDialog(null, "El propietario "+p.getNombres().split(" ")[0]+" "+p.getApaterno()+" no tiene pacientes vinculados");
-            DefaultTableModel modelo = (DefaultTableModel) resultados.getModel();
-            //eliminando valores actuales//
-            for(int i = 0; i<modelo.getRowCount(); i++) {
-                modelo.removeRow(i);
+        if(p != null) {
+            if(p.getMascotaList().size() == 0) {
+                JOptionPane.showMessageDialog(null, "El propietario "+p.getNombres().split(" ")[0].toLowerCase()+" "+p.getApaterno().toLowerCase()+" no tiene pacientes vinculados");
+                DefaultTableModel modelo = new DefaultTableModel(new Object [][] { }, new String [] { "ID", "Nombre", "Raza", "Propietario" });
+                //eliminando valores actuales//
+                for(int i = 0; i<modelo.getRowCount(); i++) {
+                    modelo.removeRow(i);
+                }
+                resultados.setModel(modelo);
+                txtRut.setEnabled(true);
+            }else{
+                DefaultTableModel modelo = new DefaultTableModel(new Object [][] { }, new String [] { "ID", "Nombre", "Raza", "Propietario" });
+                //eliminando valores actuales//
+                for(int i = 0; i<modelo.getRowCount(); i++) {
+                    modelo.removeRow(i);
+                }
+                resultados.setModel(modelo);
+                //rellenando tabla
+                for(Mascota m : p.getMascotaList()) {
+                    //declarando arreglo para insertar los valores en la tabla
+                    Object[] fila = new Object[5];
+                    //rellenando los valores del arreglo con los valores que debe contener la tabla
+                    fila[0] = m.getIdMascota();
+                    fila[1] = m.getNombre();
+                    fila[2] = m.getRaza().getNombre();
+                    fila[3] = p.getNombres().split(" ")[0]+" "+p.getApaterno();
+                    fila[4] = "Detalles";
+                    modelo.addRow(fila);
+                }
+                //aplicando el modelo a la tabla actual
+                resultados.setModel(modelo);
             }
-            resultados.setModel(modelo);
-            resultados.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
-            resultados.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JTextField()));
-        }else{
-            DefaultTableModel modelo = (DefaultTableModel) resultados.getModel();
-            //eliminando valores actuales//
-            for(int i = 0; i<modelo.getRowCount(); i++) {
-                modelo.removeRow(i);
-            }
-            resultados.setModel(modelo);
-            resultados.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
-            resultados.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JTextField()));
-            //rellenando tabla
-            for(Mascota m : p.getMascotaList()) {
-                //declarando arreglo para insertar los valores en la tabla
-                Object[] fila = new Object[5];
-                //rellenando los valores del arreglo con los valores que debe contener la tabla
-                fila[0] = m.getIdMascota();
-                fila[1] = m.getNombre();
-                fila[2] = m.getRaza().getNombre();
-                fila[3] = p.getNombres().split(" ")[0]+" "+p.getApaterno();
-                fila[4] = "Detalles";
-                modelo.addRow(fila);
-            }
-            //aplicando el modelo a la tabla actual
-            resultados.setModel(modelo);
-            resultados.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
-            resultados.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JTextField()));
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void resultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultadosMouseClicked
+        Mascota m = new MascotaJpaController(emf).findMascota(Integer.parseInt(hr.retornaValorTabla(0, resultados)));
+        if(m == null) {
+            hr.mostrarError("El paciente no pudo ser encontrado");
+        }else{
+            new DetallePaciente(m).setVisible(true);
+        }
+    }//GEN-LAST:event_resultadosMouseClicked
+
+    private void txtRutKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRutKeyTyped
+        hr.ingresaCaracteresRut(evt);
+        hr.largoMaximo(txtRut, 12, evt);
+    }//GEN-LAST:event_txtRutKeyTyped
 
     /**
      * @param args the command line arguments

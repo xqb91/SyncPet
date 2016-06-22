@@ -69,6 +69,49 @@ public class DetallePaciente extends javax.swing.JFrame {
             hr.insertarTexto(lblInfoPadrePaciente, "Nombre: "+m.getPadre().getNombre()+" Identificador: "+m.getPadre().getIdMascota()+" Propietario: "+m.getPadre().getPropietario().getNombres()+" "+m.getPadre().getPropietario().getApaterno()+" "+m.getPadre().getPropietario().getAmaterno());
         }
     }
+
+    public DetallePaciente(Mascota m) {
+        initComponents();
+        this.setLocationRelativeTo(null);
+        this.m = m;
+        this.listar = listar;
+        //rellenando informacion
+        hr.insertarTexto(lblNombrePaciente, m.getNombre());
+        int dias;
+        if(m.getDefuncion() == null) {
+            dias = hr.fechasdiferenciaendias(m.getFechaNacimiento(), new GregorianCalendar().getTime());
+        }else{
+            dias = hr.fechasdiferenciaendias(m.getFechaNacimiento(), m.getDefuncion());
+            btnDeclararDefuncion.setEnabled(false);
+        }
+        hr.insertarTexto(lblEdadPaciente, Math.abs((dias/365))+" años "+Math.abs((dias/365/12))+" meses "+((dias/365/12/24))+" días");
+        if(m.getSexo() == 'H') {
+            hr.insertarTexto(lblSexoPaciente, "Hembra");
+        }else if(m.getSexo() == 'M') {
+            hr.insertarTexto(lblSexoPaciente, "Macho");
+        }else{
+            hr.insertarTexto(lblSexoPaciente, "Hermafrodita");
+        }
+        hr.insertarTexto(lblRazaPaciente, m.getRaza().getNombre());
+        hr.insertarTexto(lblIdentificador, m.getIdMascota()+"");
+        hr.insertarTexto(lblNumeroChip, m.getNumeroChip()+"");
+        hr.insertarTexto(lblGrupoSanguineo, m.getGrupoSanguineo());
+        
+        //info propietario
+        hr.insertarTexto(lblNombrePropietario, m.getPropietario().getNombres());
+        hr.insertarTexto(lblApellidosPropietario, m.getPropietario().getApaterno()+" "+m.getPropietario().getAmaterno());
+        hr.insertarTexto(lblRunPropietario, m.getPropietario().getRut()+"-"+m.getPropietario().getDv());
+        
+        //info progenitores
+        if(m.getMadre() != null) {
+            hr.insertarTexto(lblInfoMadrePaciente, "Nombre: "+m.getMadre().getNombre()+" Identificador: "+m.getMadre().getIdMascota()+" Propietario: "+m.getMadre().getPropietario().getNombres()+" "+m.getMadre().getPropietario().getApaterno()+" "+m.getMadre().getPropietario().getAmaterno());
+        }
+        
+        if(m.getPadre()!= null) {
+            hr.insertarTexto(lblInfoPadrePaciente, "Nombre: "+m.getPadre().getNombre()+" Identificador: "+m.getPadre().getIdMascota()+" Propietario: "+m.getPadre().getPropietario().getNombres()+" "+m.getPadre().getPropietario().getApaterno()+" "+m.getPadre().getPropietario().getAmaterno());
+        }
+    }
+
     
     public DetallePaciente(Mascota m, ListarPacientes listar) {
         initComponents();
@@ -455,10 +498,10 @@ public class DetallePaciente extends javax.swing.JFrame {
             m.setDefuncion(new GregorianCalendar().getTime());
             new MascotaJpaController(Persistence.createEntityManagerFactory("SyncPetPU")).edit(m);
             hr.mostrarMensaje("Se registró la defunción del paciente");
-            this.setEnabled(false);
+            btnDeclararDefuncion.setEnabled(false);
         } catch (Exception e) {
             hr.mostrarError("Ocurrió un error al registrar la defunción: "+e.getMessage());
-            this.setEnabled(true);
+            btnDeclararDefuncion.setEnabled(true);
         }
     }//GEN-LAST:event_btnDeclararDefuncionActionPerformed
 
@@ -467,9 +510,10 @@ public class DetallePaciente extends javax.swing.JFrame {
             buscar.setVisible(true);
             buscar.actualizarTabla();
             this.dispose();
-        }
-        if(listar != null) {
+        }else if(listar != null) {
             listar.setVisible(true);
+            this.dispose();
+        }else{
             this.dispose();
         }
     }//GEN-LAST:event_btnCancelarActionPerformed

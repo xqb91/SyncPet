@@ -124,6 +124,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Especificar Progenitores"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menPacientes_treeActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -145,6 +148,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Registrar Propietario"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menPropietarios_addActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menPropietarios_find">
               <Properties>
@@ -156,6 +162,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Buscar Propietario"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menPropietarios_findActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menPropietarios_admin">
               <Properties>
@@ -167,6 +176,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Administrar Propietarios"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menPropietarios_adminActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -353,14 +365,6 @@
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menAdmin_trabajadoresActionPerformed"/>
                   </Events>
-                </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem13">
-                  <Properties>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/cl/starlabs/imagenes/iconos/anchor.png"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Usuarios Vinculados a Veterinarios"/>
-                  </Properties>
                 </MenuItem>
               </SubComponents>
             </Menu>
@@ -776,6 +780,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Agregar Paciente"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddPacienteActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnAddPropietario">
       <Properties>
@@ -784,6 +791,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Agregar Propietario"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddPropietarioActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnAddEvento">
       <Properties>
@@ -800,6 +810,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Bloquear Terminal"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBloquearTerminalActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnCambiarSucursal">
       <Properties>
@@ -808,6 +821,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Cambiar de Sucursal"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCambiarSucursalActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

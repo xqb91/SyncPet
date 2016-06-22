@@ -5,8 +5,11 @@
  */
 package cl.starlabs.vista.propietario;
 
+import cl.starlabs.controladores.PropietarioJpaController;
 import cl.starlabs.herramientas.*;
 import cl.starlabs.modelo.Propietario;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -17,14 +20,38 @@ public class DetallesPropietario extends javax.swing.JFrame {
     Propietario prop;
     HerramientasRapidas hr = new HerramientasRapidas();
     HerramientasTelefono ht = new HerramientasTelefono();
+    EntityManagerFactory emf = null;
+    PropietarioJpaController jpa = null;
+    ListarPropietarios lp = null;
+    
     public DetallesPropietario() {
         initComponents();
+        this.emf = Persistence.createEntityManagerFactory("SyncPetPU");
+        this.jpa = new PropietarioJpaController(emf);
     }
     
     public DetallesPropietario(Propietario prop) {
         initComponents();
         this.prop = prop;
         this.setLocationRelativeTo(null);
+        this.emf = Persistence.createEntityManagerFactory("SyncPetPU");
+        this.jpa = new PropietarioJpaController(emf);
+        hr.insertarTexto(lblNombres, prop.getNombres());
+        hr.insertarTexto(lblApellidos, prop.getApaterno()+" "+prop.getAmaterno());
+        hr.insertarTexto(lblRun, prop.getRut()+"-"+prop.getDv());
+        hr.insertarTexto(lblCorreo, prop.getEmail());
+        hr.insertarTexto(lblTelefono, ht.formatearTelefono(prop.getTelefono()+""));
+        hr.insertarTexto(lblcelular, ht.formatearCelular(prop.getCelular()+""));
+        hr.insertarTexto(lblDireccion, prop.getDireccion()+", "+prop.getComuna().getNombre()+", "+prop.getComuna().getProvincia().getNombre()+", "+prop.getComuna().getProvincia().getRegion().getNombre()+", "+prop.getComuna().getProvincia().getRegion().getPais().getNombre());
+    }
+    
+    public DetallesPropietario(Propietario prop, ListarPropietarios lp) {
+        initComponents();
+        this.prop = prop;
+        this.lp = lp;
+        this.setLocationRelativeTo(null);
+        this.emf = Persistence.createEntityManagerFactory("SyncPetPU");
+        this.jpa = new PropietarioJpaController(emf);
         hr.insertarTexto(lblNombres, prop.getNombres());
         hr.insertarTexto(lblApellidos, prop.getApaterno()+" "+prop.getAmaterno());
         hr.insertarTexto(lblRun, prop.getRut()+"-"+prop.getDv());
@@ -115,9 +142,19 @@ public class DetallesPropietario extends javax.swing.JFrame {
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/user_edit.png"))); // NOI18N
         jButton1.setText("Editar Información del Propietario");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/user_delete.png"))); // NOI18N
         jButton2.setText("Eliminar Propietario");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos de Contacto"));
 
@@ -199,7 +236,7 @@ public class DetallesPropietario extends javax.swing.JFrame {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 197, Short.MAX_VALUE)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -219,6 +256,27 @@ public class DetallesPropietario extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if(hr.preguntar("¿Esta usted seguro de eliminar este propietario?") == 0) {
+            try {
+                jpa.destroy(prop.getIdPropietario());
+                hr.mostrarMensaje("Propietario Eliminado");
+                if(lp != null) {
+                    this.dispose();
+                    lp.rellenar();
+                    lp.setVisible(true);
+                }
+            } catch (Exception e) {
+                hr.mostrarError("Ocurrió un problema mientras se intentaba eliminar el propietario: "+e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        new RegistroPropietario(lp.getSucursal(), prop).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

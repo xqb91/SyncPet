@@ -13,8 +13,10 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Victor Manuel Araya
@@ -414,6 +416,15 @@ public class HerramientasRapidas {
         long diferencia = fechafinalms - fechainicialms;
         double dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
         return ( (int) dias);
+    }
+    
+    public String retornaValorTabla(Integer posicion, JTable tabla) {
+        if(tabla.getSelectedColumn() >= 0) {
+            DefaultTableModel modelo = (DefaultTableModel)tabla.getModel();
+            return String.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0));
+        }else{
+            return "";
+        }
     }
 
 }

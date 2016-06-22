@@ -27,8 +27,12 @@ import cl.starlabs.vista.administracion.geografia.AdministradorRegiones;
 import cl.starlabs.vista.administracion.trabajadores.AdministradorTrabajadores;
 import cl.starlabs.vista.login.PantallaBloqueo;
 import cl.starlabs.vista.paciente.BuscarPaciente;
+import cl.starlabs.vista.paciente.DetalleProgenitores;
 import cl.starlabs.vista.paciente.ListarPacientes;
 import cl.starlabs.vista.paciente.RegistroPaciente;
+import cl.starlabs.vista.propietario.BuscarPropietario;
+import cl.starlabs.vista.propietario.ListarPropietarios;
+import cl.starlabs.vista.propietario.RegistroPropietario;
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.swing.UIManager;
@@ -131,7 +135,6 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menAdmin_Sucursal = new javax.swing.JMenuItem();
         jMenu8 = new javax.swing.JMenu();
         menAdmin_trabajadores = new javax.swing.JMenuItem();
-        jMenuItem13 = new javax.swing.JMenuItem();
         adminMenuGeografia = new javax.swing.JMenu();
         menAdminPais = new javax.swing.JMenuItem();
         menuAdminRegiones = new javax.swing.JMenuItem();
@@ -257,18 +260,38 @@ public class PrincipalAdmin extends javax.swing.JFrame {
 
         btnAddPaciente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/add.png"))); // NOI18N
         btnAddPaciente.setText("Agregar Paciente");
+        btnAddPaciente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddPacienteActionPerformed(evt);
+            }
+        });
 
         btnAddPropietario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/add.png"))); // NOI18N
         btnAddPropietario.setText("Agregar Propietario");
+        btnAddPropietario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddPropietarioActionPerformed(evt);
+            }
+        });
 
         btnAddEvento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/date.png"))); // NOI18N
         btnAddEvento.setText("Agendar Evento");
 
         btnBloquearTerminal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/sistema/logo_mini.png"))); // NOI18N
         btnBloquearTerminal.setText("Bloquear Terminal");
+        btnBloquearTerminal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBloquearTerminalActionPerformed(evt);
+            }
+        });
 
         btnCambiarSucursal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/sistema/logo_mini.png"))); // NOI18N
         btnCambiarSucursal.setText("Cambiar de Sucursal");
+        btnCambiarSucursal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCambiarSucursalActionPerformed(evt);
+            }
+        });
 
         MenSyncpet.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/sistema/logo_mini.png"))); // NOI18N
         MenSyncpet.setText("SyncPet");
@@ -341,6 +364,11 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menPacientes_tree.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_MASK));
         menPacientes_tree.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/chart_organisation.png"))); // NOI18N
         menPacientes_tree.setText("Especificar Progenitores");
+        menPacientes_tree.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menPacientes_treeActionPerformed(evt);
+            }
+        });
         menPacientes.add(menPacientes_tree);
 
         jMenuBar1.add(menPacientes);
@@ -351,16 +379,31 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menPropietarios_add.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F6, 0));
         menPropietarios_add.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/user_add.png"))); // NOI18N
         menPropietarios_add.setText("Registrar Propietario");
+        menPropietarios_add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menPropietarios_addActionPerformed(evt);
+            }
+        });
         menPropietarios.add(menPropietarios_add);
 
         menPropietarios_find.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_MASK));
         menPropietarios_find.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/find.png"))); // NOI18N
         menPropietarios_find.setText("Buscar Propietario");
+        menPropietarios_find.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menPropietarios_findActionPerformed(evt);
+            }
+        });
         menPropietarios.add(menPropietarios_find);
 
         menPropietarios_admin.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
         menPropietarios_admin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/application.png"))); // NOI18N
         menPropietarios_admin.setText("Administrar Propietarios");
+        menPropietarios_admin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menPropietarios_adminActionPerformed(evt);
+            }
+        });
         menPropietarios.add(menPropietarios_admin);
 
         jMenuBar1.add(menPropietarios);
@@ -459,10 +502,6 @@ public class PrincipalAdmin extends javax.swing.JFrame {
             }
         });
         jMenu8.add(menAdmin_trabajadores);
-
-        jMenuItem13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/anchor.png"))); // NOI18N
-        jMenuItem13.setText("Usuarios Vinculados a Veterinarios");
-        jMenu8.add(jMenuItem13);
 
         menAdmin.add(jMenu8);
 
@@ -742,8 +781,44 @@ public class PrincipalAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_confAdminProcedimientosActionPerformed
 
     private void menPacientes_findActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPacientes_findActionPerformed
-        new BuscarPaciente(u);
+        new BuscarPaciente(u).setVisible(true);
     }//GEN-LAST:event_menPacientes_findActionPerformed
+
+    private void btnBloquearTerminalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquearTerminalActionPerformed
+        new PantallaBloqueo(this, u).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnBloquearTerminalActionPerformed
+
+    private void btnAddPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPacienteActionPerformed
+        new RegistroPaciente(u).setVisible(true);
+    }//GEN-LAST:event_btnAddPacienteActionPerformed
+
+    private void menPacientes_treeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPacientes_treeActionPerformed
+        new DetalleProgenitores().setVisible(true);
+    }//GEN-LAST:event_menPacientes_treeActionPerformed
+
+    private void menPropietarios_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPropietarios_addActionPerformed
+        new RegistroPropietario(s).setVisible(true);
+    }//GEN-LAST:event_menPropietarios_addActionPerformed
+
+    private void menPropietarios_findActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPropietarios_findActionPerformed
+        new BuscarPropietario(s).setVisible(true);
+    }//GEN-LAST:event_menPropietarios_findActionPerformed
+
+    private void menPropietarios_adminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menPropietarios_adminActionPerformed
+        new ListarPropietarios(s).setVisible(true);
+    }//GEN-LAST:event_menPropietarios_adminActionPerformed
+
+    private void btnAddPropietarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPropietarioActionPerformed
+        new RegistroPropietario(s).setVisible(true);
+    }//GEN-LAST:event_btnAddPropietarioActionPerformed
+
+    private void btnCambiarSucursalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarSucursalActionPerformed
+        u = null;
+        s = null;
+        new cl.starlabs.vista.login.IniciarSesion().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnCambiarSucursalActionPerformed
 
     
     /**
@@ -812,7 +887,6 @@ public class PrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu8;
     private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem13;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblHoraSistema;
     private javax.swing.JLabel lblNumCumpleaños;
