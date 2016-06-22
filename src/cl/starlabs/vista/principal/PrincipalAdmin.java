@@ -33,6 +33,9 @@ import cl.starlabs.vista.paciente.RegistroPaciente;
 import cl.starlabs.vista.propietario.BuscarPropietario;
 import cl.starlabs.vista.propietario.ListarPropietarios;
 import cl.starlabs.vista.propietario.RegistroPropietario;
+import cl.starlabs.vista.veterinario.BuscarVeterinario;
+import cl.starlabs.vista.veterinario.ListarVeterinario;
+import cl.starlabs.vista.veterinario.RegistroVeterinario;
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.swing.UIManager;
@@ -135,6 +138,10 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menAdmin_Sucursal = new javax.swing.JMenuItem();
         jMenu8 = new javax.swing.JMenu();
         menAdmin_trabajadores = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         adminMenuGeografia = new javax.swing.JMenu();
         menAdminPais = new javax.swing.JMenuItem();
         menuAdminRegiones = new javax.swing.JMenuItem();
@@ -502,6 +509,34 @@ public class PrincipalAdmin extends javax.swing.JFrame {
             }
         });
         jMenu8.add(menAdmin_trabajadores);
+        jMenu8.add(jSeparator1);
+
+        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/user_suit.png"))); // NOI18N
+        jMenuItem1.setText("Registrar Veterinarios");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu8.add(jMenuItem1);
+
+        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/find.png"))); // NOI18N
+        jMenuItem2.setText("Buscar Veterinario");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu8.add(jMenuItem2);
+
+        jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/application_side_expand.png"))); // NOI18N
+        jMenuItem3.setText("Administrar Veterinarios");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu8.add(jMenuItem3);
 
         menAdmin.add(jMenu8);
 
@@ -820,6 +855,18 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnCambiarSucursalActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        new ListarVeterinario(s).setVisible(true);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        new BuscarVeterinario(s).setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        new RegistroVeterinario(s).setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     
     /**
      * @param args the command line arguments
@@ -887,7 +934,11 @@ public class PrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu8;
     private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JLabel lblHoraSistema;
     private javax.swing.JLabel lblNumCumpleaños;
     private javax.swing.JLabel lblNumHospitalizados;

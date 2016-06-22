@@ -65,7 +65,7 @@ public class ListarPropietarios extends javax.swing.JFrame {
     }
 
      public void rellenar(){
-         DefaultTableModel modelo = new DefaultTableModel(new Object [][] { }, new String [] { "ID", "RUN", "Nonbre", "# Pacientes" });
+         DefaultTableModel modelo = new DefaultTableModel(new Object [][] { }, new String [] { "ID", "RUN", "Nombre", "# Pacientes" });
          if((!campo.isEmpty()) && (!filtro.isEmpty())) {
             for(Propietario p : jpa.buscarMultiple(campo, filtro)) {
                 Object[] obj = new Object[4];

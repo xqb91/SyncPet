@@ -84,7 +84,9 @@ public class AdministradorTrabajadores extends javax.swing.JFrame  {
         cmbEstado.addItem("Habilitado");
         cmbEstado.addItem("Deshabilitado");
         for(Perfiles p : new PerfilesJpaController(emf).findPerfilesEntities()) {
-            cmbTipoUsuario.addItem(p.getId()+": "+p.getPerfil());
+            if(p.getPerfil().compareToIgnoreCase("Médico Veterinario") != 0) {
+                cmbTipoUsuario.addItem(p.getId()+": "+p.getPerfil());
+            }
         }
     }
     

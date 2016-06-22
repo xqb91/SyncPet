@@ -249,4 +249,14 @@ public class DetalleUsuariosJpaController implements Serializable {
         }
     }
     
+    public DetalleUsuarios buscarPorVeterinario(Veterinario u) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("DetalleUsuarios.findByVeterinario");
+            consulta.setParameter("veterinario", u);
+            return (DetalleUsuarios)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
 }

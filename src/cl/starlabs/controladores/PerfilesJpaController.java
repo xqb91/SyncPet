@@ -206,4 +206,14 @@ public class PerfilesJpaController implements Serializable {
         }
     }
     
+    public Perfiles buscarPerfilPor(String nombre) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Perfiles.findByPerfil");
+            consulta.setParameter("perfil", nombre);
+            return (Perfiles)consulta.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
 }

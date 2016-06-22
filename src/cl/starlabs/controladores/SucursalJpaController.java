@@ -383,6 +383,7 @@ public class SucursalJpaController implements Serializable {
         }
     }
     
+    
     public Integer ultimo() {
         try {
             Query consulta = getEntityManager().createNamedQuery("Sucursal.findAllById");

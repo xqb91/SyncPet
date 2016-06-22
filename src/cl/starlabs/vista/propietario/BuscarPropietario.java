@@ -17,13 +17,13 @@ import javax.persistence.Persistence;
  */
 public class BuscarPropietario extends javax.swing.JFrame {
 
-    Sucursal s = null;
-    HerramientasRapidas hr = null;
-    HerramientasCorreo hc = null;
-    HerramientasRut hru = null;
-    HerramientasTelefono ht = null;
-    EntityManagerFactory emf = null;
-    PropietarioJpaController jpa = null;
+    Sucursal                    s  = null;
+    HerramientasRapidas         hr = null;
+    HerramientasCorreo          hc = null;
+    HerramientasRut            hru = null;
+    HerramientasTelefono        ht = null;
+    EntityManagerFactory       emf = null;
+    PropietarioJpaController   jpa = null;
     
     public BuscarPropietario() {
         initComponents();
@@ -216,7 +216,7 @@ public class BuscarPropietario extends javax.swing.JFrame {
     }//GEN-LAST:event_txtFiltroKeyTyped
 
     private void txtFiltroFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtFiltroFocusLost
-switch(hr.contenido(cmbCampoFiltro)) {
+        switch(hr.contenido(cmbCampoFiltro)) {
             case "Run":
                 if(!hr.contenido(txtFiltro).isEmpty()){
                     if(hru.validar(hr.contenido(txtFiltro))) {

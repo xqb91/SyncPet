@@ -762,4 +762,51 @@ public class VeterinarioJpaController implements Serializable {
         }
     }
     
+    public List<Veterinario> buscarMultiple(String campo, String valor) {
+        switch(campo) {
+            case "Run":
+                try {
+                    Query consulta = getEntityManager().createNamedQuery("Veterinario.findByRut");
+                    consulta.setParameter("rut", valor.replace(".", "").split("-")[0]);
+                    return consulta.getResultList();
+                    } catch (Exception e) {
+                    return null;
+                }
+            case "Nombres":
+                try {
+                    Query consulta = getEntityManager().createNamedQuery("Veterinario.findByNombres");
+                    consulta.setParameter("nombres", valor);
+                    return consulta.getResultList();
+                } catch (Exception e) {
+                    return null;
+                }
+            case "Apellido Paterno":
+                try {
+                    Query consulta = getEntityManager().createNamedQuery("Veterinario.findByApaterno");
+                    consulta.setParameter("apaterno", valor);
+                    return consulta.getResultList();
+                } catch (Exception e) {
+                    return null;
+                }
+            case "Apellido Materno":
+                try {
+                    Query consulta = getEntityManager().createNamedQuery("Veterinario.findByAmaterno");
+                    consulta.setParameter("amaterno", valor);
+                    return consulta.getResultList();
+                } catch (Exception e) {
+                    return null;
+                }
+            case "Especialidad":
+                try {
+                    Query consulta = getEntityManager().createNamedQuery("Veterinario.findByEspecialidad");
+                    consulta.setParameter("especialidad", valor);
+                    return consulta.getResultList();
+                } catch (Exception e) {
+                    return null;
+                }
+
+                    default:
+                return null;
+        }
+    }
 }
