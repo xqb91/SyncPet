@@ -75,6 +75,16 @@ public class DetalleProgenitores extends javax.swing.JFrame {
             hr.insertarTexto(lblNombrePaciente, tp.getNombre());
             hr.insertarTexto(lblIdentificadorPaciente, tp.getIdMascota()+"");
             hr.insertarTexto(lblPropietarioPaciente, tp.getPropietario().getNombres()+" "+tp.getPropietario().getApaterno()+" "+tp.getPropietario().getAmaterno());
+            if(tp.getMadre() != null) {
+                hr.insertarTexto(lblNombreMadre, tp.getMadre().getNombre());
+                hr.insertarTexto(lblIdentificadorMadre, tp.getMadre().getIdMascota()+"");
+                hr.insertarTexto(lblPropietarioMadre, tp.getMadre().getPropietario().getNombres()+" "+tp.getMadre().getPropietario().getApaterno()+" "+tp.getMadre().getPropietario().getAmaterno());
+            }
+            if(tp.getPadre() != null) {
+                hr.insertarTexto(lblNombrePadre, tp.getPadre().getNombre());
+                hr.insertarTexto(lblIdentificadorPadre, tp.getPadre().getIdMascota()+"");
+                hr.insertarTexto(lblPropietarioPadre, tp.getPadre().getPropietario().getNombres()+" "+tp.getPadre().getPropietario().getApaterno()+" "+tp.getPadre().getPropietario().getAmaterno());
+            }
         }
         if(ma != null) {
             if(tp.getMadre() == null){
@@ -95,6 +105,10 @@ public class DetalleProgenitores extends javax.swing.JFrame {
                 if(tp.getMadre().getIdMascota() == ma.getIdMascota())  {
                     hr.mostrarError("Ha seleccionado el mismo paciente como progenitora");
                     ma = null;
+                }else if(tp.getMadre() != null) {
+                    hr.insertarTexto(lblNombreMadre, tp.getMadre().getNombre());
+                    hr.insertarTexto(lblIdentificadorMadre, tp.getMadre().getIdMascota()+"");
+                    hr.insertarTexto(lblPropietarioMadre, tp.getPropietario().getNombres()+" "+tp.getPropietario().getApaterno()+" "+tp.getPropietario().getAmaterno());
                 }else{
                      if(ma.getSexo() != 'H' && ma.getSexo() != '+') {
                         hr.mostrarError("El paciente seleccionado como progenitora no es Hembra o Hermafrodita");
@@ -106,10 +120,12 @@ public class DetalleProgenitores extends javax.swing.JFrame {
                     }                   
                 }
             }
-        }else{
-            hr.insertarTexto(lblNombreMadre, "Indefinido");
-            hr.insertarTexto(lblIdentificadorMadre, "Indefinido");
-            hr.insertarTexto(lblPropietarioMadre, "Indefinido");
+        }else if(tp != null){
+            if(tp.getMadre() == null) {
+                hr.insertarTexto(lblNombreMadre, "Indefinido");
+                hr.insertarTexto(lblIdentificadorMadre, "Indefinido");
+                hr.insertarTexto(lblPropietarioMadre, "Indefinido");
+            }
         }
         if(pa != null) {
             if(tp.getPadre()== null){
@@ -130,6 +146,10 @@ public class DetalleProgenitores extends javax.swing.JFrame {
                 if(tp.getPadre().getIdMascota() == pa.getIdMascota())  {
                     hr.mostrarError("Ha seleccionado el mismo paciente como progenitor");
                     pa = null;
+                }else if(tp.getPadre() != null) {    
+                    hr.insertarTexto(lblNombrePadre, tp.getPadre().getNombre());
+                    hr.insertarTexto(lblIdentificadorPadre, tp.getPadre().getIdMascota()+"");
+                    hr.insertarTexto(lblPropietarioPadre, tp.getPropietario().getNombres()+" "+tp.getPropietario().getApaterno()+" "+tp.getPropietario().getAmaterno());
                 }else{
                      if(pa.getSexo() != 'M' && pa.getSexo() != '+') {
                         hr.mostrarError("El paciente seleccionado como progenitor no es Macho o Hermafrodita");
@@ -141,10 +161,12 @@ public class DetalleProgenitores extends javax.swing.JFrame {
                     }                   
                 }
             }
-        }else{
-            hr.insertarTexto(lblNombrePadre, "Indefinido");
-            hr.insertarTexto(lblIdentificadorPadre, "Indefinido");
-            hr.insertarTexto(lblPropietarioPadre, "Indefinido"); 
+        }else if(tp != null){
+            if(tp.getPadre() == null) {
+                hr.insertarTexto(lblNombrePadre, "Indefinido");
+                hr.insertarTexto(lblIdentificadorPadre, "Indefinido");
+                hr.insertarTexto(lblPropietarioPadre, "Indefinido");
+            }
         }
     }
     
@@ -154,6 +176,7 @@ public class DetalleProgenitores extends javax.swing.JFrame {
 
     public void setPaciente(Mascota tp) {
         this.tp = tp;
+        rellenarDatos();
     }
 
     public Mascota getMadre() {
@@ -162,6 +185,7 @@ public class DetalleProgenitores extends javax.swing.JFrame {
 
     public void setMadre(Mascota ma) {
         this.ma = ma;
+        rellenarDatos();
     }
 
     public Mascota getPadre() {
@@ -170,6 +194,7 @@ public class DetalleProgenitores extends javax.swing.JFrame {
 
     public void setPadre(Mascota pa) {
         this.pa = pa;
+        rellenarDatos();
     }
     
     @SuppressWarnings("unchecked")
@@ -411,14 +436,10 @@ public class DetalleProgenitores extends javax.swing.JFrame {
                     .addComponent(jLabel15))
                 .addGap(22, 22, 22)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(lblNombrePadre)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblPropietarioPadre)
-                            .addComponent(lblIdentificadorPadre))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(lblNombrePadre)
+                    .addComponent(lblPropietarioPadre)
+                    .addComponent(lblIdentificadorPadre))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnBuscarPadre)
                     .addComponent(btnEliminarPadre, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -474,7 +495,7 @@ public class DetalleProgenitores extends javax.swing.JFrame {
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 167, Short.MAX_VALUE)
                         .addComponent(btnConfirmar)))
                 .addContainerGap())
         );

@@ -253,6 +253,7 @@ public class IniciarSesion extends javax.swing.JFrame {
                             slcSucursal.addItem(s.getSucursal().getIdSucursal()+": "+s.getSucursal().getNombre());
                         }
                     }
+                    slcSucursal.requestFocus();
                 }else{
                     //usuario correcto y password incorrecta
                     JOptionPane.showMessageDialog(null, "Contraseña incorrecta");

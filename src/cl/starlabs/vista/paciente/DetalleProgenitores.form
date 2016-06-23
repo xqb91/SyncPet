@@ -38,7 +38,7 @@
                   <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="btnCancelar" min="-2" pref="166" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="167" max="32767" attributes="0"/>
                       <Component id="btnConfirmar" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -326,18 +326,11 @@
                   </Group>
                   <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="lblNombrePadre" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblPropietarioPadre" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblIdentificadorPadre" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="38" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="lblNombrePadre" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblPropietarioPadre" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblIdentificadorPadre" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="btnBuscarPadre" min="-2" max="-2" attributes="0"/>
                       <Component id="btnEliminarPadre" alignment="1" min="-2" max="-2" attributes="0"/>
