@@ -809,4 +809,19 @@ public class VeterinarioJpaController implements Serializable {
                 return null;
         }
     }
+    
+    public void actualizar(Veterinario v) {
+        EntityManager em;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            em.merge(v);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            em.getTransaction().rollback();
+            em.close();
+        }
+    }
 }

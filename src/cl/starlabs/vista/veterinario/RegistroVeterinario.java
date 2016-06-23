@@ -609,7 +609,6 @@ public class RegistroVeterinario extends javax.swing.JFrame {
                                                         if(aux.getId() == usu.getId()){
                                                             
                                                             //creando veterinario
-                                                            Veterinario vet = new Veterinario();
                                                             vet.setRut(hr.contenido(txtRut).replace(".", "").split("-")[0]);
                                                             vet.setDv(hr.contenido(txtRut).replace(".", "").split("-")[1].charAt(0));
                                                             vet.setNombres(hr.contenido(txtNombres));
@@ -618,7 +617,6 @@ public class RegistroVeterinario extends javax.swing.JFrame {
                                                             vet.setEspecialidad(hr.contenido(cmbEspecialidad));
                                                             
                                                             //editando usuario
-                                                            Usuarios usu = new Usuarios();
                                                             usu.setUsuario(hr.contenido(txtUsuario));
                                                             usu.setContrasena(hr.contenido(txtContraseña1));
                                                             usu.setNombres(hr.contenido(txtNombres));
@@ -629,7 +627,6 @@ public class RegistroVeterinario extends javax.swing.JFrame {
                                                             usu.setPerfil(jpe.buscarPerfilPor("Médico Veterinario"));
                                                             
                                                             //creando vinculo entre cuentas y tipos de registros
-                                                            DetalleUsuarios det = new DetalleUsuarios();
                                                             det.setUsuario(usu);
                                                             det.setVeterinario(vet);
                                                             det.setSucursal(jpb.findSucursal(Integer.parseInt(hr.contenido(cmbSucursal).split(":")[0])));

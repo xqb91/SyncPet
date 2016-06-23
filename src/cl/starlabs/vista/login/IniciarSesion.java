@@ -78,7 +78,6 @@ public class IniciarSesion extends javax.swing.JFrame {
 
         lblSucursal.setText("Sucursal");
 
-        txtNombreUsuario.setText("varaya");
         txtNombreUsuario.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtNombreUsuarioFocusLost(evt);
@@ -118,7 +117,6 @@ public class IniciarSesion extends javax.swing.JFrame {
             }
         });
 
-        txtPassword.setText("123456");
         txtPassword.setMaximumSize(new java.awt.Dimension(5, 5));
         txtPassword.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
