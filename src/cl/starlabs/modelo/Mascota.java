@@ -42,6 +42,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Mascota.findByDefuncion", query = "SELECT m FROM Mascota m WHERE m.defuncion = :defuncion"),
     @NamedQuery(name = "Mascota.findByPeso", query = "SELECT m FROM Mascota m WHERE m.peso = :peso"),
     @NamedQuery(name = "Mascota.findBySexo", query = "SELECT m FROM Mascota m WHERE m.sexo = :sexo"),
+    @NamedQuery(name = "Mascota.findByPropietario", query = "SELECT m FROM Mascota m WHERE m.propietario = :propietario"),
     @NamedQuery(name = "Mascota.findByNumeroChip", query = "SELECT m FROM Mascota m WHERE m.numeroChip = :numeroChip"),
     @NamedQuery(name = "Mascota.findByGrupoSanguineo", query = "SELECT m FROM Mascota m WHERE m.grupoSanguineo = :grupoSanguineo")})
 public class Mascota implements Serializable {

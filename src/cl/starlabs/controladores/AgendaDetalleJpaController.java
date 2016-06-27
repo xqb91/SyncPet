@@ -15,7 +15,9 @@ import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Agenda;
 import cl.starlabs.modelo.AgendaDetalle;
 import cl.starlabs.modelo.Mascota;
+import cl.starlabs.modelo.Propietario;
 import cl.starlabs.modelo.Veterinario;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -226,6 +228,61 @@ public class AgendaDetalleJpaController implements Serializable {
             return ((Long) q.getSingleResult()).intValue();
         } finally {
             em.close();
+        }
+    }
+    
+    public List<AgendaDetalle> buscarPorMascota(Mascota m) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("AgendaDetalle.findByMascota");
+            consulta.setParameter("mascota", m);
+            return consulta.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    
+    public ArrayList<Agenda> buscarPorPropietario(String rut) {
+        try {
+            //Obteniendo propietario para realizar consultas posteriores
+            PropietarioJpaController jpa = new PropietarioJpaController(emf);
+            Propietario pro = jpa.buscarPorRut(rut);
+            if(pro == null) {
+                return null;
+            }else{
+                //si propietario no es null... se buscan sus mascotas
+                MascotaJpaController jpb = new MascotaJpaController(emf);
+                List<Mascota> mas = jpb.buscarPorPropietario(pro);
+                //si el propietario no posee mascotas retorna null
+                if(mas == null) {
+                    return null;
+                }else{
+                    //de lo contrario se recorren la lista de mascotas que hayan sido agendadas
+                    
+                    //se crea un arraylist para almacenar los eventos
+                    ArrayList<Agenda> agendaList = new ArrayList<Agenda>();
+                    
+                    //se recorren las mascotas desde el arreglo de mascotas retornado segun el propietario
+                    for(Mascota m : mas){
+                        //si esta mascota recorrida no esta vacía... entonces
+                        if(m != null) {
+                            //se debe recorrer cada una de las mascotas en busca de atenciones dentro del detalle de la agenda
+                            for(AgendaDetalle ad : m.getAgendaDetalleList()) {
+                                //si el elemento de atencion de agenda no es nulo se agrega al arraylist para retornarlo
+                                if(ad.getEventoAgenda() != null) {
+                                    agendaList.add(ad.getEventoAgenda());
+                                }
+                            }
+                        }
+                        //revisar la siguiente mascota ... (continuar iterando entre resultados)
+                    }
+                    //cuando finaliza
+                    //retornando los resultados
+                    return agendaList;
+                }
+            }
+        } catch (Exception e) {
+            return null;
         }
     }
     

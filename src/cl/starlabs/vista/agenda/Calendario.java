@@ -41,12 +41,12 @@ public class Calendario extends javax.swing.JFrame {
         Date inicial = hr.fechaHoraInicial(hr.recuperarFecha(calendario));
         Date ffinal  = hr.fechaHoraFinal(hr.recuperarFecha(calendario));
         for(Agenda te : jpa.eventosPorFecha(inicial, ffinal)) {
-            /*Object[] obj = new Object[4];
+            Object[] obj = new Object[4];
             obj[0] = te.getIdEvento();
             obj[1] = hr.formatearHoraDesdeFecha(te.getFechaEvento());
             obj[2] = te.getAgendaDetalleList().get(0).getMascota().getNombre();
             obj[3] = te.getAgendaDetalleList().get(0).getVeterinario().getNombres().split(" ")[0]+" "+te.getAgendaDetalleList().get(0).getVeterinario().getApaterno();
-            modelo.addRow(obj);*/
+            modelo.addRow(obj);
         }
         tablaResultados.setModel(modelo);
     }

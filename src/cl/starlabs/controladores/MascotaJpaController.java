@@ -1045,5 +1045,15 @@ public class MascotaJpaController implements Serializable {
             return false;
         }
     }
+    
+    public List<Mascota> buscarPorPropietario(Propietario pro) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Mascota.findByPropietario");
+            consulta.setParameter("propietario", pro);
+            return consulta.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
 }

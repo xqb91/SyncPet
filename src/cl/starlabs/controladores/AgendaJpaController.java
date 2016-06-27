@@ -247,4 +247,14 @@ public class AgendaJpaController implements Serializable {
         }
     }
     
+    public List<Agenda> eventos(Date fecha) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Agenda.findByFechaEvento");
+            consulta.setParameter("fechaEvento", fecha);
+            return consulta.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
 }
