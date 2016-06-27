@@ -5,6 +5,7 @@
  */
 package cl.starlabs.herramientas;
 
+import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -424,6 +425,56 @@ public class HerramientasRapidas {
             return String.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0));
         }else{
             return "";
+        }
+    }
+    
+    public Date recuperarFecha(JCalendar obj) {
+        try {
+            return obj.getDate();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public String formatearFecha(Date fecha) {
+        try {
+            SimpleDateFormat dt = new SimpleDateFormat("dd-MM-yyyy");
+            return dt.format(fecha);
+        } catch (Exception e) {
+            return "Error: No se pudo transformar la fecha";
+        }
+    }
+    
+    public String formatearHoraDesdeFecha(Date fecha) {
+        try {
+            SimpleDateFormat dt = new SimpleDateFormat("hh:mm");
+            return dt.format(fecha);
+        } catch (Exception e) {
+            return "Error: No se pudo transformar la fecha";
+        }
+    }
+    
+    public Date fechaHoraInicial(Date fecha) {
+        Date fechaAux = fecha;
+        try {
+            fechaAux.setHours(00);
+            fechaAux.setMinutes(00);
+            fechaAux.setSeconds(00);
+            return fechaAux;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public Date fechaHoraFinal(Date fecha) {
+        Date fechaAux = fecha;
+        try {
+            fechaAux.setHours(23);
+            fechaAux.setMinutes(59);
+            fechaAux.setSeconds(59);
+            return fechaAux;
+        } catch (Exception e) {
+            return null;
         }
     }
 

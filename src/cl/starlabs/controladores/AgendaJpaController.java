@@ -17,6 +17,7 @@ import javax.persistence.criteria.Root;
 import cl.starlabs.modelo.Sucursal;
 import cl.starlabs.modelo.AgendaDetalle;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -232,6 +233,17 @@ public class AgendaJpaController implements Serializable {
             return ((Long) q.getSingleResult()).intValue();
         } finally {
             em.close();
+        }
+    }
+    
+    public List<Agenda> eventosPorFecha(Date fechaInicio, Date fechaTermino) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Agenda.findBetween");
+            consulta.setParameter("fecInicio", fechaInicio);
+            consulta.setParameter("fecTermino", fechaTermino);
+            return consulta.getResultList();
+        } catch (Exception e) {
+            return null;
         }
     }
     
