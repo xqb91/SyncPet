@@ -12,6 +12,7 @@ import cl.starlabs.controladores.PropietarioJpaController;
 import cl.starlabs.controladores.SucursalJpaController;
 import cl.starlabs.herramientas.HerramientasRapidas;
 import cl.starlabs.herramientas.HerramientasRut;
+import cl.starlabs.modelo.Agenda;
 import cl.starlabs.modelo.DetalleUsuarios;
 import cl.starlabs.modelo.Mascota;
 import cl.starlabs.modelo.Propietario;
@@ -20,11 +21,13 @@ import cl.starlabs.vista.paciente.RegistroPaciente;
 import cl.starlabs.vista.propietario.RegistroPropietario;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -43,12 +46,12 @@ public class AgendaAtencion extends javax.swing.JFrame {
     Propietario                     pro = null;
     
     //---- valores de base de datos
-    EntityManagerFactory            emf = null;
-    DetalleUsuariosJpaController    jpa = null;
-    AgendaJpaController             jpb = null;
-    AgendaDetalleJpaController      jpc = null;
-    SucursalJpaController           jpd = null;
-    PropietarioJpaController        jpe = null;
+    EntityManagerFactory            emf = Persistence.createEntityManagerFactory("SyncPetPU");
+    DetalleUsuariosJpaController    jpa = new DetalleUsuariosJpaController(emf);
+    AgendaJpaController             jpb = new AgendaJpaController(emf);
+    AgendaDetalleJpaController      jpc = new AgendaDetalleJpaController(emf);
+    SucursalJpaController           jpd = new SucursalJpaController(emf);
+    PropietarioJpaController        jpe = new PropietarioJpaController(emf);
     
     public AgendaAtencion() {
         initComponents();
@@ -60,13 +63,6 @@ public class AgendaAtencion extends javax.swing.JFrame {
         
         //seteando los valores globales de hora y seteando valores en calendario y agendamiento de hora
         inicializarAgendamiento();
-        //seteando datos de persistencia y controladores
-        this.emf = Persistence.createEntityManagerFactory("SyncPetPU");
-        this.jpa = new DetalleUsuariosJpaController(emf);
-        this.jpb = new AgendaJpaController(emf);
-        this.jpc = new AgendaDetalleJpaController(emf);
-        this.jpd = new SucursalJpaController(emf);
-        this.jpe = new PropietarioJpaController(emf);
         
         //setenado valores de prueba de aplicación
         this.suc = jpd.findSucursal(1);
@@ -165,6 +161,9 @@ public class AgendaAtencion extends javax.swing.JFrame {
         cal.set(Calendar.HOUR_OF_DAY, aux.get(Calendar.HOUR_OF_DAY));
         cal.set(Calendar.MINUTE, aux.get(Calendar.MINUTE));
         cal.set(Calendar.SECOND, 00);
+        
+        //rellenar datos para hoy
+        rellenarEventosDefault();
     }
     
     //setea los valores para los veterinarios de esta sucursal
@@ -197,7 +196,48 @@ public class AgendaAtencion extends javax.swing.JFrame {
         btnFindActionPerformed(null);
     }
     
+    public void rellenarEventosDefault() {
+        DefaultTableModel modelo = new DefaultTableModel(new Object [][] { }, new String [] { "Hora", "Detalle" });
+        Calendar aux = new GregorianCalendar();
+        aux.set(Calendar.HOUR_OF_DAY, 0);
+        aux.set(Calendar.MINUTE, 0);
+        aux.set(Calendar.SECOND, 0);
+        aux.set(Calendar.MILLISECOND, 000);
+
+        while(aux.get(Calendar.HOUR_OF_DAY) < 23 ) {
+            Object[] obj = new Object[2];
+            SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+            obj[0] = df.format(aux.getTime());
+            if(jpb.eventos(aux.getTime()).size() > 0) {
+                for(Agenda a : jpb.eventos(aux.getTime())) {
+                    if(a == null) {
+                        obj[1] = "Libre";
+                    }else{
+                        obj[1] = a.getAgendaDetalleList().get(0).getMascota().getNombre()+": Propietario "+a.getAgendaDetalleList().get(0).getMascota().getPropietario().getRut()+"-"+a.getAgendaDetalleList().get(0).getMascota().getPropietario().getDv();
+                    }
+                }
+            }else{
+                obj[1] = "Libre";
+            }
+            modelo.addRow(obj);
+            aux.add(Calendar.MINUTE, 15);
+        }
+        //arreglar este método
+        
+        tablaResultados.setModel(modelo);
+        tablaResultados.getColumnModel().getColumn(0).setMaxWidth(45);
+        tablaResultados.getColumnModel().getColumn(0).setMinWidth(45);
+        tablaResultados.getColumnModel().getColumn(0).setWidth(45);
+    }
     
+    public void rellenarEventosByFecha() {
+        
+    }
+    
+    public void indicarFechaSeleccionada() {
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMMM-yyyy");
+        hr.insertarTexto(lblEventosDetail, "Eventos para el "+df.format(cal.getTime()).replace("-", " de "));
+    }
     // --- fin de la libreria de metodos
     
 
@@ -342,9 +382,9 @@ public class AgendaAtencion extends javax.swing.JFrame {
                     .addComponent(lblDireccion)
                     .addComponent(lblDireccionData))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCiudad)
-                    .addComponent(lblCiudadData))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblCiudadData)
+                    .addComponent(lblCiudad))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPaciente)
@@ -354,14 +394,14 @@ public class AgendaAtencion extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Agendamiento"));
 
-        btnMenos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/delete.png"))); // NOI18N
+        btnMenos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/arrow_left.gif"))); // NOI18N
         btnMenos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnMenosActionPerformed(evt);
             }
         });
 
-        btnMas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/add.png"))); // NOI18N
+        btnMas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/arrow_right.gif"))); // NOI18N
         btnMas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnMasActionPerformed(evt);
@@ -388,8 +428,8 @@ public class AgendaAtencion extends javax.swing.JFrame {
                         .addGap(19, 19, 19))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(15, 15, 15)
-                        .addComponent(btnMenos, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnMenos, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(hora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnMas, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -398,7 +438,7 @@ public class AgendaAtencion extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(16, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblFechaAgendar)
                     .addComponent(lblHoraAgendar))
@@ -414,6 +454,7 @@ public class AgendaAtencion extends javax.swing.JFrame {
 
         lblEventosDetail.setText("Eventos para : dd de mm de yyyy");
 
+        tablaResultados.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         tablaResultados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -430,10 +471,16 @@ public class AgendaAtencion extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tablaResultados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaResultadosMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tablaResultados);
         if (tablaResultados.getColumnModel().getColumnCount() > 0) {
             tablaResultados.getColumnModel().getColumn(0).setResizable(false);
             tablaResultados.getColumnModel().getColumn(1).setResizable(false);
+            tablaResultados.getColumnModel().getColumn(1).setPreferredWidth(50);
         }
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -480,7 +527,7 @@ public class AgendaAtencion extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -639,6 +686,28 @@ public class AgendaAtencion extends javax.swing.JFrame {
         calendario.setDate(cal.getTime());
         hora.setTime(cal.getTime());
     }//GEN-LAST:event_btnMasActionPerformed
+
+    private void tablaResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaResultadosMouseClicked
+        //hr.mostrarMensaje(hr.retornaValorTabla(0, tablaResultados));
+        Calendar aux = this.cal;
+        String horaSeleccionada = hr.retornaValorTabla(0, tablaResultados);
+        aux.set(Calendar.HOUR_OF_DAY, Integer.parseInt(horaSeleccionada.split(":")[0]));
+        aux.set(Calendar.MINUTE, Integer.parseInt(horaSeleccionada.split(":")[1]));
+        aux.set(Calendar.SECOND, 0);
+        aux.set(Calendar.MILLISECOND, 000);
+        //vericando que la hora seleccionada sea anterior a la hora actual
+        if(cal.getTime().before(aux.getTime())) {
+            hr.mostrarError("La hora seleccionada no puede ser asignada ya que es una hora pasada");
+        }else{
+            cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(horaSeleccionada.split(":")[0]));
+            cal.set(Calendar.MINUTE, Integer.parseInt(horaSeleccionada.split(":")[1]));
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 000);
+            //actualizar valores en campo de selección de hora
+            hora.setTime(aux.getTime());
+        }
+        
+    }//GEN-LAST:event_tablaResultadosMouseClicked
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
