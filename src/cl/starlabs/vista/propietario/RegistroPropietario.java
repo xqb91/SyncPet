@@ -90,6 +90,11 @@ public class RegistroPropietario extends javax.swing.JFrame {
         this.p = p;
     }
 
+    public void setRun(String run) {
+        txtRun.setText(run);
+        txtNombres.requestFocus();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

@@ -249,6 +249,16 @@ public class DetalleUsuariosJpaController implements Serializable {
         }
     }
     
+    public List<DetalleUsuarios> buscarPorSucursal(Sucursal s) {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("DetalleUsuarios.findBySucursal");
+            consulta.setParameter("sucursal", s);
+            return consulta.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
     public DetalleUsuarios buscarPorVeterinario(Veterinario u) {
         try {
             Query consulta = getEntityManager().createNamedQuery("DetalleUsuarios.findByVeterinario");

@@ -13,13 +13,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/vista/agenda/AgendarAtencion.java</file>
-            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/controladores/AgendaJpaController.java</file>
-            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/vista/administracion/config/AdminRazas.java</file>
-            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/vista/administracion/config/AdminPatologia.java</file>
+            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/modelo/DetalleUsuarios.java</file>
+            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/vista/agenda/AgendaAtencion.java</file>
+            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/vista/propietario/RegistroPropietario.java</file>
+            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/controladores/DetalleUsuariosJpaController.java</file>
             <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/META-INF/persistence.xml</file>
-            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/modelo/Agenda.java</file>
-            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/herramientas/HerramientasRapidas.java</file>
-            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/vista/agenda/Calendario.java</file>
         </group>
     </open-files>
 </project-private>

@@ -30,6 +30,8 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import cl.starlabs.herramientas.*;
 import cl.starlabs.modelo.Usuarios;
+import cl.starlabs.vista.agenda.AgendaAtencion;
+import cl.starlabs.vista.agenda.AgendarAtencion;
 /**
  *
  * @author Victor Manuel Araya
@@ -50,6 +52,8 @@ public class RegistroPaciente extends javax.swing.JFrame {
     HerramientasRut hrut = new HerramientasRut();
     HerramientasTelefono ht = new HerramientasTelefono();
     
+    AgendaAtencion aat = null;
+    
     public RegistroPaciente() {
         initComponents();
         emf = Persistence.createEntityManagerFactory("SyncPetPU");
@@ -62,6 +66,21 @@ public class RegistroPaciente extends javax.swing.JFrame {
         habilitarCampos();
         jpa = new MascotaJpaController(emf);
         jpb = new PropietarioJpaController(emf);
+    }
+    
+    public RegistroPaciente(AgendaAtencion aat) {
+        initComponents();
+        emf = Persistence.createEntityManagerFactory("SyncPetPU");
+        this.setLocationRelativeTo(null);
+        rellenarEspecie();
+        rellenarCaracteres();
+        rellenarSexo();
+        rellenarHabitad();
+        rellenarGrupoSangre();
+        habilitarCampos();
+        jpa = new MascotaJpaController(emf);
+        jpb = new PropietarioJpaController(emf);
+        this.aat = aat;
     }
     
     public RegistroPaciente(Usuarios u) {
@@ -254,6 +273,11 @@ public class RegistroPaciente extends javax.swing.JFrame {
         txtRut.setEnabled(false);
     }
 
+    
+    public void setRun(String run) {
+        txtRut.setText(run);
+        btnBuscarPropietarioActionPerformed(null);
+    }
     // fin libreria básica
     
     @SuppressWarnings("unchecked")
@@ -573,6 +597,9 @@ public class RegistroPaciente extends javax.swing.JFrame {
 
     private void btnCancelarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarRegistroActionPerformed
         vaciarCampos();
+        if(aat != null) {
+            aat.setVisible(true);
+        } 
         this.dispose();
         if(buscar != null) {
             buscar.setVisible(true);
@@ -629,7 +656,15 @@ public class RegistroPaciente extends javax.swing.JFrame {
                                             jpa.create(tp);
                                             hr.mostrarMensaje("El paciente "+hr.contenido(txtNombre)+" ha sido registrado.");
                                             vaciarCampos();
-                                            this.dispose();
+                                            if(aat == null) {
+                                                this.dispose();
+                                            }else{
+                                                aat.vaciarPacientes();
+                                                aat.rellenaPacientes();
+                                                aat.actualizarProcesoRegistroPaciente();
+                                                aat.setVisible(true);
+                                                this.dispose();
+                                            }
                                         }catch(Exception e) {
                                             hr.mostrarError("Ocurrió un error al intentar registrar el paciente: "+e.getMessage());
                                         }
