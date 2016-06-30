@@ -7,9 +7,11 @@ import cl.starlabs.herramientas.HerramientasRut;
 import cl.starlabs.modelo.Agenda;
 import cl.starlabs.modelo.AgendaDetalle;
 import java.awt.Color;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -42,7 +44,7 @@ public class BuscarAtencion extends javax.swing.JFrame {
     }
     
     public void rellenarTabla() {
-        DefaultTableModel modelo = new DefaultTableModel(new Object [][] { }, new String [] { "Evento", "Hora", "Paciente", "Propietario" });
+        DefaultTableModel modelo = new DefaultTableModel(new Object [][] { }, new String [] { "Evento", "Fecha", "Paciente", "Propietario" });
         tablaResultados.getColumnModel().getColumn(0).setResizable(false);
         tablaResultados.getColumnModel().getColumn(1).setResizable(false);
         tablaResultados.getColumnModel().getColumn(2).setResizable(false);
@@ -52,13 +54,19 @@ public class BuscarAtencion extends javax.swing.JFrame {
             for(Agenda te : jpb.buscarPorPropietario(hr.contenido(txtRutPropietario))) {
                 Object[] obj = new Object[4];
                 obj[0] = te.getIdEvento();
-                obj[1] = hr.formatearHoraDesdeFecha(te.getFechaEvento());
+                obj[1] = new SimpleDateFormat("dd-MMMMM-yyyy HH:mm:ss").format(te.getFechaEvento()).replace(" ", " a las ").replace("-", " de ");
                 obj[2] = te.getAgendaDetalleList().get(0).getMascota().getNombre();
                 obj[3] = te.getAgendaDetalleList().get(0).getMascota().getPropietario().getNombres().split(" ")[0]+" "+te.getAgendaDetalleList().get(0).getMascota().getPropietario().getApaterno();
                 modelo.addRow(obj);
             }
         }
         tablaResultados.setModel(modelo);
+        tablaResultados.getColumnModel().getColumn(0).setMaxWidth(45);
+        tablaResultados.getColumnModel().getColumn(0).setMinWidth(45);
+        tablaResultados.getColumnModel().getColumn(0).setWidth(45);
+        tablaResultados.getColumnModel().getColumn(1).setMaxWidth(200);
+        tablaResultados.getColumnModel().getColumn(1).setMinWidth(200);
+        tablaResultados.getColumnModel().getColumn(1).setWidth(200);
     }
 
     @SuppressWarnings("unchecked")
@@ -106,6 +114,11 @@ public class BuscarAtencion extends javax.swing.JFrame {
                 "Evento", "Fecha", "Paciente", "Propietario"
             }
         ));
+        tablaResultados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaResultadosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablaResultados);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -119,8 +132,8 @@ public class BuscarAtencion extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
                         .addComponent(txtRutPropietario, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnBuscar))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -128,13 +141,14 @@ public class BuscarAtencion extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtRutPropietario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(txtRutPropietario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -180,7 +194,8 @@ public class BuscarAtencion extends javax.swing.JFrame {
     }//GEN-LAST:event_txtRutPropietarioFocusLost
 
     private void txtRutPropietarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRutPropietarioKeyTyped
-
+        hr.ingresaCaracteresRut(evt);
+        hr.largoMaximo(txtRutPropietario, 12, evt);
     }//GEN-LAST:event_txtRutPropietarioKeyTyped
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
@@ -198,6 +213,25 @@ public class BuscarAtencion extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
+    private void tablaResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaResultadosMouseClicked
+        //descoponiendo & obteniendo identificador de agenda
+        String identificador = hr.retornaValorTabla(0, tablaResultados);
+        identificador = identificador.split("]")[0].replace("[", "").trim();
+        //obteniendo detalles del evento
+        try{
+            Agenda aux = new AgendaJpaController(emf).findAgenda(Integer.parseInt(identificador));
+            if(aux == null) {
+                hr.mostrarError("El evento con identificador "+identificador+" ya no esta disponible en la base de datos");
+            }else{
+                if(hr.preguntar("¿Desea ver el detalle del evento del "+new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss").format(aux.getFechaEvento()).replace(" ", " a las ").replace("-", " de ")+" para el paciente "+aux.getAgendaDetalleList().get(0).getMascota().getNombre()+"?") == 0) {
+                    new DetalleEvento(aux).setVisible(true);
+                }
+            }
+        }catch(Exception e) {
+            hr.mostrarError("No se pudo encontrar el evento: "+e.getMessage());
+        }
+    }//GEN-LAST:event_tablaResultadosMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -210,7 +244,7 @@ public class BuscarAtencion extends javax.swing.JFrame {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    javax.swing.UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                     break;
                 }
             }

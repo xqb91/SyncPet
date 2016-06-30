@@ -840,7 +840,9 @@ public class AgendaAtencion extends javax.swing.JFrame {
                     if(aux == null) {
                         hr.mostrarError("El evento con identificador "+identificador+" ya no esta disponible en la base de datos");
                     }else{
-                        hr.preguntar("¿Desea editar el evento del "+new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss").format(aux.getFechaEvento()).replace(" ", " a las ").replace("-", " de ")+" para el paciente "+aux.getAgendaDetalleList().get(0).getMascota().getNombre()+"?");
+                        if(hr.preguntar("¿Desea ver el detalle del evento del "+new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss").format(aux.getFechaEvento()).replace(" ", " a las ").replace("-", " de ")+" para el paciente "+aux.getAgendaDetalleList().get(0).getMascota().getNombre()+"?") == 0) {
+                            new DetalleEvento(aux).setVisible(true);
+                        }
                     }
                 }catch(Exception e) {
                     hr.mostrarError("No se pudo encontrar el evento: "+e.getMessage());
@@ -971,6 +973,7 @@ public class AgendaAtencion extends javax.swing.JFrame {
 
     private void txtRunKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRunKeyTyped
         hr.ingresaCaracteresRut(evt);
+        hr.largoMaximo(txtRun, 12, evt);
     }//GEN-LAST:event_txtRunKeyTyped
 
     public static void main(String args[]) {

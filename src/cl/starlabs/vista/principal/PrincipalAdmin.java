@@ -5,6 +5,9 @@
  */
 package cl.starlabs.vista.principal;
 
+import cl.starlabs.controladores.AgendaJpaController;
+import cl.starlabs.herramientas.HerramientasRapidas;
+import cl.starlabs.modelo.Agenda;
 import cl.starlabs.modelo.Sucursal;
 import cl.starlabs.modelo.Usuarios;
 import cl.starlabs.vista.administracion.clinica.AdministracionClinica;
@@ -26,7 +29,10 @@ import cl.starlabs.vista.administracion.geografia.AdministradorProvincias;
 import cl.starlabs.vista.administracion.geografia.AdministradorRegiones;
 import cl.starlabs.vista.administracion.trabajadores.AdministradorTrabajadores;
 import cl.starlabs.vista.agenda.AgendaAtencion;
+import cl.starlabs.vista.agenda.BuscarAtencion;
 import cl.starlabs.vista.agenda.Calendario;
+import cl.starlabs.vista.agenda.DetalleEvento;
+import cl.starlabs.vista.agenda.EventosParaHoy;
 import cl.starlabs.vista.login.PantallaBloqueo;
 import cl.starlabs.vista.paciente.BuscarPaciente;
 import cl.starlabs.vista.paciente.DetalleProgenitores;
@@ -40,7 +46,13 @@ import cl.starlabs.vista.veterinario.ListarVeterinario;
 import cl.starlabs.vista.veterinario.RegistroVeterinario;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -53,6 +65,8 @@ public class PrincipalAdmin extends javax.swing.JFrame {
      */
     Usuarios u = null;
     Sucursal s = null;
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("SyncPetPU");
+    AgendaJpaController jpb = new AgendaJpaController(emf);
     
     public PrincipalAdmin() {
         initComponents();
@@ -62,6 +76,7 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/cl/starlabs/imagenes/sistema/logo_renovado.png"));
         setIconImage(icon);
         setVisible(true);
+        rellenarEventosDefault();
     }
     
      public PrincipalAdmin(Usuarios u, Sucursal s) {
@@ -78,8 +93,38 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/cl/starlabs/imagenes/sistema/logo_renovado.png"));
         setIconImage(icon);
         setVisible(true);
+        rellenarEventosDefault();
     }
 
+     
+    public void rellenarEventosDefault() {
+        DefaultTableModel modelo = new DefaultTableModel(new Object [][] { }, new String [] { "Hora", "Evento", "Paciente", "Propietario" });
+        Calendar inicio = new GregorianCalendar();
+        inicio.set(Calendar.MILLISECOND, 000);
+        Calendar finali = new GregorianCalendar();
+        finali.set(Calendar.HOUR_OF_DAY, 23);
+        finali.set(Calendar.MINUTE, 59);
+        finali.set(Calendar.SECOND, 59);
+        finali.set(Calendar.MILLISECOND, 999);
+        
+        for(Agenda a : jpb.eventosPorFecha(inicio.getTime(), finali.getTime())) {
+            Object[] obj = new Object[4];
+            obj[0] = new SimpleDateFormat("HH:mm").format(a.getFechaEvento());
+            obj[1] = a.getIdEvento();
+            obj[2] = a.getAgendaDetalleList().get(0).getMascota().getNombre();
+            obj[3] = a.getAgendaDetalleList().get(0).getMascota().getPropietario().getNombres().split(" ")[0]+" "+a.getAgendaDetalleList().get(0).getMascota().getPropietario().getApaterno();
+            modelo.addRow(obj);
+        }
+        //arreglar este método
+        
+        tablaAtencionesProximas.setModel(modelo);
+        tablaAtencionesProximas.getColumnModel().getColumn(0).setMaxWidth(45);
+        tablaAtencionesProximas.getColumnModel().getColumn(0).setMinWidth(45);
+        tablaAtencionesProximas.getColumnModel().getColumn(0).setWidth(45);
+        tablaAtencionesProximas.getColumnModel().getColumn(1).setMaxWidth(45);
+        tablaAtencionesProximas.getColumnModel().getColumn(1).setMinWidth(45);
+        tablaAtencionesProximas.getColumnModel().getColumn(1).setWidth(45);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -128,7 +173,6 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menAgenda_hoy = new javax.swing.JMenuItem();
         menAgenda_add = new javax.swing.JMenuItem();
         menAgenda_find = new javax.swing.JMenuItem();
-        menAgenda_historial = new javax.swing.JMenuItem();
         menAgenda_urgencia = new javax.swing.JMenuItem();
         menFicha = new javax.swing.JMenu();
         menFicha_anamnesis = new javax.swing.JMenuItem();
@@ -165,6 +209,14 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("SyncPet :: conectado como usuario@nombre_clínica (Sucursal)");
         setResizable(false);
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                formWindowGainedFocus(evt);
+            }
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+                formWindowLostFocus(evt);
+            }
+        });
 
         panelResumen.setBorder(javax.swing.BorderFactory.createTitledBorder("Resumen del Sistema"));
 
@@ -245,15 +297,17 @@ public class PrincipalAdmin extends javax.swing.JFrame {
 
         tablaAtencionesProximas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Paciente", "Propietario", "Hora", "Acciones"
             }
         ));
+        tablaAtencionesProximas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaAtencionesProximasMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablaAtencionesProximas);
 
         javax.swing.GroupLayout panelProximasAtencionesLayout = new javax.swing.GroupLayout(panelProximasAtenciones);
@@ -433,6 +487,11 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menAgenda_hoy.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         menAgenda_hoy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/bell.png"))); // NOI18N
         menAgenda_hoy.setText("Eventos para hoy");
+        menAgenda_hoy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menAgenda_hoyActionPerformed(evt);
+            }
+        });
         menAgenda.add(menAgenda_hoy);
 
         menAgenda_add.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F7, 0));
@@ -448,12 +507,12 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menAgenda_find.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
         menAgenda_find.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/find.png"))); // NOI18N
         menAgenda_find.setText("Buscar Atención");
+        menAgenda_find.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menAgenda_findActionPerformed(evt);
+            }
+        });
         menAgenda.add(menAgenda_find);
-
-        menAgenda_historial.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_MASK));
-        menAgenda_historial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/hourglass.png"))); // NOI18N
-        menAgenda_historial.setText("Historial de Atención");
-        menAgenda.add(menAgenda_historial);
 
         menAgenda_urgencia.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
         menAgenda_urgencia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/exclamation.png"))); // NOI18N
@@ -887,6 +946,33 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         new AgendaAtencion(s).setVisible(true);
     }//GEN-LAST:event_menAgenda_addActionPerformed
 
+    private void formWindowLostFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowLostFocus
+        rellenarEventosDefault();
+    }//GEN-LAST:event_formWindowLostFocus
+
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+        rellenarEventosDefault();
+    }//GEN-LAST:event_formWindowGainedFocus
+
+    private void menAgenda_hoyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menAgenda_hoyActionPerformed
+        new EventosParaHoy().setVisible(true);
+    }//GEN-LAST:event_menAgenda_hoyActionPerformed
+
+    private void menAgenda_findActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menAgenda_findActionPerformed
+        new BuscarAtencion().setVisible(true);
+    }//GEN-LAST:event_menAgenda_findActionPerformed
+
+    private void tablaAtencionesProximasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaAtencionesProximasMouseClicked
+        String identificador = new cl.starlabs.herramientas.HerramientasRapidas().retornaValorTabla(1, tablaAtencionesProximas);
+        identificador = identificador.split("]")[0].replace("[", "").trim();
+        Agenda aux = jpb.findAgenda(Integer.parseInt(identificador));
+        if(aux != null) {
+            if(new cl.starlabs.herramientas.HerramientasRapidas().preguntar("¿Desea ver el detalle del evento del "+new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss").format(aux.getFechaEvento()).replace(" ", " a las ").replace("-", " de ")+" para el paciente "+aux.getAgendaDetalleList().get(0).getMascota().getNombre()+"?") == 0) {
+                new DetalleEvento(aux).setVisible(true);
+            }
+        }
+    }//GEN-LAST:event_tablaAtencionesProximasMouseClicked
+
     
     /**
      * @param args the command line arguments
@@ -973,7 +1059,6 @@ public class PrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JMenuItem menAgenda_add;
     private javax.swing.JMenuItem menAgenda_calendario;
     private javax.swing.JMenuItem menAgenda_find;
-    private javax.swing.JMenuItem menAgenda_historial;
     private javax.swing.JMenuItem menAgenda_hoy;
     private javax.swing.JMenuItem menAgenda_urgencia;
     private javax.swing.JMenu menFicha;

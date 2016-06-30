@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Agenda.findAll", query = "SELECT a FROM Agenda a"),
     @NamedQuery(name = "Agenda.findAllDesc", query = "SELECT a FROM Agenda a ORDER BY a.idEvento DESC"),
-    @NamedQuery(name = "Agenda.findBetween", query = "SELECT a FROM Agenda a WHERE a.fechaEvento BETWEEN :fecInicio AND :fecTermino"),
+    @NamedQuery(name = "Agenda.findBetween", query = "SELECT a FROM Agenda a WHERE a.fechaEvento BETWEEN :fecInicio AND :fecTermino ORDER BY a.fechaEvento ASC"),
     @NamedQuery(name = "Agenda.findByIdEvento", query = "SELECT a FROM Agenda a WHERE a.idEvento = :idEvento"),
     @NamedQuery(name = "Agenda.findByFechaEvento", query = "SELECT a FROM Agenda a WHERE a.fechaEvento = :fechaEvento"),
     @NamedQuery(name = "Agenda.findByEstado", query = "SELECT a FROM Agenda a WHERE a.estado = :estado")})

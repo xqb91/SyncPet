@@ -8,6 +8,7 @@ package cl.starlabs.vista.agenda;
 import cl.starlabs.controladores.AgendaJpaController;
 import cl.starlabs.herramientas.HerramientasRapidas;
 import cl.starlabs.modelo.Agenda;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -29,6 +30,7 @@ public class Calendario extends javax.swing.JFrame {
         calendario.setTodayButtonVisible(true);
         hr.insertarTexto(lblFechaResultados, "Eventos para: "+hr.formatearFecha(hr.recuperarFecha(calendario)));        
         rellenarTabla();
+        this.setLocationRelativeTo(null);
     }
 
 
@@ -43,9 +45,9 @@ public class Calendario extends javax.swing.JFrame {
         for(Agenda te : jpa.eventosPorFecha(inicial, ffinal)) {
             Object[] obj = new Object[4];
             obj[0] = te.getIdEvento();
-            obj[1] = hr.formatearHoraDesdeFecha(te.getFechaEvento());
+            obj[1] = new SimpleDateFormat("HH:mm").format(te.getFechaEvento());
             obj[2] = te.getAgendaDetalleList().get(0).getMascota().getNombre();
-            obj[3] = te.getAgendaDetalleList().get(0).getVeterinario().getNombres().split(" ")[0]+" "+te.getAgendaDetalleList().get(0).getVeterinario().getApaterno();
+            obj[3] = te.getAgendaDetalleList().get(0).getMascota().getPropietario().getNombres().split(" ")[0]+" "+te.getAgendaDetalleList().get(0).getMascota().getPropietario().getApaterno();
             modelo.addRow(obj);
         }
         tablaResultados.setModel(modelo);
@@ -162,6 +164,11 @@ public class Calendario extends javax.swing.JFrame {
                 "Evento", "Hora", "Paciente", "Propietario"
             }
         ));
+        tablaResultados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaResultadosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablaResultados);
 
         lblFechaResultados.setText("jLabel1");
@@ -220,6 +227,25 @@ public class Calendario extends javax.swing.JFrame {
         hr.insertarTexto(lblFechaResultados, "Eventos para: "+hr.formatearFecha(hr.recuperarFecha(calendario)));
         rellenarTabla();        
     }//GEN-LAST:event_calendarioPropertyChange
+
+    private void tablaResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaResultadosMouseClicked
+        //descoponiendo & obteniendo identificador de agenda
+        String identificador = hr.retornaValorTabla(0, tablaResultados);
+        identificador = identificador.split("]")[0].replace("[", "").trim();
+        //obteniendo detalles del evento
+        try{
+            Agenda aux = new AgendaJpaController(emf).findAgenda(Integer.parseInt(identificador));
+            if(aux == null) {
+                hr.mostrarError("El evento con identificador "+identificador+" ya no esta disponible en la base de datos");
+            }else{
+                if(hr.preguntar("¿Desea ver el detalle del evento del "+new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss").format(aux.getFechaEvento()).replace(" ", " a las ").replace("-", " de ")+" para el paciente "+aux.getAgendaDetalleList().get(0).getMascota().getNombre()+"?") == 0) {
+                    new DetalleEvento(aux).setVisible(true);
+                }
+            }
+        }catch(Exception e) {
+            hr.mostrarError("No se pudo encontrar el evento: "+e.getMessage());
+        }
+    }//GEN-LAST:event_tablaResultadosMouseClicked
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
