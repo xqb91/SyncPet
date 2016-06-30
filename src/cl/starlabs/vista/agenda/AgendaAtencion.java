@@ -8,22 +8,28 @@ package cl.starlabs.vista.agenda;
 import cl.starlabs.controladores.AgendaDetalleJpaController;
 import cl.starlabs.controladores.AgendaJpaController;
 import cl.starlabs.controladores.DetalleUsuariosJpaController;
+import cl.starlabs.controladores.MascotaJpaController;
 import cl.starlabs.controladores.PropietarioJpaController;
 import cl.starlabs.controladores.SucursalJpaController;
+import cl.starlabs.controladores.VeterinarioJpaController;
 import cl.starlabs.herramientas.HerramientasRapidas;
 import cl.starlabs.herramientas.HerramientasRut;
 import cl.starlabs.modelo.Agenda;
+import cl.starlabs.modelo.AgendaDetalle;
 import cl.starlabs.modelo.DetalleUsuarios;
 import cl.starlabs.modelo.Mascota;
 import cl.starlabs.modelo.Propietario;
 import cl.starlabs.modelo.Sucursal;
+import cl.starlabs.modelo.Veterinario;
 import cl.starlabs.vista.paciente.RegistroPaciente;
 import cl.starlabs.vista.propietario.RegistroPropietario;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.UIManager;
@@ -45,13 +51,17 @@ public class AgendaAtencion extends javax.swing.JFrame {
     Sucursal                        suc = null;
     Propietario                     pro = null;
     
+    //--- elemento clave
+    Agenda                          age = null;
+    
     //---- valores de base de datos
     EntityManagerFactory            emf = Persistence.createEntityManagerFactory("SyncPetPU");
-    DetalleUsuariosJpaController    jpa = new DetalleUsuariosJpaController(emf);
+    AgendaDetalleJpaController      jpa = new AgendaDetalleJpaController(emf);
     AgendaJpaController             jpb = new AgendaJpaController(emf);
     AgendaDetalleJpaController      jpc = new AgendaDetalleJpaController(emf);
     SucursalJpaController           jpd = new SucursalJpaController(emf);
     PropietarioJpaController        jpe = new PropietarioJpaController(emf);
+    DetalleUsuariosJpaController    jpf = new DetalleUsuariosJpaController(emf);
     
     public AgendaAtencion() {
         initComponents();
@@ -129,6 +139,7 @@ public class AgendaAtencion extends javax.swing.JFrame {
     public void inicializarAgendamiento() {
         //seteando la variable de fecha global
         this.cal = new GregorianCalendar();
+        this.cal.add(Calendar.HOUR_OF_DAY, -1);
         cal.set(Calendar.MILLISECOND, 000);
         //seteando la fecha minima de seleccion al calendario
         this.calendario.setMinSelectableDate(new GregorianCalendar().getTime());
@@ -153,7 +164,7 @@ public class AgendaAtencion extends javax.swing.JFrame {
             int valor = 45 - aux.get(Calendar.MINUTE);
             aux.add(Calendar.MINUTE, valor);
             hora.setTime(aux.getTime()); 
-        }else{
+        }else if(aux.get(Calendar.MINUTE) > 45 && aux.get(Calendar.MINUTE) < 60){
             int valor = 60 - aux.get(Calendar.MINUTE);
             aux.add(Calendar.MINUTE, valor);
             hora.setTime(aux.getTime());
@@ -164,11 +175,15 @@ public class AgendaAtencion extends javax.swing.JFrame {
         
         //rellenar datos para hoy
         rellenarEventosDefault();
+        indicarFechaSeleccionada();
+        
+        //seleccionando la hora del evento actual en la tabla
+        seleccionaElementoTablaSegunHora();
     }
     
     //setea los valores para los veterinarios de esta sucursal
     public void rellenarVeterinarios(Sucursal suc) {
-        for(DetalleUsuarios dt : jpa.buscarPorSucursal(suc)) {
+        for(DetalleUsuarios dt : jpf.buscarPorSucursal(suc)) {
             if(dt.getVeterinario() != null) {
                 hr.insertarTexto(cmbVeterinario, dt.getVeterinario().getIdVeterinario()+": Dr. "+dt.getVeterinario().getNombres().split(" ")[0]+" "+dt.getVeterinario().getApaterno());
             }
@@ -203,8 +218,8 @@ public class AgendaAtencion extends javax.swing.JFrame {
         aux.set(Calendar.MINUTE, 0);
         aux.set(Calendar.SECOND, 0);
         aux.set(Calendar.MILLISECOND, 000);
-
-        while(aux.get(Calendar.HOUR_OF_DAY) < 23 ) {
+        int contador = 0;
+        while(contador < 96 ) {
             Object[] obj = new Object[2];
             SimpleDateFormat df = new SimpleDateFormat("HH:mm");
             obj[0] = df.format(aux.getTime());
@@ -213,7 +228,7 @@ public class AgendaAtencion extends javax.swing.JFrame {
                     if(a == null) {
                         obj[1] = "Libre";
                     }else{
-                        obj[1] = a.getAgendaDetalleList().get(0).getMascota().getNombre()+": Propietario "+a.getAgendaDetalleList().get(0).getMascota().getPropietario().getRut()+"-"+a.getAgendaDetalleList().get(0).getMascota().getPropietario().getDv();
+                        obj[1] = "["+a.getIdEvento()+"] "+a.getAgendaDetalleList().get(0).getMascota().getNombre()+": Propietario "+a.getAgendaDetalleList().get(0).getMascota().getPropietario().getRut()+"-"+a.getAgendaDetalleList().get(0).getMascota().getPropietario().getDv();
                     }
                 }
             }else{
@@ -221,6 +236,7 @@ public class AgendaAtencion extends javax.swing.JFrame {
             }
             modelo.addRow(obj);
             aux.add(Calendar.MINUTE, 15);
+            contador++;
         }
         //arreglar este método
         
@@ -230,13 +246,65 @@ public class AgendaAtencion extends javax.swing.JFrame {
         tablaResultados.getColumnModel().getColumn(0).setWidth(45);
     }
     
-    public void rellenarEventosByFecha() {
-        
+    public void rellenarEventosByFecha(Calendar fecha) {
+        try {
+            DefaultTableModel modelo = new DefaultTableModel(new Object [][] { }, new String [] { "Hora", "Detalle" });
+            Calendar aux = new GregorianCalendar();
+            aux.set(Calendar.DAY_OF_MONTH, fecha.get(Calendar.DAY_OF_MONTH));
+            aux.set(Calendar.MONTH, fecha.get(Calendar.MONTH));
+            aux.set(Calendar.YEAR, fecha.get(Calendar.YEAR));
+            aux.set(Calendar.HOUR_OF_DAY, 0);
+            aux.set(Calendar.MINUTE, 0);
+            aux.set(Calendar.SECOND, 0);
+            aux.set(Calendar.MILLISECOND, 000);
+            int contador = 0;
+            while(contador < 96 ) {
+                Object[] obj = new Object[2];
+                SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+                obj[0] = df.format(aux.getTime());
+                if(jpb.eventos(aux.getTime()).size() > 0) {
+                    for(Agenda a : jpb.eventos(aux.getTime())) {
+                        if(a == null) {
+                            obj[1] = "Libre";
+                        }else{
+                            obj[1] = "["+a.getIdEvento()+"] "+a.getAgendaDetalleList().get(0).getMascota().getNombre()+": Propietario "+a.getAgendaDetalleList().get(0).getMascota().getPropietario().getRut()+"-"+a.getAgendaDetalleList().get(0).getMascota().getPropietario().getDv();
+                        }
+                    }
+                }else{
+                    obj[1] = "Libre";
+                }
+                modelo.addRow(obj);
+                aux.add(Calendar.MINUTE, 15);
+                contador++;
+            }
+            //arreglar este método
+
+            tablaResultados.setModel(modelo);
+            tablaResultados.getColumnModel().getColumn(0).setMaxWidth(45);
+            tablaResultados.getColumnModel().getColumn(0).setMinWidth(45);
+            tablaResultados.getColumnModel().getColumn(0).setWidth(45);
+            //cal.add(Calendar.DAY_OF_MONTH, -1);
+        }catch(Exception e) {
+        }
+    }
+    
+    public void seleccionaElementoTablaSegunHora() {
+        try {
+            Calendar aux = cal;
+            String elemento = new SimpleDateFormat("HH:mm").format(aux.getTime());
+            for(int i = 0; i<tablaResultados.getRowCount(); i++) {
+                if(tablaResultados.getValueAt(i, 0).toString().compareToIgnoreCase(elemento) == 0) {
+                    tablaResultados.changeSelection(i, 1, false, false);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+        }
     }
     
     public void indicarFechaSeleccionada() {
         SimpleDateFormat df = new SimpleDateFormat("dd-MMMM-yyyy");
-        hr.insertarTexto(lblEventosDetail, "Eventos para el "+df.format(cal.getTime()).replace("-", " de "));
+        hr.insertarTexto(lblEventosDetail, "Eventos para el "+df.format(calendario.getDate()).replace("-", " de "));
     }
     // --- fin de la libreria de metodos
     
@@ -272,6 +340,9 @@ public class AgendaAtencion extends javax.swing.JFrame {
         lblEventosDetail = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaResultados = new javax.swing.JTable();
+        btnReservarHora = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        btnReestablecer = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -301,6 +372,11 @@ public class AgendaAtencion extends javax.swing.JFrame {
         txtRun.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtRunFocusLost(evt);
+            }
+        });
+        txtRun.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtRunKeyTyped(evt);
             }
         });
 
@@ -358,7 +434,7 @@ public class AgendaAtencion extends javax.swing.JFrame {
                             .addComponent(cmbVeterinario, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblDireccionData)
                             .addComponent(lblCiudadData))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 8, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -394,6 +470,12 @@ public class AgendaAtencion extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Agendamiento"));
 
+        calendario.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                calendarioPropertyChange(evt);
+            }
+        });
+
         btnMenos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/arrow_left.gif"))); // NOI18N
         btnMenos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -427,9 +509,9 @@ public class AgendaAtencion extends javax.swing.JFrame {
                         .addComponent(lblHoraAgendar)
                         .addGap(19, 19, 19))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(btnMenos, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnMenos, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(hora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnMas, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -452,6 +534,7 @@ public class AgendaAtencion extends javax.swing.JFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Horarios"));
 
+        lblEventosDetail.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblEventosDetail.setText("Eventos para : dd de mm de yyyy");
 
         tablaResultados.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
@@ -492,7 +575,7 @@ public class AgendaAtencion extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lblEventosDetail)
-                        .addGap(0, 182, Short.MAX_VALUE))
+                        .addGap(0, 149, Short.MAX_VALUE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -505,31 +588,67 @@ public class AgendaAtencion extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        btnReservarHora.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/calendar_add.png"))); // NOI18N
+        btnReservarHora.setText("Reservar Hora");
+        btnReservarHora.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReservarHoraActionPerformed(evt);
+            }
+        });
+
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/cancel.png"))); // NOI18N
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
+        btnReestablecer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/arrow_undo.png"))); // NOI18N
+        btnReestablecer.setText("Reestablecer");
+        btnReestablecer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReestablecerActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnCancelar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnReestablecer)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnReservarHora)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnReservarHora)
+                    .addComponent(btnCancelar)
+                    .addComponent(btnReestablecer))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -538,34 +657,22 @@ public class AgendaAtencion extends javax.swing.JFrame {
     private void btnMenosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenosActionPerformed
         //atrasa la hora a agendar en 15 minutos
         Calendar aux = new GregorianCalendar();
+        aux.add(Calendar.HOUR_OF_DAY, -1);
         Calendar aux3 = new GregorianCalendar();
-        if( (aux3.get(Calendar.DAY_OF_MONTH) == cal.get(Calendar.DAY_OF_MONTH)) && (aux3.get(Calendar.MONTH) == cal.get(Calendar.MONTH)) && (aux3.get(Calendar.YEAR) == cal.get(Calendar.YEAR)) ) {
-            //se esta tratando de atrasar en 15 minutos la hora del día actual (pero no podrá retrasarse menos de 15 minutos de la hora actual) porque no se permite
-            //registrar horas en el pasado
-            Calendar aux2 = hora.getCalendarWithTime(aux);
-            if(aux3.getTime().before(this.cal.getTime())) {
-                cal.add(Calendar.MINUTE, -15);
-                calendario.setDate(cal.getTime());
-                hora.setTime(cal.getTime());
-            }else{
-                hr.mostrarError("Estas tratando de viajar en el tiempo: No se pueden seleccionar horas pasadas para agendar un evento.");
-            }
+        aux3.add(Calendar.HOUR_OF_DAY, -1);
+        Calendar aux2 = hora.getCalendarWithTime(aux);
+        cal.add(Calendar.MINUTE, -15);
+        if(!this.cal.getTime().before(aux3.getTime())) {
+            calendario.setDate(cal.getTime());
+            hora.setTime(cal.getTime());
         }else{
-            if((aux3.get(Calendar.DAY_OF_MONTH) < cal.get(Calendar.DAY_OF_MONTH)) && (aux3.get(Calendar.MONTH) == cal.get(Calendar.MONTH)) && (aux3.get(Calendar.YEAR) == cal.get(Calendar.YEAR)) ) {
-                hora.getCalendarWithTime(aux);
-                if(aux3.before(aux)) {
-                    hr.mostrarError("Estas tratando de viajar en el tiempo: No se pueden seleccionar horas pasadas para agendar un evento.");
-                }else{
-                    cal.add(Calendar.MINUTE, -15);
-                    calendario.setDate(cal.getTime());
-                    hora.setTime(cal.getTime());  
-                }
-            }else{
-                cal.add(Calendar.MINUTE, -15);
-                calendario.setDate(cal.getTime());
-                hora.setTime(cal.getTime());
-            }
+            cal.add(Calendar.MINUTE, 15);
+            hr.mostrarError("Estas tratando de viajar en el tiempo: No se pueden seleccionar horas pasadas para agendar un evento.");
         }
+        
+        rellenarEventosByFecha(cal);
+        indicarFechaSeleccionada();
+        seleccionaElementoTablaSegunHora();
     }//GEN-LAST:event_btnMenosActionPerformed
 
     private void txtRunFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtRunFocusLost
@@ -652,7 +759,6 @@ public class AgendaAtencion extends javax.swing.JFrame {
                         rellenaPacientes();
                         hr.focus(cmbPaciente);
                         hr.activar(lblPaciente);
-                        pro = null;
                     }
                 }
             }else{
@@ -685,29 +791,160 @@ public class AgendaAtencion extends javax.swing.JFrame {
         cal.add(Calendar.MINUTE, 15);
         calendario.setDate(cal.getTime());
         hora.setTime(cal.getTime());
+        rellenarEventosByFecha(cal);
+        indicarFechaSeleccionada();
+        seleccionaElementoTablaSegunHora();
     }//GEN-LAST:event_btnMasActionPerformed
 
     private void tablaResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaResultadosMouseClicked
-        //hr.mostrarMensaje(hr.retornaValorTabla(0, tablaResultados));
-        Calendar aux = this.cal;
-        String horaSeleccionada = hr.retornaValorTabla(0, tablaResultados);
-        aux.set(Calendar.HOUR_OF_DAY, Integer.parseInt(horaSeleccionada.split(":")[0]));
-        aux.set(Calendar.MINUTE, Integer.parseInt(horaSeleccionada.split(":")[1]));
-        aux.set(Calendar.SECOND, 0);
-        aux.set(Calendar.MILLISECOND, 000);
-        //vericando que la hora seleccionada sea anterior a la hora actual
-        if(cal.getTime().before(aux.getTime())) {
-            hr.mostrarError("La hora seleccionada no puede ser asignada ya que es una hora pasada");
+        //revisando acción del evento seleccionado
+        if(cmbPaciente.isEnabled() == false && pro == null) {
+            //edición de evento
+            String elemento = hr.retornaValorTabla(1, tablaResultados);
+            if(elemento.compareToIgnoreCase("libre") == 0) {
+                hr.mostrarError("No se puede editar una hora sin agendamiento previo");
+            }else{
+                //descoponiendo & obteniendo identificador de agenda
+                String identificador = hr.retornaValorTabla(1, tablaResultados);
+                identificador = identificador.split("]")[0].replace("[", "").trim();
+                //obteniendo detalles del evento
+                try{
+                    Agenda aux = jpb.findAgenda(Integer.parseInt(identificador));
+                    if(aux == null) {
+                        hr.mostrarError("El evento con identificador "+identificador+" ya no esta disponible en la base de datos");
+                    }else{
+                        hr.preguntar("¿Desea editar el evento del "+new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss").format(aux.getFechaEvento()).replace(" ", " a las ").replace("-", " de ")+" para el paciente "+aux.getAgendaDetalleList().get(0).getMascota().getNombre()+"?");
+                    }
+                }catch(Exception e) {
+                    hr.mostrarError("No se pudo encontrar el evento: "+e.getMessage());
+                }
+            }
         }else{
-            cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(horaSeleccionada.split(":")[0]));
-            cal.set(Calendar.MINUTE, Integer.parseInt(horaSeleccionada.split(":")[1]));
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 000);
-            //actualizar valores en campo de selección de hora
-            hora.setTime(aux.getTime());
+            //creación dee evento
+            Calendar aux = this.cal;
+            Calendar aux2 = new GregorianCalendar(TimeZone.getTimeZone("GMT-4"));
+            aux2.add(Calendar.HOUR_OF_DAY, -1);
+            String horaSeleccionada = hr.retornaValorTabla(0, tablaResultados);
+            aux.set(Calendar.HOUR_OF_DAY, Integer.parseInt(horaSeleccionada.split(":")[0]));
+            aux.set(Calendar.MINUTE, Integer.parseInt(horaSeleccionada.split(":")[1]));
+            aux.set(Calendar.SECOND, 0);
+            aux.set(Calendar.MILLISECOND, 000);
+            //vericando que la hora seleccionada sea anterior a la hora actual
+            if(aux.getTime().before(aux2.getTime())) {
+                hr.mostrarError("La hora seleccionada no puede ser asignada ya que es una hora pasada");
+            }else{
+                //verificando que la hora este libre
+                if(hr.retornaValorTabla(1, tablaResultados).compareToIgnoreCase("libre") == 0) {
+                    cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(horaSeleccionada.split(":")[0]));
+                    cal.set(Calendar.MINUTE, Integer.parseInt(horaSeleccionada.split(":")[1]));
+                    cal.set(Calendar.SECOND, 0);
+                    cal.set(Calendar.MILLISECOND, 000);
+                    //actualizar valores en campo de selección de hora
+                    hora.setTime(aux.getTime());                       
+                }else{
+                    hr.mostrarError("El "+new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss").format(cal.getTime()).replace(" ", " existe una hora reservada a las ").replace("-", " de ")+".");
+                }
+            }
         }
         
     }//GEN-LAST:event_tablaResultadosMouseClicked
+
+    private void calendarioPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_calendarioPropertyChange
+        try {
+            this.cal.set(Calendar.DAY_OF_MONTH, calendario.getCalendar().get(Calendar.DAY_OF_MONTH));
+            this.cal.set(Calendar.MONTH, calendario.getCalendar().get(Calendar.MONTH));
+            this.cal.set(Calendar.YEAR, calendario.getCalendar().get(Calendar.YEAR));
+            rellenarEventosByFecha(cal);
+            indicarFechaSeleccionada();
+            seleccionaElementoTablaSegunHora();
+        }catch(Exception e) {
+            
+        }
+    }//GEN-LAST:event_calendarioPropertyChange
+
+    private void btnReestablecerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReestablecerActionPerformed
+        //seteando los valores globales de hora y seteando valores en calendario y agendamiento de hora
+        inicializarAgendamiento();
+        
+        //setenado valores de prueba de aplicación
+        this.suc = jpd.findSucursal(1);
+        
+        //rellenando lista de veterinarios de la sucursal
+        rellenarVeterinarios(suc);
+        if(cmbVeterinario.getItemCount() == 0) {
+            deshabilitarCamposSeleccion();
+        }else{
+            deshabilitarCamposSeleccion();
+            hr.activar(lblRunPropietario);
+            hr.activar(txtRun);
+            hr.activar(btnFind);
+            hr.focus(txtRun);
+        }
+        pro = null;
+        age = null;
+        vaciarPacientes();
+        hr.insertarTexto(txtRun, "");
+        hr.focus(txtRun);
+        //Estado original
+        hr.desactivar(lblPropietario);
+        hr.desactivar(lblPropietarioData);
+        hr.insertarTexto(lblPropietarioData, "No especificado");
+        hr.desactivar(lblDireccion);
+        hr.desactivar(lblDireccionData);
+        hr.insertarTexto(lblDireccionData, "No especificado");
+        hr.desactivar(lblCiudad);
+        hr.desactivar(lblCiudadData);
+        hr.insertarTexto(lblCiudadData, "No especificado");
+        vaciarPacientes();
+        hr.activar(lblPaciente);
+        hr.desactivar(cmbPaciente);
+        
+    }//GEN-LAST:event_btnReestablecerActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.dispose();
+        System.gc();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnReservarHoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarHoraActionPerformed
+        if((/*pro != null &&*/ cmbPaciente.isEnabled() == true) && age == null) {
+            //crear agendamiento
+            try {
+                if(hr.retornaValorTabla(1, tablaResultados).compareToIgnoreCase("libre") == 0) {
+                    Agenda aux = new Agenda();
+                    AgendaDetalle gaux = new AgendaDetalle();
+                    //recuperando datos
+                    Veterinario vet = new VeterinarioJpaController(emf).findVeterinario(Integer.parseInt(hr.contenido(cmbVeterinario).split(":")[0]));
+                    Mascota     mas = new MascotaJpaController(emf).findMascota(Integer.parseInt(hr.contenido(cmbPaciente).split(":")[0]));
+
+                    //asignando valores
+                    aux.setIdEvento(jpb.ultimo());
+                    aux.setFechaEvento(this.cal.getTime());
+                    aux.setEstado("0");
+                    aux.setSucursal(suc);
+
+                    gaux.setIdDetalle(jpa.ultimo());
+                    gaux.setEventoAgenda(aux);
+                    gaux.setVeterinario(vet);
+                    gaux.setMascota(mas);
+
+                    //escribiendo datos en DB
+                    jpb.create(aux);
+                    jpa.create(gaux);
+                    hr.mostrarMensaje("Se realizó con exito la reserva para el "+new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss").format(cal.getTime()).replace(" ", "  a las ").replace("-", " de "));
+                    btnReestablecerActionPerformed(evt);
+                }else{
+                    hr.mostrarError("El "+new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss").format(cal.getTime()).replace(" ", " existe una hora reservada a las ").replace("-", " de ")+".");                    
+                }
+            }catch(Exception e) {
+                hr.mostrarError("Ocurrió un error al intentar registrar el evento: "+e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_btnReservarHoraActionPerformed
+
+    private void txtRunKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRunKeyTyped
+        hr.ingresaCaracteresRut(evt);
+    }//GEN-LAST:event_txtRunKeyTyped
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -742,9 +979,12 @@ public class AgendaAtencion extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnFind;
     private javax.swing.JButton btnMas;
     private javax.swing.JButton btnMenos;
+    private javax.swing.JButton btnReestablecer;
+    private javax.swing.JButton btnReservarHora;
     private com.toedter.calendar.JCalendar calendario;
     private javax.swing.JComboBox cmbPaciente;
     private javax.swing.JComboBox cmbVeterinario;

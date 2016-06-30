@@ -258,4 +258,15 @@ public class AgendaJpaController implements Serializable {
         }
     }
     
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Agenda.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((Agenda)consulta.getSingleResult()).getIdEvento()+1;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+    
+    
 }

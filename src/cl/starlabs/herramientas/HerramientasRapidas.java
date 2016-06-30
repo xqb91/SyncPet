@@ -422,7 +422,7 @@ public class HerramientasRapidas {
     public String retornaValorTabla(Integer posicion, JTable tabla) {
         if(tabla.getSelectedColumn() >= 0) {
             DefaultTableModel modelo = (DefaultTableModel)tabla.getModel();
-            return String.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0));
+            return String.valueOf(modelo.getValueAt(tabla.getSelectedRow(), posicion));
         }else{
             return "";
         }
