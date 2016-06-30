@@ -31,7 +31,6 @@ import javax.swing.UIManager;
 import cl.starlabs.herramientas.*;
 import cl.starlabs.modelo.Usuarios;
 import cl.starlabs.vista.agenda.AgendaAtencion;
-import cl.starlabs.vista.agenda.AgendarAtencion;
 /**
  *
  * @author Victor Manuel Araya

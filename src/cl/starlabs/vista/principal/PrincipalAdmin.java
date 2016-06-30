@@ -25,6 +25,8 @@ import cl.starlabs.vista.administracion.geografia.AdministradorPaises;
 import cl.starlabs.vista.administracion.geografia.AdministradorProvincias;
 import cl.starlabs.vista.administracion.geografia.AdministradorRegiones;
 import cl.starlabs.vista.administracion.trabajadores.AdministradorTrabajadores;
+import cl.starlabs.vista.agenda.AgendaAtencion;
+import cl.starlabs.vista.agenda.Calendario;
 import cl.starlabs.vista.login.PantallaBloqueo;
 import cl.starlabs.vista.paciente.BuscarPaciente;
 import cl.starlabs.vista.paciente.DetalleProgenitores;
@@ -421,6 +423,11 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menAgenda_calendario.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
         menAgenda_calendario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/date.png"))); // NOI18N
         menAgenda_calendario.setText("Calendario");
+        menAgenda_calendario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menAgenda_calendarioActionPerformed(evt);
+            }
+        });
         menAgenda.add(menAgenda_calendario);
 
         menAgenda_hoy.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
@@ -431,6 +438,11 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menAgenda_add.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F7, 0));
         menAgenda_add.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/calendar_add.png"))); // NOI18N
         menAgenda_add.setText("Agendar Atención");
+        menAgenda_add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menAgenda_addActionPerformed(evt);
+            }
+        });
         menAgenda.add(menAgenda_add);
 
         menAgenda_find.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
@@ -866,6 +878,14 @@ public class PrincipalAdmin extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         new RegistroVeterinario(s).setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void menAgenda_calendarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menAgenda_calendarioActionPerformed
+        new Calendario().setVisible(true);
+    }//GEN-LAST:event_menAgenda_calendarioActionPerformed
+
+    private void menAgenda_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menAgenda_addActionPerformed
+        new AgendaAtencion(s).setVisible(true);
+    }//GEN-LAST:event_menAgenda_addActionPerformed
 
     
     /**

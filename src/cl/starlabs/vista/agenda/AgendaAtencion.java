@@ -90,6 +90,33 @@ public class AgendaAtencion extends javax.swing.JFrame {
         }
     }
     
+    public AgendaAtencion(Sucursal suc) {
+        initComponents();
+        //centrando ventana
+        this.setLocationRelativeTo(null);
+        //colocando icono a ventana
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/cl/starlabs/imagenes/iconos/calendar_add.png"));
+        setIconImage(icon);
+        
+        //seteando los valores globales de hora y seteando valores en calendario y agendamiento de hora
+        inicializarAgendamiento();
+        
+        //setenado valores de prueba de aplicación
+        this.suc = suc;
+        
+        //rellenando lista de veterinarios de la sucursal
+        rellenarVeterinarios(suc);
+        if(cmbVeterinario.getItemCount() == 0) {
+            deshabilitarCamposSeleccion();
+        }else{
+            deshabilitarCamposSeleccion();
+            hr.activar(lblRunPropietario);
+            hr.activar(txtRun);
+            hr.activar(btnFind);
+            hr.focus(txtRun);
+        }
+    }
+    
 
     // --- libreria de métodos utiles de esta aplicacion
     
