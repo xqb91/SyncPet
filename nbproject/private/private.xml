@@ -12,12 +12,9 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/vista/agenda/AgendaAtencion.java</file>
-            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/vista/agenda/DetalleEvento.java</file>
-            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/vista/agenda/EventosParaHoy.java</file>
-            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/vista/agenda/BuscarAtencion.java</file>
-            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/vista/principal/PrincipalAdmin.java</file>
-            <file>file:/C:/Users/Victor%20Manuel%20Araya/Documents/GitHub/SyncPet/src/cl/starlabs/vista/agenda/Calendario.java</file>
+            <file>file:/C:/Users/cetecom/Downloads/SyncPet-master/src/cl/starlabs/vista/agenda/DetalleEvento.java</file>
+            <file>file:/C:/Users/cetecom/Downloads/SyncPet-master/src/META-INF/persistence.xml</file>
+            <file>file:/C:/Users/cetecom/Downloads/SyncPet-master/src/cl/starlabs/vista/agenda/EditarAtencion.java</file>
         </group>
     </open-files>
 </project-private>

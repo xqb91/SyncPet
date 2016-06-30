@@ -264,7 +264,7 @@ public class AgendaJpaController implements Serializable {
             consulta.setMaxResults(1);
             return ((Agenda)consulta.getSingleResult()).getIdEvento()+1;
         } catch (Exception e) {
-            return 0;
+            return 1;
         }
     }
     

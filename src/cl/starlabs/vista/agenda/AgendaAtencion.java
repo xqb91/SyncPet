@@ -166,7 +166,7 @@ public class AgendaAtencion extends javax.swing.JFrame {
     public void inicializarAgendamiento() {
         //seteando la variable de fecha global
         this.cal = new GregorianCalendar();
-        this.cal.add(Calendar.HOUR_OF_DAY, -1);
+        //this.cal.add(Calendar.HOUR_OF_DAY, -1);
         cal.set(Calendar.MILLISECOND, 000);
         //seteando la fecha minima de seleccion al calendario
         this.calendario.setMinSelectableDate(new GregorianCalendar().getTime());
@@ -684,9 +684,9 @@ public class AgendaAtencion extends javax.swing.JFrame {
     private void btnMenosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenosActionPerformed
         //atrasa la hora a agendar en 15 minutos
         Calendar aux = new GregorianCalendar();
-        aux.add(Calendar.HOUR_OF_DAY, -1);
+        //aux.add(Calendar.HOUR_OF_DAY, -1);
         Calendar aux3 = new GregorianCalendar();
-        aux3.add(Calendar.HOUR_OF_DAY, -1);
+        //aux3.add(Calendar.HOUR_OF_DAY, -1);
         Calendar aux2 = hora.getCalendarWithTime(aux);
         cal.add(Calendar.MINUTE, -15);
         if(!this.cal.getTime().before(aux3.getTime())) {
@@ -852,7 +852,7 @@ public class AgendaAtencion extends javax.swing.JFrame {
             //creación dee evento
             Calendar aux = this.cal;
             Calendar aux2 = new GregorianCalendar(TimeZone.getTimeZone("GMT-4"));
-            aux2.add(Calendar.HOUR_OF_DAY, -1);
+            //aux2.add(Calendar.HOUR_OF_DAY, -1);
             String horaSeleccionada = hr.retornaValorTabla(0, tablaResultados);
             aux.set(Calendar.HOUR_OF_DAY, Integer.parseInt(horaSeleccionada.split(":")[0]));
             aux.set(Calendar.MINUTE, Integer.parseInt(horaSeleccionada.split(":")[1]));
