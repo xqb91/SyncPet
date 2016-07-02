@@ -5,6 +5,8 @@
  */
 package cl.starlabs.vista.agenda;
 
+import cl.starlabs.controladores.AgendaJpaController;
+import cl.starlabs.controladores.MascotaJpaController;
 import cl.starlabs.controladores.PropietarioJpaController;
 import cl.starlabs.controladores.VeterinarioJpaController;
 import cl.starlabs.herramientas.HerramientasRapidas;
@@ -13,6 +15,7 @@ import cl.starlabs.modelo.Mascota;
 import cl.starlabs.modelo.Veterinario;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -44,12 +47,13 @@ public class EditarAtencion extends javax.swing.JFrame {
     public EditarAtencion(Agenda a) {
         initComponents();
         this.a = a;
-        if(a != null) {
+        /*if(a != null) {
             hr.insertarTexto(cmbHora, new SimpleDateFormat("HH:mm").format(a.getFechaEvento()));
-        }
+        }*/
         rellenarHora();
+        setearHora(a.getFechaEvento());
         //seleccionarHora();
-        setearFechaCalendario();
+        seleccionarFechaCalendario(a.getFechaEvento());
         rellenarProfesional();
         rellenarPacientes();
         this.setLocationRelativeTo(null);
@@ -91,8 +95,37 @@ public class EditarAtencion extends javax.swing.JFrame {
         }
     }
     
+    public void setearHora(Date fecha) {
+        Calendar aux = new GregorianCalendar();
+        aux.set(Calendar.HOUR_OF_DAY, fecha.getHours());
+        aux.set(Calendar.MINUTE, fecha.getMinutes());     
+        /*if(aux.get(Calendar.MINUTE) > 0 && aux.get(Calendar.MINUTE) < 15) {
+            int calculo = 15 - aux.get(Calendar.MINUTE);
+            aux.add(Calendar.MINUTE, calculo);
+        }else if(aux.get(Calendar.MINUTE) > 15 && aux.get(Calendar.MINUTE) < 30) {
+            int calculo = 30 - aux.get(Calendar.MINUTE);
+            aux.add(Calendar.MINUTE, calculo);
+        }else if(aux.get(Calendar.MINUTE) > 30 && aux.get(Calendar.MINUTE) < 45) {
+            int calculo = 45 - aux.get(Calendar.MINUTE);
+            aux.add(Calendar.MINUTE, calculo);
+        }else if(aux.get(Calendar.MINUTE) > 45 && aux.get(Calendar.MINUTE) < 60) {
+            int calculo = 60 - aux.get(Calendar.MINUTE);
+            aux.add(Calendar.MINUTE, calculo);
+        }*/
+        for(int i = 0; i<cmbHora.getItemCount(); i++) {
+            if(cmbHora.getItemAt(i).toString().compareToIgnoreCase(new SimpleDateFormat("HH:mm").format(aux.getTime())) == 0) {
+                cmbHora.setSelectedIndex(i);
+                break;
+            }
+        }
+    }
+    
     public void setearFechaCalendario() {
         calendario.setMinSelectableDate(new GregorianCalendar().getTime());
+    }
+    
+    public void seleccionarFechaCalendario(Date fecha) {
+        calendario.setDate(fecha);
     }
     
     public void rellenarProfesional() {
@@ -128,12 +161,12 @@ public class EditarAtencion extends javax.swing.JFrame {
         calendario = new com.toedter.calendar.JCalendar();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        cmbProfesional = new javax.swing.JComboBox<>();
-        cmbHora = new javax.swing.JComboBox<>();
+        cmbProfesional = new javax.swing.JComboBox<String>();
+        cmbHora = new javax.swing.JComboBox<String>();
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        cmbPaciento = new javax.swing.JComboBox<>();
+        cmbPaciento = new javax.swing.JComboBox<String>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Modificar Evento");
@@ -147,9 +180,19 @@ public class EditarAtencion extends javax.swing.JFrame {
 
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/accept.png"))); // NOI18N
         btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/cancel.png"))); // NOI18N
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Paciente");
 
@@ -211,6 +254,49 @@ public class EditarAtencion extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        if(this.a != null) {
+            try {
+                //recuperando valores de la ventana
+                Veterinario vet = new VeterinarioJpaController(emf).findVeterinario(Integer.parseInt(hr.contenido(cmbProfesional).split(":")[0]));
+                Mascota mas = new MascotaJpaController(emf).findMascota(Integer.parseInt(hr.contenido(cmbPaciento).split(":")[0]));
+                Calendar cal = new GregorianCalendar();
+                cal.set(Calendar.DAY_OF_MONTH   , calendario.getCalendar().get(Calendar.DAY_OF_MONTH));
+                cal.set(Calendar.MONTH          , calendario.getCalendar().get(Calendar.MONTH));
+                cal.set(Calendar.YEAR           , calendario.getCalendar().get(Calendar.YEAR));
+                cal.set(Calendar.HOUR_OF_DAY    , Integer.parseInt(hr.contenido(cmbHora).split(":")[0]));
+                cal.set(Calendar.MINUTE         , Integer.parseInt(hr.contenido(cmbHora).split(":")[1]));
+                cal.set(Calendar.SECOND         , 00);
+                cal.set(Calendar.MILLISECOND    , 000);
+                
+                if(new AgendaJpaController(emf).eventos(cal.getTime()).size() == 0) {
+                    //seteando valores
+                    a.getAgendaDetalleList().get(0).setVeterinario(vet);
+                    a.getAgendaDetalleList().get(0).setMascota(mas);
+                    a.setFechaEvento(cal.getTime());
+                    //guardado datos
+                    new AgendaJpaController(emf).edit(a);
+                    hr.mostrarMensaje("Actualizado");
+                    btnCancelarActionPerformed(evt);
+                }else if(new AgendaJpaController(emf).eventos(cal.getTime()) == null) {
+                    hr.mostrarError("El sistema encontró un error inesperado al intentar recuperar eventos");
+                    btnCancelarActionPerformed(evt);
+                }else{
+                    hr.mostrarError("La hora seleccionada se encuentra ocupada");
+                    cmbHora.setSelectedIndex(cmbHora.getSelectedIndex()+1);
+                    hr.focus(cmbHora);
+                }
+            } catch (Exception e) {
+                hr.mostrarError("Ocurrió un error al intentar actualizar el evento: "+e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.dispose();
+        System.gc();
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments
