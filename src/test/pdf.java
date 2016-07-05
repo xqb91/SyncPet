@@ -12,6 +12,9 @@ import java.io.FileOutputStream;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfContentByte;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -24,6 +27,7 @@ public class pdf extends javax.swing.JFrame {
      */
     public pdf() {
         initComponents();
+        
     }
 
     /**
@@ -75,15 +79,36 @@ public class pdf extends javax.swing.JFrame {
 
     public void test() throws FileNotFoundException, DocumentException
     {
-       FileOutputStream archivo = new FileOutputStream("C:\\hola.pdf");
-       Document documento = new Document();
-       PdfWriter.getInstance(documento, archivo);
-       documento.open();
-       documento.add(new Paragraph("Hola Mundo!"));
-       documento.add(new Paragraph("SoloInformaticaYAlgoMas.blogspot.com"));
-       documento.add(new Paragraph("-------------------------------"));
-       documento.add(new Paragraph("potatosoft asdasjdajdkasdjkasdjaskdja"));
-       documento.close();
+        try {
+            FileOutputStream archivo = new FileOutputStream("C:\\hola.pdf");
+            Document documento = new Document();
+            PdfWriter writer = PdfWriter.getInstance(documento, archivo);
+            documento.open();
+            /*documento.add(new Paragraph("StarLabs SyncPet"));
+            documento.add(new Paragraph("Hola Mundo!"));
+            documento.add(new Paragraph("SoloInformaticaYAlgoMas.blogspot.com"));
+            documento.add(new Paragraph("-------------------------------"));
+            documento.add(new Paragraph("potatosoft asdasjdajdkasdjkasdjaskdja"));
+            //Image imagen = Image.getInstance("logo.png");
+            //documento.add(imagen);*/
+            
+            PdfContentByte canvas = writer.getDirectContentUnder();
+            writer.setCompressionLevel(0);
+            canvas.saveState();
+            canvas.beginText();
+            canvas.moveText(36, 778);
+            canvas.setFontAndSize(BaseFont.createFont(), 10);
+            canvas.showText("Hello world");
+            Image img = Image.getInstance(pdf.class.getResource("/cl/starlabs/imagenes/sistema/logo aplicacion slide.png").toString().replace("file:/", "").replace("%20", " "));
+            img.setAbsolutePosition(10, 10);
+            canvas.addImage(img);
+            canvas.endText();
+            canvas.restoreState();
+            
+            documento.close();
+        }catch(Exception e) {
+            JOptionPane.showConfirmDialog(null, e.getMessage());
+        }
     }
     /**
      * @param args the command line arguments

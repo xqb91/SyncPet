@@ -43,6 +43,7 @@ public class RegistroPropietario extends javax.swing.JFrame {
         this.hr = new HerramientasRapidas();
     }
     
+    
     public RegistroPropietario(Sucursal u) {
         initComponents();
         //iniciando entitymanagerfactory
