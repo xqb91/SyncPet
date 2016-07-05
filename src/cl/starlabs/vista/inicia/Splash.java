@@ -12,6 +12,7 @@ import java.awt.Graphics;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Random;
 import javax.persistence.Persistence;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -47,8 +48,16 @@ public class Splash extends javax.swing.JPanel {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Splash.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        lblEstado.setForeground(Color.BLACK);        
-        imagen = new ImageIcon(getClass().getResource("/cl/starlabs/imagenes/sistema/Splash_2.png")); // se obtiene la imagen 
+        lblEstado.setForeground(Color.BLACK);   
+        Random rnd = new Random();
+        int numero = (int) (rnd.nextDouble() * 3 + 1);
+        if(numero == 1) {
+            imagen = new ImageIcon(getClass().getResource("/cl/starlabs/imagenes/sistema/Splash_2.png")); // se obtiene la imagen 
+        }else if(numero == 2) {
+            imagen = new ImageIcon(getClass().getResource("/cl/starlabs/imagenes/sistema/Splash2.png")); // se obtiene la imagen 
+        }else{
+            imagen = new ImageIcon(getClass().getResource("/cl/starlabs/imagenes/sistema/Splash3.png")); // se obtiene la imagen 
+        }
         this.setSize(imagen.getIconWidth(), imagen.getIconHeight()); // se establece el tamaño del panel 
         // mediante la dimencion de la imagen ancho y alto
     }
