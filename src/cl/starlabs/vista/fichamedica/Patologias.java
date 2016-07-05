@@ -5,17 +5,24 @@
  */
 package cl.starlabs.vista.fichamedica;
 
+import cl.starlabs.modelo.Mascota;
+
 /**
  *
  * @author Janno
  */
 public class Patologias extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Patologias
-     */
+    Mascota m = null;
+    
     public Patologias() {
         initComponents();
+        this.setLocationRelativeTo(null);
+    }
+    
+    public Patologias(Mascota mascota) {
+        initComponents();
+        this.m = mascota;
     }
 
     /**

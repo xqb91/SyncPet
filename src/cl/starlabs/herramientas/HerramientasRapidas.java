@@ -7,6 +7,7 @@ package cl.starlabs.herramientas;
 
 import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
+import java.awt.Label;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -303,6 +305,14 @@ public class HerramientasRapidas {
         obj.setEnabled(true);
     }
     
+    static public void activar(JPanel obj) {
+        obj.setEnabled(true);
+    }
+    
+    static public void activar(JDateChooser obj) {
+        obj.setEnabled(true);
+    }
+    
     static public void desactivar(JLabel obj) {
         obj.setEnabled(false);
     }
@@ -323,6 +333,13 @@ public class HerramientasRapidas {
         obj.setEnabled(false);
     }
     
+    static public void desactivar(JPanel obj) {
+        obj.setEnabled(false);
+    }
+    
+    static public void desactivar(JDateChooser obj) {
+        obj.setEnabled(false);
+    }
     static public void focus(JLabel obj) {
         obj.requestFocus();
     }

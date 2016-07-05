@@ -258,4 +258,14 @@ public class ExamenesJpaController implements Serializable {
         }
     }
     
+    public Integer ultimo(){
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Examenes.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((Examenes)consulta.getSingleResult()).getIdExamen()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
 }

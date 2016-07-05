@@ -5,17 +5,53 @@
  */
 package cl.starlabs.vista.fichamedica;
 
+import cl.starlabs.controladores.ExamenesJpaController;
+import cl.starlabs.controladores.TipoExamenJpaController;
+import cl.starlabs.herramientas.HerramientasRapidas;
+import cl.starlabs.modelo.Examenes;
+import cl.starlabs.modelo.Mascota;
+import cl.starlabs.modelo.Veterinario;
+import cl.starlabs.modelo.TipoExamen;
+import java.util.GregorianCalendar;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+
 /**
  *
  * @author Janno
  */
-public class Examenes extends javax.swing.JFrame {
+public class VistaExamenes extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Examenes
-     */
-    public Examenes() {
+    Mascota m = null;
+    Veterinario v = null;
+    HerramientasRapidas hr = new HerramientasRapidas();
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("SyncPetPU");
+    JFileChooser dlg = null;
+    
+    public VistaExamenes() {
         initComponents();
+        this.setLocationRelativeTo(null);
+        rellenarTipoExamen();
+    }
+    public VistaExamenes(Mascota mascota, Veterinario veterinario) {
+        initComponents();
+        this.m = mascota;
+        this.v = veterinario;
+        hr.insertarTexto(lblMascota, m.getNombre());
+        hr.insertarTexto(lblVeterinario, v.getNombres());
+        rellenarTipoExamen();
+    }
+    
+    public void rellenarTipoExamen()
+    {
+        cmbTipoExamen.removeAllItems();
+        for(TipoExamen te : new TipoExamenJpaController(emf).findTipoExamenEntities())
+        {
+            hr.insertarTexto(cmbTipoExamen,te.getIdTipoExamen()+": "+te.getNombreExamen());
+        }
     }
 
     /**
@@ -39,9 +75,10 @@ public class Examenes extends javax.swing.JFrame {
         textAreaResultado = new javax.swing.JTextArea();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
+        lblNombreArchivo = new javax.swing.JLabel();
         lblMascota = new javax.swing.JLabel();
         lblVeterinario = new javax.swing.JLabel();
+        btnBuscarArchivo = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
 
@@ -75,14 +112,22 @@ public class Examenes extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel6.setText("Veterinario");
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel7.setText("Recuperacion de archivo no especificada");
+        lblNombreArchivo.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        lblNombreArchivo.setText("Recuperacion de archivo no especificada");
 
         lblMascota.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         lblMascota.setText("Mascota no especificada");
 
         lblVeterinario.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         lblVeterinario.setText("Veterinario no especificado");
+
+        btnBuscarArchivo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/attach.png"))); // NOI18N
+        btnBuscarArchivo.setText("Archivo");
+        btnBuscarArchivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarArchivoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -99,14 +144,20 @@ public class Examenes extends javax.swing.JFrame {
                     .addComponent(jLabel4))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2)
-                        .addComponent(cmbTipoExamen, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(lblMascota)
-                    .addComponent(lblVeterinario))
-                .addContainerGap(39, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblNombreArchivo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
+                        .addComponent(btnBuscarArchivo))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+                                .addComponent(jScrollPane2)
+                                .addComponent(cmbTipoExamen, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(lblMascota)
+                            .addComponent(lblVeterinario))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -123,27 +174,40 @@ public class Examenes extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
-                        .addGap(60, 60, 60)
+                        .addGap(61, 61, 61)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jLabel7)))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(lblMascota))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(lblVeterinario))
+                            .addComponent(lblNombreArchivo))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(lblMascota))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(lblVeterinario)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnBuscarArchivo)))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
         btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/cancel.png"))); // NOI18N
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/disk.png"))); // NOI18N
         btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -174,6 +238,53 @@ public class Examenes extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnBuscarArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarArchivoActionPerformed
+        try
+        {  
+            dlg = new JFileChooser(); //Crea un objeto de dialogo JFileChooser
+            int option = dlg.showOpenDialog(this); //Abre la ventana de dialogo
+            if(option == JFileChooser.APPROVE_OPTION)// Si hace click en el boton abrir del dialogo 
+            {
+                String ruta = dlg.getSelectedFile().getPath(); // .getPath()obtiene ruta y nombre del archivo seleccionado
+                // Si solo quieres el nombre del archivo, debe usar getName()
+                lblNombreArchivo.setText(ruta); // Muestra nombre de archivo
+            }   
+        }catch(Exception e){
+            hr.mostrarError("Ha ocurrido un error: "+e.getMessage());
+        }
+    }//GEN-LAST:event_btnBuscarArchivoActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.dispose();
+        System.gc();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        Examenes exam = new Examenes();
+        try {
+            //Recuperando datos
+            if(!hr.esVacio(textAreaResultado))
+            {
+                TipoExamen te = new TipoExamenJpaController(emf).findTipoExamen(Integer.parseInt(hr.contenido(cmbTipoExamen).split(":")[0]));
+                
+                exam.setIdExamen(new ExamenesJpaController(emf).ultimo());
+                exam.setFechaSolicitud(new GregorianCalendar().getTime());
+                exam.setTipoExamen(te);
+                exam.setObservacion(textAreaObservaciones.getText());
+                exam.setResultado(textAreaResultado.getText());
+                exam.setArchivo(lblNombreArchivo.getText());
+                exam.setMascota(m);
+                exam.setVeterinario(v);
+                exam.setHospitalizacion(null);
+                
+                new ExamenesJpaController(emf).create(exam);
+                hr.mostrarMensaje("Examen registrado exitosamente");
+            }
+        } catch (Exception e) {
+            hr.mostrarError("Se produjo un error "+e.getMessage());
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -186,30 +297,32 @@ public class Examenes extends javax.swing.JFrame {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    javax.swing.UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                     break;
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Examenes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaExamenes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Examenes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaExamenes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Examenes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaExamenes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Examenes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaExamenes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Examenes().setVisible(true);
+                new VistaExamenes().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscarArchivo;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JComboBox<String> cmbTipoExamen;
@@ -219,11 +332,11 @@ public class Examenes extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblMascota;
+    private javax.swing.JLabel lblNombreArchivo;
     private javax.swing.JLabel lblVeterinario;
     private javax.swing.JTextArea textAreaObservaciones;
     private javax.swing.JTextArea textAreaResultado;

@@ -5,17 +5,24 @@
  */
 package cl.starlabs.vista.fichamedica;
 
+import cl.starlabs.modelo.Mascota;
+
 /**
  *
  * @author Janno
  */
 public class Hospitalizaciones extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Hospitalizaciones
-     */
+    Mascota m = null;
+    
     public Hospitalizaciones() {
         initComponents();
+        this.setLocationRelativeTo(null);
+    }
+    
+    public Hospitalizaciones(Mascota mascota) {
+        initComponents();
+        this.m = mascota;
     }
 
     /**
@@ -46,7 +53,7 @@ public class Hospitalizaciones extends javax.swing.JFrame {
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Hospitalizacion"));

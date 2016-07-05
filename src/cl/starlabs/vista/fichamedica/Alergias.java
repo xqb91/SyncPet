@@ -5,17 +5,23 @@
  */
 package cl.starlabs.vista.fichamedica;
 
+import cl.starlabs.modelo.Mascota;
+
 /**
  *
  * @author Janno
  */
 public class Alergias extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Alergias
-     */
+    Mascota m = null;
     public Alergias() {
         initComponents();
+        this.setLocationRelativeTo(null);
+    }
+    
+    public Alergias(Mascota mascota) {
+        initComponents();
+        this.m = mascota;
     }
 
     /**

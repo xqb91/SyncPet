@@ -5,17 +5,24 @@
  */
 package cl.starlabs.vista.fichamedica;
 
+import cl.starlabs.modelo.Mascota;
+
 /**
  *
  * @author Janno
  */
 public class Procedimientos extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Procedimientos
-     */
+    Mascota m = null;
+    
     public Procedimientos() {
         initComponents();
+        this.setLocationRelativeTo(null);
+    }
+    
+    public Procedimientos(Mascota mascota) {
+        initComponents();
+        this.m = mascota;
     }
 
     /**

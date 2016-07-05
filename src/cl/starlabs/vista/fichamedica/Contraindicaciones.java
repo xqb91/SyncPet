@@ -5,17 +5,24 @@
  */
 package cl.starlabs.vista.fichamedica;
 
+import cl.starlabs.modelo.Mascota;
+
 /**
  *
  * @author Janno
  */
 public class Contraindicaciones extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Contraindicaciones
-     */
+    Mascota m = null;
+    
     public Contraindicaciones() {
         initComponents();
+        this.setLocationRelativeTo(null);
+    }
+    
+    public Contraindicaciones(Mascota mascota) {
+        initComponents();
+        this.m = mascota;
     }
 
     /**

@@ -5,17 +5,23 @@
  */
 package cl.starlabs.vista.fichamedica;
 
+import cl.starlabs.modelo.Mascota;
+
 /**
  *
  * @author Janno
  */
 public class Vacunaciones extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Vacunaciones
-     */
+    Mascota m = null;
+    
     public Vacunaciones() {
         initComponents();
+        this.setLocationRelativeTo(null);
+    }
+    public Vacunaciones(Mascota mascota) {
+        initComponents();
+        this.m = mascota;
     }
 
     /**

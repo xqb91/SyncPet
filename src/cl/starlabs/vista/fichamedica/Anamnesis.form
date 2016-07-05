@@ -28,11 +28,11 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jPanel2" max="32767" attributes="0"/>
+                  <Component id="panelAnalisis" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
+                      <Component id="panelAcciones" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="btnGuardar" max="32767" attributes="0"/>
@@ -56,11 +56,11 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="btnCancelar" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="jPanel3" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="panelAcciones" alignment="1" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
+              <Component id="panelAnalisis" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -122,6 +122,10 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtRutPropietario">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtRutPropietarioFocusLost"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtRutPropietarioKeyTyped"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnValidarRut">
           <Properties>
@@ -141,9 +145,7 @@
         <Component class="javax.swing.JComboBox" name="cmbMascota">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="1">
-                <StringItem index="0" value="Seleccionar..."/>
-              </StringArray>
+              <StringArray count="0"/>
             </Property>
           </Properties>
           <AuxValues>
@@ -152,7 +154,7 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="jPanel2">
+    <Container class="javax.swing.JPanel" name="panelAnalisis">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -605,7 +607,7 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="jPanel3">
+    <Container class="javax.swing.JPanel" name="panelAcciones">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -674,6 +676,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Examenes"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExamenesActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnPatologia">
           <Properties>
@@ -682,6 +687,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Patolog&#xed;a"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPatologiaActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnContraindicacion">
           <Properties>
@@ -690,6 +698,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Contraindicaci&#xf3;n"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnContraindicacionActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnProcedimiento">
           <Properties>
@@ -698,6 +709,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Procedimiento"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnProcedimientoActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnAlergias">
           <Properties>
@@ -706,6 +720,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Alergias"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAlergiasActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnVacunacion">
           <Properties>
@@ -714,6 +731,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Vacunaci&#xf3;n"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVacunacionActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnDesparasitacion">
           <Properties>
@@ -722,6 +742,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Desparasitaci&#xf3;n"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDesparasitacionActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnFarmacos">
           <Properties>
@@ -730,6 +753,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Farmacos"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFarmacosActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnHospitalizacion">
           <Properties>
@@ -738,6 +764,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Hospitalizaci&#xf3;n"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHospitalizacionActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

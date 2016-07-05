@@ -5,17 +5,22 @@
  */
 package cl.starlabs.vista.fichamedica;
 
+import cl.starlabs.modelo.Mascota;
+
 /**
  *
  * @author Janno
  */
 public class Desparacitaciones extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Desparacitaciones
-     */
+    Mascota m = null;
     public Desparacitaciones() {
         initComponents();
+        this.setLocationRelativeTo(null);
+    }
+    public Desparacitaciones(Mascota mascota) {
+        initComponents();
+        this.m = mascota;
     }
 
     /**

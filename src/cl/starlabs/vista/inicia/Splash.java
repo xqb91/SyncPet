@@ -79,7 +79,7 @@ public class Splash extends javax.swing.JPanel {
             barCarga.setValue(i); // se asigna el valor de la barra 
             if (i == 20) {
                 lblEstado.setText("Comprobando conexión con base de datos...");
-                String urlConexion = "jdbc:sqlserver://syncpet.noip.me;databaseName=syncpet;user=syncpet;password=alfacentauro$$;";
+                String urlConexion = "jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=syncpet;user=syncpet;password=alfacentauro$$;";
                 try {
                     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                     Connection con = DriverManager.getConnection(urlConexion);
