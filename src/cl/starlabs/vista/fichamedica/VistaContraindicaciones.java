@@ -5,24 +5,53 @@
  */
 package cl.starlabs.vista.fichamedica;
 
+import cl.starlabs.controladores.ContraindicacionesJpaController;
+import cl.starlabs.controladores.HospitalizacionJpaController;
+import cl.starlabs.controladores.TipoContraindicacionJpaController;
+import cl.starlabs.herramientas.HerramientasRapidas;
+import cl.starlabs.modelo.Contraindicaciones;
+import cl.starlabs.modelo.Hospitalizacion;
 import cl.starlabs.modelo.Mascota;
+import cl.starlabs.modelo.TipoContraindicacion;
+import cl.starlabs.modelo.Veterinario;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.swing.UIManager;
 
 /**
  *
  * @author Janno
  */
-public class Patologias extends javax.swing.JFrame {
+public class VistaContraindicaciones extends javax.swing.JFrame {
 
     Mascota m = null;
+    Veterinario v = null;
+    HerramientasRapidas hr = new HerramientasRapidas();
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("SyncPetPU");
     
-    public Patologias() {
+    public VistaContraindicaciones() {
         initComponents();
         this.setLocationRelativeTo(null);
+        rellenarTipoContraindicacion();
     }
     
-    public Patologias(Mascota mascota) {
+    public VistaContraindicaciones(Mascota mascota, Veterinario veterinario) {
+        this.setLocationRelativeTo(null);
         initComponents();
         this.m = mascota;
+        this.v = veterinario;
+        hr.insertarTexto(lblMascota, m.getNombre());
+        hr.insertarTexto(lblVeterinario, v.getNombres());
+        rellenarTipoContraindicacion();
+    }
+    
+    public void rellenarTipoContraindicacion()
+    {
+        cmbTipoContraindicacion.removeAllItems();
+        for(TipoContraindicacion tc : new TipoContraindicacionJpaController(emf).findTipoContraindicacionEntities())
+        {
+            hr.insertarTexto(cmbTipoContraindicacion,tc.getIdTipoContraindicacion()+": "+tc.getNombreContraindicacion());
+        }
     }
 
     /**
@@ -36,32 +65,32 @@ public class Patologias extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        cmbTipoPatologia = new javax.swing.JComboBox<>();
+        cmbTipoContraindicacion = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        textAreaObservaciones = new javax.swing.JTextArea();
+        textAreaObservacion = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         lblMascota = new javax.swing.JLabel();
         lblVeterinario = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("SyncPet :: Patologias");
+        setTitle("SyncPet :: Contraindicaciones");
         setResizable(false);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Patologias"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Contraindicaciones"));
 
-        jLabel1.setText("Tipo de Patologia");
+        jLabel1.setText("Tipo de Contraindicacion");
 
-        cmbTipoPatologia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar..." }));
+        cmbTipoContraindicacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar..." }));
 
-        jLabel2.setText("Observaciones");
+        jLabel2.setText("Observacion");
 
-        textAreaObservaciones.setColumns(20);
-        textAreaObservaciones.setRows(5);
-        jScrollPane1.setViewportView(textAreaObservaciones);
+        textAreaObservacion.setColumns(20);
+        textAreaObservacion.setRows(5);
+        jScrollPane1.setViewportView(textAreaObservacion);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel3.setText("Mascota");
@@ -88,13 +117,13 @@ public class Patologias extends javax.swing.JFrame {
                     .addComponent(jLabel4))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
-                    .addComponent(cmbTipoPatologia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblMascota)
-                            .addComponent(lblVeterinario))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(lblVeterinario)
+                            .addComponent(lblMascota))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(cmbTipoContraindicacion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -103,27 +132,37 @@ public class Patologias extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(cmbTipoPatologia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbTipoContraindicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(lblMascota))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblMascota)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(lblVeterinario))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/cancel.png"))); // NOI18N
-        jButton1.setText("Cancelar");
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/cancel.png"))); // NOI18N
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/disk.png"))); // NOI18N
-        jButton2.setText("Guardar");
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/disk.png"))); // NOI18N
+        btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -134,9 +173,9 @@ public class Patologias extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(btnCancelar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2)))
+                        .addComponent(btnGuardar)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -146,13 +185,39 @@ public class Patologias extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(btnCancelar)
+                    .addComponent(btnGuardar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.dispose();
+        System.gc();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        Contraindicaciones con = new Contraindicaciones();
+        
+        try {
+            //Recuperando Datos
+            TipoContraindicacion tp = new TipoContraindicacionJpaController(emf).findTipoContraindicacion(Integer.parseInt(hr.contenido(cmbTipoContraindicacion).split(":")[0]));
+            con.setIdContraindicacion(new ContraindicacionesJpaController(emf).ultimo());
+            con.setTipoContraindicicacion(tp);
+            con.setObservaciones(textAreaObservacion.getText());
+            con.setMascota(m);
+            con.setVeterinario(v);
+            con.setHospitalizacion(new HospitalizacionJpaController(emf).findHospitalizacion(1));
+            
+            new ContraindicacionesJpaController(emf).create(con);
+            hr.mostrarMensaje("Contraindicacion registrada exitosamente");
+            btnCancelarActionPerformed(evt);
+        } catch (Exception e) {
+            hr.mostrarError("Se produjo un error "+e.getMessage());
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -166,33 +231,34 @@ public class Patologias extends javax.swing.JFrame {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    javax.swing.UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
                     break;
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Patologias.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaContraindicaciones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Patologias.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaContraindicaciones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Patologias.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaContraindicaciones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Patologias.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaContraindicaciones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Patologias().setVisible(true);
+                new VistaContraindicaciones().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> cmbTipoPatologia;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnGuardar;
+    private javax.swing.JComboBox<String> cmbTipoContraindicacion;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -201,6 +267,6 @@ public class Patologias extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblMascota;
     private javax.swing.JLabel lblVeterinario;
-    private javax.swing.JTextArea textAreaObservaciones;
+    private javax.swing.JTextArea textAreaObservacion;
     // End of variables declaration//GEN-END:variables
 }

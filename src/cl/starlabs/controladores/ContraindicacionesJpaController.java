@@ -257,5 +257,15 @@ public class ContraindicacionesJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Contraindicaciones.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((Contraindicaciones) consulta.getSingleResult()).getIdContraindicacion() + 1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+
 }

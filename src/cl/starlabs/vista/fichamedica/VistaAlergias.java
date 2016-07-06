@@ -5,26 +5,53 @@
  */
 package cl.starlabs.vista.fichamedica;
 
+import cl.starlabs.controladores.AlergiasJpaController;
+import cl.starlabs.controladores.TipoAlergiaJpaController;
+import cl.starlabs.herramientas.HerramientasRapidas;
+import cl.starlabs.modelo.Alergias;
 import cl.starlabs.modelo.Mascota;
+import cl.starlabs.modelo.TipoAlergia;
+import cl.starlabs.modelo.Veterinario;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.swing.UIManager;
 
 /**
  *
  * @author Janno
  */
-public class Procedimientos extends javax.swing.JFrame {
+public class VistaAlergias extends javax.swing.JFrame {
 
     Mascota m = null;
+    Veterinario v = null;
+    HerramientasRapidas hr = new HerramientasRapidas();
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("SyncPetPU");
     
-    public Procedimientos() {
+    public VistaAlergias() {
         initComponents();
         this.setLocationRelativeTo(null);
+        rellenarTipoPatologia();
     }
     
-    public Procedimientos(Mascota mascota) {
+    public VistaAlergias(Mascota mascota, Veterinario veterinario) {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.m = mascota;
+        this.v = veterinario;
+        hr.insertarTexto(lblMascota, m.getNombre());
+        hr.insertarTexto(lblVeterinario, v.getNombres());
+        rellenarTipoPatologia();
     }
-
+    
+    public void rellenarTipoPatologia()
+    {
+        cmbTipoAlergia.removeAllItems();
+        for(TipoAlergia ta : new TipoAlergiaJpaController(emf).findTipoAlergiaEntities())
+        {
+            hr.insertarTexto(cmbTipoAlergia,ta.getIdTipoAlergia()+": "+ta.getNombre());
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -36,32 +63,32 @@ public class Procedimientos extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        cmbTipoDeProcedimiento = new javax.swing.JComboBox<>();
+        cmbTipoAlergia = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        textAreaObservaciones = new javax.swing.JTextArea();
+        textAreaDescripcion = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
         lblMascota = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         lblVeterinario = new javax.swing.JLabel();
         btnCancelar = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("SyncPet :: Procedimientos");
+        setTitle("SyncPet :: Alergias");
         setResizable(false);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Procedimientos"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Alergias"));
 
-        jLabel1.setText("Tipo de Procedimiento");
+        jLabel1.setText("Tipo de Alergias");
 
-        cmbTipoDeProcedimiento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar..." }));
+        cmbTipoAlergia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar..." }));
 
-        jLabel2.setText("Observaciones");
+        jLabel2.setText("Descripcion");
 
-        textAreaObservaciones.setColumns(20);
-        textAreaObservaciones.setRows(5);
-        jScrollPane1.setViewportView(textAreaObservaciones);
+        textAreaDescripcion.setColumns(20);
+        textAreaDescripcion.setRows(5);
+        jScrollPane1.setViewportView(textAreaDescripcion);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel3.setText("Mascota");
@@ -69,8 +96,8 @@ public class Procedimientos extends javax.swing.JFrame {
         lblMascota.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         lblMascota.setText("Mascota no especificada");
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel5.setText("Veterinario");
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel4.setText("Veterinario");
 
         lblVeterinario.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         lblVeterinario.setText("Veterinario no especificado");
@@ -85,16 +112,16 @@ public class Procedimientos extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel5))
+                    .addComponent(jLabel4))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                    .addComponent(cmbTipoAlergia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblVeterinario)
                             .addComponent(lblMascota))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(cmbTipoDeProcedimiento, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -103,27 +130,37 @@ public class Procedimientos extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(cmbTipoDeProcedimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbTipoAlergia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(lblMascota))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblMascota)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
+                    .addComponent(jLabel4)
                     .addComponent(lblVeterinario))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/cancel.png"))); // NOI18N
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/disk.png"))); // NOI18N
         btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -154,6 +191,30 @@ public class Procedimientos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.dispose();
+        System.gc();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        Alergias ale = new Alergias();
+        
+        try {
+            //Rellenar Datos
+            TipoAlergia ta = new TipoAlergiaJpaController(emf).findTipoAlergia(Integer.parseInt(hr.contenido(cmbTipoAlergia).split(":")[0]));
+            ale.setIdAlergia(new AlergiasJpaController(emf).ultimo());
+            ale.setDescripcion(textAreaDescripcion.getText());
+            ale.setMascota(m);
+            ale.setTipoAlergia(ta);
+            
+            new AlergiasJpaController(emf).create(ale);
+            hr.mostrarMensaje("Alergia registrada exitosamente");
+            btnCancelarActionPerformed(evt);
+        } catch (Exception e) {
+            hr.mostrarError("Se produjo un error "+e.getMessage());
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -166,25 +227,26 @@ public class Procedimientos extends javax.swing.JFrame {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    javax.swing.UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
                     break;
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Procedimientos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaAlergias.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Procedimientos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaAlergias.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Procedimientos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaAlergias.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Procedimientos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaAlergias.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Procedimientos().setVisible(true);
+                new VistaAlergias().setVisible(true);
             }
         });
     }
@@ -192,15 +254,15 @@ public class Procedimientos extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
-    private javax.swing.JComboBox<String> cmbTipoDeProcedimiento;
+    private javax.swing.JComboBox<String> cmbTipoAlergia;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblMascota;
     private javax.swing.JLabel lblVeterinario;
-    private javax.swing.JTextArea textAreaObservaciones;
+    private javax.swing.JTextArea textAreaDescripcion;
     // End of variables declaration//GEN-END:variables
 }

@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Farmacos.findAll", query = "SELECT f FROM Farmacos f"),
+    @NamedQuery(name = "Farmacos.findAllDesc", query = "SELECT f FROM Farmacos f ORDER BY f.idFarmaco DESC"),
     @NamedQuery(name = "Farmacos.findByIdFarmaco", query = "SELECT f FROM Farmacos f WHERE f.idFarmaco = :idFarmaco"),
     @NamedQuery(name = "Farmacos.findByFechaSuministro", query = "SELECT f FROM Farmacos f WHERE f.fechaSuministro = :fechaSuministro")})
 public class Farmacos implements Serializable {

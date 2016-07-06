@@ -258,4 +258,13 @@ public class FarmacosJpaController implements Serializable {
         }
     }
     
+    public Integer ultimo(){
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Farmacos.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((Farmacos)consulta.getSingleResult()).getIdFarmaco()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
 }

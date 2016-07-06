@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Desparacitaciones.findAll", query = "SELECT d FROM Desparacitaciones d"),
+    @NamedQuery(name = "Desparacitaciones.findAllDesc", query = "SELECT d FROM Desparacitaciones d ORDER BY d.idDesparacitacion DESC"),
     @NamedQuery(name = "Desparacitaciones.findByIdDesparacitacion", query = "SELECT d FROM Desparacitaciones d WHERE d.idDesparacitacion = :idDesparacitacion"),
     @NamedQuery(name = "Desparacitaciones.findByFecha", query = "SELECT d FROM Desparacitaciones d WHERE d.fecha = :fecha")})
 public class Desparacitaciones implements Serializable {

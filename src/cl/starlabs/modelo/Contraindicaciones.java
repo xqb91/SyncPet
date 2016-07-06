@@ -27,6 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Contraindicaciones.findAll", query = "SELECT c FROM Contraindicaciones c"),
+    @NamedQuery(name = "Contraindicaciones.findAllDesc", query = "SELECT c FROM Contraindicaciones c ORDER BY c.idContraindicacion DESC"),
     @NamedQuery(name = "Contraindicaciones.findByIdContraindicacion", query = "SELECT c FROM Contraindicaciones c WHERE c.idContraindicacion = :idContraindicacion")})
 public class Contraindicaciones implements Serializable {
     private static final long serialVersionUID = 1L;

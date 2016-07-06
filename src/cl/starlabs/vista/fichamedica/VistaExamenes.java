@@ -6,9 +6,12 @@
 package cl.starlabs.vista.fichamedica;
 
 import cl.starlabs.controladores.ExamenesJpaController;
+import cl.starlabs.controladores.HospitalizacionJpaController;
 import cl.starlabs.controladores.TipoExamenJpaController;
+import cl.starlabs.herramientas.HerramientasFTP;
 import cl.starlabs.herramientas.HerramientasRapidas;
 import cl.starlabs.modelo.Examenes;
+import cl.starlabs.modelo.Hospitalizacion;
 import cl.starlabs.modelo.Mascota;
 import cl.starlabs.modelo.Veterinario;
 import cl.starlabs.modelo.TipoExamen;
@@ -28,6 +31,7 @@ public class VistaExamenes extends javax.swing.JFrame {
     Mascota m = null;
     Veterinario v = null;
     HerramientasRapidas hr = new HerramientasRapidas();
+    HerramientasFTP hftp = new HerramientasFTP();
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("SyncPetPU");
     JFileChooser dlg = null;
     
@@ -37,6 +41,7 @@ public class VistaExamenes extends javax.swing.JFrame {
         rellenarTipoExamen();
     }
     public VistaExamenes(Mascota mascota, Veterinario veterinario) {
+        this.setLocationRelativeTo(null);
         initComponents();
         this.m = mascota;
         this.v = veterinario;
@@ -247,8 +252,14 @@ public class VistaExamenes extends javax.swing.JFrame {
             {
                 String ruta = dlg.getSelectedFile().getPath(); // .getPath()obtiene ruta y nombre del archivo seleccionado
                 // Si solo quieres el nombre del archivo, debe usar getName()
-                lblNombreArchivo.setText(ruta); // Muestra nombre de archivo
-            }   
+                if(ruta.length()>45)
+                {
+                    lblNombreArchivo.setText(ruta.substring(0, 45)+"..."); // Muestra nombre de archivo
+                }else
+                {
+                    lblNombreArchivo.setText(ruta);
+                }
+            }      
         }catch(Exception e){
             hr.mostrarError("Ha ocurrido un error: "+e.getMessage());
         }
@@ -275,10 +286,11 @@ public class VistaExamenes extends javax.swing.JFrame {
                 exam.setArchivo(lblNombreArchivo.getText());
                 exam.setMascota(m);
                 exam.setVeterinario(v);
-                exam.setHospitalizacion(null);
+                exam.setHospitalizacion(new HospitalizacionJpaController(emf).findHospitalizacion(1));
                 
                 new ExamenesJpaController(emf).create(exam);
                 hr.mostrarMensaje("Examen registrado exitosamente");
+                btnCancelarActionPerformed(evt);
             }
         } catch (Exception e) {
             hr.mostrarError("Se produjo un error "+e.getMessage());

@@ -257,5 +257,15 @@ public class ProcedimientosJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Procedimientos.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((Procedimientos) consulta.getSingleResult()).getIdProcedimiento() + 1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+
 }

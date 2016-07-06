@@ -5,25 +5,54 @@
  */
 package cl.starlabs.vista.fichamedica;
 
+import cl.starlabs.controladores.HistorialvacunasJpaController;
+import cl.starlabs.controladores.HospitalizacionJpaController;
+import cl.starlabs.controladores.TipoAlergiaJpaController;
+import cl.starlabs.controladores.VacunasJpaController;
+import cl.starlabs.herramientas.HerramientasRapidas;
+import cl.starlabs.modelo.Historialvacunas;
+import cl.starlabs.modelo.Hospitalizacion;
 import cl.starlabs.modelo.Mascota;
+import cl.starlabs.modelo.Vacunas;
+import cl.starlabs.modelo.Veterinario;
+import java.util.GregorianCalendar;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.swing.UIManager;
 
 /**
  *
  * @author Janno
  */
-public class Farmacos extends javax.swing.JFrame {
+public class VistaVacunaciones extends javax.swing.JFrame {
 
     Mascota m = null;
+    Veterinario v = null;
+    HerramientasRapidas hr = new HerramientasRapidas();
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("SyncPetPU");
     
-    public Farmacos() {
+    public VistaVacunaciones() {
         initComponents();
         this.setLocationRelativeTo(null);
+        rellenarVacuna();
     }
-    public Farmacos(Mascota mascota) {
+    public VistaVacunaciones(Mascota mascota, Veterinario veterinario) {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.m = mascota;
+        this.v = veterinario;
+        hr.insertarTexto(lblMascota, m.getNombre());
+        hr.insertarTexto(lblVeterinario, v.getNombres());
+        rellenarVacuna();
     }
-
+   public void rellenarVacuna()
+    {
+        cmbVacuna.removeAllItems();
+        for(Vacunas v : new VacunasJpaController(emf).findVacunasEntities())
+        {
+            hr.insertarTexto(cmbVacuna,v.getIdVacuna()+": "+v.getNombre());
+        }
+    } 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -35,32 +64,30 @@ public class Farmacos extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        cmbFarmaco = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        textAreaObservacion = new javax.swing.JTextArea();
+        textAreaDescripcion = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
         lblMascota = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         lblVeterinario = new javax.swing.JLabel();
+        cmbVacuna = new javax.swing.JComboBox<>();
         btnCancelar = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("SyncPet :: Farmacos");
+        setTitle("SyncPet :: Vacunas");
         setResizable(false);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Farmacos"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Vacunas"));
 
-        jLabel1.setText("Nombre de Farmaco");
-
-        cmbFarmaco.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar..." }));
+        jLabel1.setText("Tipo de Vacuna");
 
         jLabel2.setText("Observacion");
 
-        textAreaObservacion.setColumns(20);
-        textAreaObservacion.setRows(5);
-        jScrollPane1.setViewportView(textAreaObservacion);
+        textAreaDescripcion.setColumns(20);
+        textAreaDescripcion.setRows(5);
+        jScrollPane1.setViewportView(textAreaDescripcion);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel3.setText("Mascota");
@@ -87,13 +114,13 @@ public class Farmacos extends javax.swing.JFrame {
                     .addComponent(jLabel5))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblVeterinario)
                             .addComponent(lblMascota))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(cmbFarmaco, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(cmbVacuna, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -102,15 +129,15 @@ public class Farmacos extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(cmbFarmaco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbVacuna, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(11, 11, 11)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(lblMascota))
+                    .addComponent(lblMascota)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -120,9 +147,19 @@ public class Farmacos extends javax.swing.JFrame {
 
         btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/cancel.png"))); // NOI18N
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/disk.png"))); // NOI18N
         btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -153,6 +190,32 @@ public class Farmacos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.dispose();
+        System.gc();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        Historialvacunas hv = new Historialvacunas();
+        try {
+            //Rellenar Datos
+            Vacunas va = new VacunasJpaController(emf).findVacunas(Integer.parseInt(hr.contenido(cmbVacuna).split(":")[0]));
+            hv.setIdEvento(new HistorialvacunasJpaController(emf).ultimo());
+            hv.setFecha(new GregorianCalendar().getTime());
+            hv.setObservaciones(textAreaDescripcion.getText());
+            hv.setMascota(m);
+            hv.setVeterinario(v);
+            hv.setVacuna(va);
+            hv.setHospitalizacion(new HospitalizacionJpaController(emf).findHospitalizacion(1));
+            
+            new HistorialvacunasJpaController(emf).create(hv);
+            hr.mostrarMensaje("Vacuna registrada exitosamente");
+            btnCancelarActionPerformed(evt);
+        } catch (Exception e) {
+            hr.mostrarError("Se produjo un error "+e.getMessage());
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -165,25 +228,26 @@ public class Farmacos extends javax.swing.JFrame {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    javax.swing.UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
                     break;
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Farmacos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaVacunaciones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Farmacos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaVacunaciones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Farmacos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaVacunaciones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Farmacos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaVacunaciones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Farmacos().setVisible(true);
+                new VistaVacunaciones().setVisible(true);
             }
         });
     }
@@ -191,7 +255,7 @@ public class Farmacos extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
-    private javax.swing.JComboBox<String> cmbFarmaco;
+    private javax.swing.JComboBox<String> cmbVacuna;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -200,6 +264,6 @@ public class Farmacos extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblMascota;
     private javax.swing.JLabel lblVeterinario;
-    private javax.swing.JTextArea textAreaObservacion;
+    private javax.swing.JTextArea textAreaDescripcion;
     // End of variables declaration//GEN-END:variables
 }

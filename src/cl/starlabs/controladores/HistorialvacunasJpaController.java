@@ -257,5 +257,14 @@ public class HistorialvacunasJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public Integer ultimo() {
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Historialvacunas.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((Historialvacunas) consulta.getSingleResult()).getIdEvento() + 1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
 }

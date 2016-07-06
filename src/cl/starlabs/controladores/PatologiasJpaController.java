@@ -258,4 +258,14 @@ public class PatologiasJpaController implements Serializable {
         }
     }
     
+    public Integer ultimo(){
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Patologias.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((Patologias)consulta.getSingleResult()).getIdPatologia()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
 }

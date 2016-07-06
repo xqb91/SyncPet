@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Procedimientos.findAll", query = "SELECT p FROM Procedimientos p"),
+    @NamedQuery(name = "Procedimientos.findAllDesc", query = "SELECT p FROM Procedimientos p ORDER BY p.idProcedimiento DESC"),
     @NamedQuery(name = "Procedimientos.findByIdProcedimiento", query = "SELECT p FROM Procedimientos p WHERE p.idProcedimiento = :idProcedimiento"),
     @NamedQuery(name = "Procedimientos.findByFecha", query = "SELECT p FROM Procedimientos p WHERE p.fecha = :fecha")})
 public class Procedimientos implements Serializable {

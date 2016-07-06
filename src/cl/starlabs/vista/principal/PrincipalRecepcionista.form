@@ -82,9 +82,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Registrar Paciente"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menPacientes_addActionPerformed"/>
-              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menPacientes_find">
               <Properties>
@@ -96,9 +93,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Buscar Paciente"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menPacientes_findActionPerformed"/>
-              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menPacientes_admin">
               <Properties>
@@ -110,9 +104,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Administrar Pacientes"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menPacientes_adminActionPerformed"/>
-              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menPacientes_tree">
               <Properties>
@@ -124,9 +115,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Especificar Progenitores"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menPacientes_treeActionPerformed"/>
-              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -148,9 +136,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Registrar Propietario"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menPropietarios_addActionPerformed"/>
-              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menPropietarios_find">
               <Properties>
@@ -162,9 +147,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Buscar Propietario"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menPropietarios_findActionPerformed"/>
-              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menPropietarios_admin">
               <Properties>
@@ -176,9 +158,17 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Administrar Propietarios"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menPropietarios_adminActionPerformed"/>
-              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menPropietarios_paciente">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+O"/>
+                </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/cl/starlabs/imagenes/iconos/pet.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Asociar Paciente"/>
+              </Properties>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -516,9 +506,6 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Agregar Paciente"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddPacienteActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnAddPropietario">
       <Properties>
@@ -527,9 +514,6 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Agregar Propietario"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddPropietarioActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnAddEvento">
       <Properties>
@@ -546,9 +530,6 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Bloquear Terminal"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBloquearTerminalActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnCambiarSucursal">
       <Properties>
@@ -557,9 +538,6 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Cambiar de Sucursal"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCambiarSucursalActionPerformed"/>
-      </Events>
     </Component>
   </SubComponents>
 </Form>

@@ -200,4 +200,14 @@ public class AlergiasJpaController implements Serializable {
         }
     }
     
+    public Integer ultimo(){
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Alergias.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((Alergias)consulta.getSingleResult()).getIdAlergia()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
 }

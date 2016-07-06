@@ -603,6 +603,11 @@ public class Anamnesis extends javax.swing.JFrame {
 
         btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/cancel.png"))); // NOI18N
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/disk.png"))); // NOI18N
         btnGuardar.setText("Guargar");
@@ -696,7 +701,7 @@ public class Anamnesis extends javax.swing.JFrame {
         Mascota m = cm.findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
         if(m != null)
         {
-            new Patologias(m).setVisible(true);
+            new VistaPatologias(m,v).setVisible(true);
         }else{
             hr.mostrarError("No se encontro la mascota");
         }
@@ -706,7 +711,7 @@ public class Anamnesis extends javax.swing.JFrame {
         Mascota m = cm.findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
         if(m != null)
         {
-            new Contraindicaciones(m).setVisible(true);
+            new VistaContraindicaciones(m,v).setVisible(true);
         }else{
             hr.mostrarError("No se encontro la mascota");
         }
@@ -716,7 +721,7 @@ public class Anamnesis extends javax.swing.JFrame {
         Mascota m = cm.findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
         if(m != null)
         {
-            new Procedimientos(m).setVisible(true);
+            new VistaProcedimientos(m,v).setVisible(true);
         }else{
             hr.mostrarError("No se encontro la mascota");
         }
@@ -726,7 +731,7 @@ public class Anamnesis extends javax.swing.JFrame {
         Mascota m = cm.findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
         if(m != null)
         {
-            new Alergias(m).setVisible(true);
+            new VistaAlergias(m,v).setVisible(true);
         }else{
             hr.mostrarError("No se encontro la mascota");
         }
@@ -736,7 +741,7 @@ public class Anamnesis extends javax.swing.JFrame {
         Mascota m = cm.findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
         if(m != null)
         {
-            new Vacunaciones(m).setVisible(true);
+            new VistaVacunaciones(m,v).setVisible(true);
         }else{
             hr.mostrarError("No se encontro la mascota");
         }
@@ -746,7 +751,7 @@ public class Anamnesis extends javax.swing.JFrame {
         Mascota m = cm.findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
         if(m != null)
         {
-            new Desparacitaciones(m).setVisible(true);
+            new VistaDesparacitaciones(m,v).setVisible(true);
         }else{
             hr.mostrarError("No se encontro la mascota");
         }
@@ -756,7 +761,7 @@ public class Anamnesis extends javax.swing.JFrame {
         Mascota m = cm.findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
         if(m != null)
         {
-            new Farmacos(m).setVisible(true);
+            new VistaFarmacos(m,v).setVisible(true);
         }else{
             hr.mostrarError("No se encontro la mascota");
         }
@@ -771,6 +776,11 @@ public class Anamnesis extends javax.swing.JFrame {
             hr.mostrarError("No se encontro la mascota");
         }
     }//GEN-LAST:event_btnHospitalizacionActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.dispose();
+        System.gc();
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments

@@ -229,4 +229,14 @@ public class DesparacitacionesJpaController implements Serializable {
         }
     }
     
+    public Integer ultimo(){
+        try {
+            Query consulta = getEntityManager().createNamedQuery("Desparacitaciones.findAllDesc");
+            consulta.setMaxResults(1);
+            return ((Desparacitaciones)consulta.getSingleResult()).getIdDesparacitacion()+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+    
 }
