@@ -8,7 +8,6 @@ package cl.starlabs.vista.fichamedica;
 import cl.starlabs.controladores.ExamenesJpaController;
 import cl.starlabs.controladores.HospitalizacionJpaController;
 import cl.starlabs.controladores.TipoExamenJpaController;
-import cl.starlabs.herramientas.HerramientasFTP;
 import cl.starlabs.herramientas.HerramientasRapidas;
 import cl.starlabs.modelo.Examenes;
 import cl.starlabs.modelo.Hospitalizacion;
@@ -31,7 +30,6 @@ public class VistaExamenes extends javax.swing.JFrame {
     Mascota m = null;
     Veterinario v = null;
     HerramientasRapidas hr = new HerramientasRapidas();
-    HerramientasFTP hftp = new HerramientasFTP();
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("SyncPetPU");
     JFileChooser dlg = null;
     
@@ -46,7 +44,7 @@ public class VistaExamenes extends javax.swing.JFrame {
         this.m = mascota;
         this.v = veterinario;
         hr.insertarTexto(lblMascota, m.getNombre());
-        hr.insertarTexto(lblVeterinario, v.getNombres());
+        hr.insertarTexto(lblVeterinario, v.getNombres().split(" ")[0]+" "+v.getApaterno());
         rellenarTipoExamen();
     }
     

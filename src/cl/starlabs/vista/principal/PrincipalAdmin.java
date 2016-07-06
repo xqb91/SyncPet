@@ -10,6 +10,8 @@ import cl.starlabs.herramientas.HerramientasRapidas;
 import cl.starlabs.modelo.Agenda;
 import cl.starlabs.modelo.Sucursal;
 import cl.starlabs.modelo.Usuarios;
+import cl.starlabs.reportes.ReportePaciente;
+import cl.starlabs.reportes.ReportePropietarios;
 import cl.starlabs.vista.administracion.clinica.AdministracionClinica;
 import cl.starlabs.vista.administracion.clinica.AdministracionSucursales;
 import cl.starlabs.vista.administracion.config.AdminCaracter;
@@ -33,6 +35,7 @@ import cl.starlabs.vista.agenda.BuscarAtencion;
 import cl.starlabs.vista.agenda.Calendario;
 import cl.starlabs.vista.agenda.DetalleEvento;
 import cl.starlabs.vista.agenda.EventosParaHoy;
+import cl.starlabs.vista.fichamedica.VistaAnamnesis;
 import cl.starlabs.vista.login.PantallaBloqueo;
 import cl.starlabs.vista.paciente.BuscarPaciente;
 import cl.starlabs.vista.paciente.DetalleProgenitores;
@@ -178,6 +181,8 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menFicha_anamnesis = new javax.swing.JMenuItem();
         menFicha_find = new javax.swing.JMenuItem();
         menRep = new javax.swing.JMenu();
+        menRepoPropietarios = new javax.swing.JMenuItem();
+        menRepAnamnesis = new javax.swing.JMenuItem();
         menAdmin = new javax.swing.JMenu();
         jMenu9 = new javax.swing.JMenu();
         menAdmin_clinica = new javax.swing.JMenuItem();
@@ -527,6 +532,11 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         menFicha_anamnesis.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, 0));
         menFicha_anamnesis.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/book_go.png"))); // NOI18N
         menFicha_anamnesis.setText("Anamnesis");
+        menFicha_anamnesis.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menFicha_anamnesisActionPerformed(evt);
+            }
+        });
         menFicha.add(menFicha_anamnesis);
 
         menFicha_find.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, 0));
@@ -538,6 +548,25 @@ public class PrincipalAdmin extends javax.swing.JFrame {
 
         menRep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/chart_curve.png"))); // NOI18N
         menRep.setText("Reportes");
+
+        menRepoPropietarios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/chart_curve_go.png"))); // NOI18N
+        menRepoPropietarios.setText("Reporte de Propietarios");
+        menRepoPropietarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menRepoPropietariosActionPerformed(evt);
+            }
+        });
+        menRep.add(menRepoPropietarios);
+
+        menRepAnamnesis.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/chart_curve_go.png"))); // NOI18N
+        menRepAnamnesis.setText("Reporte de Anamnesis");
+        menRepAnamnesis.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menRepAnamnesisActionPerformed(evt);
+            }
+        });
+        menRep.add(menRepAnamnesis);
+
         jMenuBar1.add(menRep);
 
         menAdmin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/cog.png"))); // NOI18N
@@ -973,6 +1002,18 @@ public class PrincipalAdmin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tablaAtencionesProximasMouseClicked
 
+    private void menFicha_anamnesisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menFicha_anamnesisActionPerformed
+        new VistaAnamnesis(u).setVisible(true);
+    }//GEN-LAST:event_menFicha_anamnesisActionPerformed
+
+    private void menRepoPropietariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menRepoPropietariosActionPerformed
+        new ReportePropietarios(u).setVisible(true);
+    }//GEN-LAST:event_menRepoPropietariosActionPerformed
+
+    private void menRepAnamnesisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menRepAnamnesisActionPerformed
+        new ReportePaciente(u).setVisible(true);
+    }//GEN-LAST:event_menRepAnamnesisActionPerformed
+
     
     /**
      * @param args the command line arguments
@@ -1074,6 +1115,8 @@ public class PrincipalAdmin extends javax.swing.JFrame {
     private javax.swing.JMenuItem menPropietarios_admin;
     private javax.swing.JMenuItem menPropietarios_find;
     private javax.swing.JMenu menRep;
+    private javax.swing.JMenuItem menRepAnamnesis;
+    private javax.swing.JMenuItem menRepoPropietarios;
     private javax.swing.JMenuItem menuAdminComunas;
     private javax.swing.JMenuItem menuAdminProvincias;
     private javax.swing.JMenuItem menuAdminRegiones;

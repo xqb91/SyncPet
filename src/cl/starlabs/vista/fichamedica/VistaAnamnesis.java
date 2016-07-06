@@ -5,13 +5,17 @@
  */
 package cl.starlabs.vista.fichamedica;
 
+import cl.starlabs.controladores.AnamnesisJpaController;
 import cl.starlabs.controladores.DetalleUsuariosJpaController;
+import cl.starlabs.controladores.HospitalizacionJpaController;
 import cl.starlabs.controladores.MascotaJpaController;
 import cl.starlabs.controladores.PropietarioJpaController;
 import cl.starlabs.controladores.VeterinarioJpaController;
 import cl.starlabs.herramientas.HerramientasRapidas;
 import cl.starlabs.herramientas.HerramientasRut;
+import cl.starlabs.modelo.Anamnesis;
 import cl.starlabs.modelo.DetalleUsuarios;
+import cl.starlabs.modelo.Hospitalizacion;
 import cl.starlabs.modelo.Mascota;
 import cl.starlabs.modelo.Propietario;
 import cl.starlabs.modelo.Usuarios;
@@ -26,62 +30,59 @@ import org.eclipse.persistence.config.PersistenceUnitProperties;
  *
  * @author Janno
  */
-public class Anamnesis extends javax.swing.JFrame {
+public class VistaAnamnesis extends javax.swing.JFrame {
 
+    Anamnesis ana = null;
+    boolean actuali = false;
+    Mascota m = null;
     Veterinario v = null;
-    EntityManagerFactory mf = Persistence.createEntityManagerFactory("SyncPetPU");
-    PropietarioJpaController cp = new PropietarioJpaController(mf);
-    MascotaJpaController cm = new MascotaJpaController(mf);
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("SyncPetPU");
+    PropietarioJpaController cp = new PropietarioJpaController(emf);
+    MascotaJpaController cm = new MascotaJpaController(emf);
     HerramientasRapidas hr = new HerramientasRapidas();
     HerramientasRut ha = new HerramientasRut();
-    
-    public Anamnesis() {
+
+    public VistaAnamnesis() {
         initComponents();
         desactivarPaneles();
         dateChooserFecha.setMinSelectableDate(new GregorianCalendar().getTime());
         this.setLocationRelativeTo(null);
     }
-    
-    public Anamnesis(Usuarios user) {
+
+    public VistaAnamnesis(Usuarios user) {
         initComponents();
         desactivarPaneles();
         dateChooserFecha.setMinSelectableDate(new GregorianCalendar().getTime());
         this.setLocationRelativeTo(null);
         //buscando veterinario
-        DetalleUsuarios du = new DetalleUsuariosJpaController(mf).findDetalleUsuarios(user.getId());
-        if(du != null)
-        {
-            if(du.getVeterinario() != null)
-            {
+        DetalleUsuarios du = new DetalleUsuariosJpaController(emf).findDetalleUsuarios(user.getId());
+        if (du != null) {
+            if (du.getVeterinario() != null) {
                 v = du.getVeterinario();
-            }else{
+            } else {
                 hr.mostrarError("El usuario no es veterinario");
                 this.dispose();
             }
-        }else{
+        } else {
             hr.mostrarError("No se pudo recuperar el detalle usuario");
             this.dispose();
         }
     }
 
-    public void rellenarmascota()
-    {
+    public void rellenarmascota() {
         cmbMascota.removeAllItems();
         String rutPropietario = hr.contenido(txtRutPropietario);
         Propietario p = cp.buscarPorRut(rutPropietario);
-        if(p == null)
-        {
+        if (p == null) {
             hr.mostrarError("No se pudo encontrar al propietario");
-        }else{
-            for(Mascota m : p.getMascotaList())
-            {
-                hr.insertarTexto(cmbMascota, m.getIdMascota()+": "+m.getNombre());
+        } else {
+            for (Mascota m : p.getMascotaList()) {
+                hr.insertarTexto(cmbMascota, m.getIdMascota() + ": " + m.getNombre());
             }
         }
     }
-    
-    public void desactivarPaneles()
-    {
+
+    public void desactivarPaneles() {
         //hr.desactivar(panelAcciones);
         //hr.desactivar(panelAnalisis);
         hr.desactivar(btnGuardar);
@@ -111,9 +112,8 @@ public class Anamnesis extends javax.swing.JFrame {
         hr.desactivar(textAreaPalpacion);
         hr.desactivar(textAreaPercucion);
     }
-    
-    public void activarPaneles()
-    {
+
+    public void activarPaneles() {
         //hr.desactivar(panelAcciones);
         //hr.desactivar(panelAnalisis);
         hr.activar(btnGuardar);
@@ -143,6 +143,7 @@ public class Anamnesis extends javax.swing.JFrame {
         hr.activar(textAreaPalpacion);
         hr.activar(textAreaPercucion);
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -196,6 +197,7 @@ public class Anamnesis extends javax.swing.JFrame {
         jScrollPane12 = new javax.swing.JScrollPane();
         textAreaFrecuenciaRespiratoria = new javax.swing.JTextArea();
         jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
         panelAcciones = new javax.swing.JPanel();
         btnExamenes = new javax.swing.JButton();
         btnPatologia = new javax.swing.JButton();
@@ -237,6 +239,17 @@ public class Anamnesis extends javax.swing.JFrame {
 
         jLabel2.setText("Mascota");
 
+        cmbMascota.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbMascotaItemStateChanged(evt);
+            }
+        });
+        cmbMascota.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbMascotaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -276,6 +289,18 @@ public class Anamnesis extends javax.swing.JFrame {
         jLabel4.setText("Peso");
 
         jLabel5.setText("Temperatura");
+
+        txtPeso.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPesoKeyTyped(evt);
+            }
+        });
+
+        txtTemperatura.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTemperaturaKeyTyped(evt);
+            }
+        });
 
         jLabel6.setText("Inspeccion Visual");
 
@@ -349,6 +374,9 @@ public class Anamnesis extends javax.swing.JFrame {
 
         jLabel17.setText("Frecuencia Respiratoria");
 
+        jLabel18.setFont(new java.awt.Font("Tahoma", 2, 10)); // NOI18N
+        jLabel18.setText("Grados");
+
         javax.swing.GroupLayout panelAnalisisLayout = new javax.swing.GroupLayout(panelAnalisis);
         panelAnalisis.setLayout(panelAnalisisLayout);
         panelAnalisisLayout.setHorizontalGroup(
@@ -356,20 +384,23 @@ public class Anamnesis extends javax.swing.JFrame {
             .addGroup(panelAnalisisLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(txtPeso, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(panelAnalisisLayout.createSequentialGroup()
-                            .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel3)
-                                .addComponent(jLabel4)
-                                .addComponent(jLabel5))
-                            .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(panelAnalisisLayout.createSequentialGroup()
-                                    .addGap(55, 55, 55)
-                                    .addComponent(txtTemperatura, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAnalisisLayout.createSequentialGroup()
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(dateChooserFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(panelAnalisisLayout.createSequentialGroup()
+                        .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtPeso, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelAnalisisLayout.createSequentialGroup()
+                                .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5))
+                                .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelAnalisisLayout.createSequentialGroup()
+                                        .addGap(55, 55, 55)
+                                        .addComponent(txtTemperatura, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAnalisisLayout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(dateChooserFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel18))
                     .addGroup(panelAnalisisLayout.createSequentialGroup()
                         .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
@@ -430,7 +461,8 @@ public class Anamnesis extends javax.swing.JFrame {
                 .addGap(9, 9, 9)
                 .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(txtTemperatura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTemperatura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel18))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelAnalisisLayout.createSequentialGroup()
@@ -611,6 +643,11 @@ public class Anamnesis extends javax.swing.JFrame {
 
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cl/starlabs/imagenes/iconos/disk.png"))); // NOI18N
         btnGuardar.setText("Guargar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -651,15 +688,14 @@ public class Anamnesis extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnValidarRutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidarRutActionPerformed
-        if(!hr.contenido(txtRutPropietario).isEmpty())
-        {
+        if (!hr.contenido(txtRutPropietario).isEmpty()) {
             hr.insertarTexto(txtRutPropietario, ha.formatear(hr.contenido(txtRutPropietario)));
-            if(ha.validar(hr.contenido(txtRutPropietario)))
-            {
+            if (ha.validar(hr.contenido(txtRutPropietario))) {
                 rellenarmascota();
                 hr.focus(cmbMascota);
                 activarPaneles();
-            }else{
+
+            } else {
                 hr.mostrarError("Rut invalido");
                 hr.focus(txtRutPropietario);
                 hr.insertarTexto(txtRutPropietario, "");
@@ -673,13 +709,11 @@ public class Anamnesis extends javax.swing.JFrame {
     }//GEN-LAST:event_txtRutPropietarioKeyTyped
 
     private void txtRutPropietarioFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtRutPropietarioFocusLost
-        if(!hr.contenido(txtRutPropietario).isEmpty())
-        {
+        if (!hr.contenido(txtRutPropietario).isEmpty()) {
             hr.insertarTexto(txtRutPropietario, ha.formatear(hr.contenido(txtRutPropietario)));
-            if(ha.validar(hr.contenido(txtRutPropietario)))
-            {
+            if (ha.validar(hr.contenido(txtRutPropietario))) {
                 btnValidarRutActionPerformed(null);
-            }else{
+            } else {
                 hr.mostrarError("Rut invalido");
                 hr.focus(txtRutPropietario);
                 hr.insertarTexto(txtRutPropietario, "");
@@ -689,90 +723,81 @@ public class Anamnesis extends javax.swing.JFrame {
 
     private void btnExamenesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExamenesActionPerformed
         Mascota m = cm.findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
-        if(m != null)
-        {
-            new VistaExamenes(m,v).setVisible(true);
-        }else{
+        if (m != null) {
+            new VistaExamenes(m, v).setVisible(true);
+        } else {
             hr.mostrarError("No se encontro la mascota");
         }
     }//GEN-LAST:event_btnExamenesActionPerformed
 
     private void btnPatologiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPatologiaActionPerformed
         Mascota m = cm.findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
-        if(m != null)
-        {
-            new VistaPatologias(m,v).setVisible(true);
-        }else{
+        if (m != null) {
+            new VistaPatologias(m, v).setVisible(true);
+        } else {
             hr.mostrarError("No se encontro la mascota");
         }
     }//GEN-LAST:event_btnPatologiaActionPerformed
 
     private void btnContraindicacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContraindicacionActionPerformed
         Mascota m = cm.findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
-        if(m != null)
-        {
-            new VistaContraindicaciones(m,v).setVisible(true);
-        }else{
+        if (m != null) {
+            new VistaContraindicaciones(m, v).setVisible(true);
+        } else {
             hr.mostrarError("No se encontro la mascota");
         }
     }//GEN-LAST:event_btnContraindicacionActionPerformed
 
     private void btnProcedimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcedimientoActionPerformed
         Mascota m = cm.findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
-        if(m != null)
-        {
-            new VistaProcedimientos(m,v).setVisible(true);
-        }else{
+        if (m != null) {
+            new VistaProcedimientos(m, v).setVisible(true);
+        } else {
             hr.mostrarError("No se encontro la mascota");
         }
     }//GEN-LAST:event_btnProcedimientoActionPerformed
 
     private void btnAlergiasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlergiasActionPerformed
         Mascota m = cm.findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
-        if(m != null)
-        {
-            new VistaAlergias(m,v).setVisible(true);
-        }else{
+        if (m != null) {
+            new VistaAlergias(m, v).setVisible(true);
+        } else {
             hr.mostrarError("No se encontro la mascota");
         }
     }//GEN-LAST:event_btnAlergiasActionPerformed
 
     private void btnVacunacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVacunacionActionPerformed
         Mascota m = cm.findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
-        if(m != null)
-        {
-            new VistaVacunaciones(m,v).setVisible(true);
-        }else{
+        if (m != null) {
+            new VistaVacunaciones(m, v).setVisible(true);
+        } else {
             hr.mostrarError("No se encontro la mascota");
         }
     }//GEN-LAST:event_btnVacunacionActionPerformed
 
     private void btnDesparasitacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDesparasitacionActionPerformed
         Mascota m = cm.findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
-        if(m != null)
-        {
-            new VistaDesparacitaciones(m,v).setVisible(true);
-        }else{
+        if (m != null) {
+            new VistaDesparacitaciones(m, v).setVisible(true);
+        } else {
             hr.mostrarError("No se encontro la mascota");
         }
     }//GEN-LAST:event_btnDesparasitacionActionPerformed
 
     private void btnFarmacosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFarmacosActionPerformed
         Mascota m = cm.findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
-        if(m != null)
-        {
-            new VistaFarmacos(m,v).setVisible(true);
-        }else{
+        if (m != null) {
+            new VistaFarmacos(m, v).setVisible(true);
+        } else {
             hr.mostrarError("No se encontro la mascota");
         }
     }//GEN-LAST:event_btnFarmacosActionPerformed
 
     private void btnHospitalizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHospitalizacionActionPerformed
         Mascota m = cm.findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
-        if(m != null)
-        {
+        if (m != null) {
             new Hospitalizaciones(m).setVisible(true);
-        }else{
+        } else {
             hr.mostrarError("No se encontro la mascota");
         }
     }//GEN-LAST:event_btnHospitalizacionActionPerformed
@@ -781,6 +806,105 @@ public class Anamnesis extends javax.swing.JFrame {
         this.dispose();
         System.gc();
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+
+        try {
+            if (!hr.esVacio(txtPeso)) {
+                if (!hr.esVacio(txtTemperatura)) {
+                    if (!hr.esVacio(textAreaInspeccionVisual)) {
+                        if (!hr.esVacio(textAreaAuscultasion)) {
+                            if (!hr.esVacio(textAreaEstadoDeConciencia)) {
+                                if (!hr.esVacio(textAreaNivelDeMovilidad)) {
+                                    if (!hr.esVacio(textAreaEstadoDeHidratacion)) {
+                                        //Recuperando Datos
+                                        if (ana == null) {
+                                            ana = new Anamnesis();
+                                            ana.setIdAnamnesis(new AnamnesisJpaController(emf).ultimo());
+                                            actuali = false;
+                                        }else{
+                                            actuali = true;
+                                        }
+                                        ana.setFechaAnamnesis(dateChooserFecha.getDate());
+                                        ana.setPeso(Long.parseLong(txtPeso.getText()));
+                                        ana.setTemperatura(Long.parseLong(txtTemperatura.getText()));
+                                        ana.setInspeccionVisual(textAreaInspeccionVisual.getText());
+                                        ana.setPalpacion(textAreaPalpacion.getText());
+                                        ana.setPercusion(textAreaPercucion.getText());
+                                        ana.setAuscultacion(textAreaAuscultasion.getText());
+                                        ana.setOlfaccion(textAreaOlfaccion.getText());
+                                        ana.setEstadoConciencia(textAreaEstadoDeConciencia.getText());
+                                        ana.setNivelMovilidad(textAreaNivelDeMovilidad.getText());
+                                        ana.setActitud(textAreaActitud.getText());
+                                        ana.setEstadoNutricion(textAreaEstadoDeNutricion.getText());
+                                        ana.setGradoHidratacion(textAreaEstadoDeHidratacion.getText());
+                                        ana.setFrecuenciaCardiaca(textAreaFrecuenciaCardiaca.getText());
+                                        ana.setFrecuenciaRespiratoria(textAreaFrecuenciaRespiratoria.getText());
+                                        m = new MascotaJpaController(emf).findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
+                                        ana.setMascota(m);
+                                        ana.setVeterinario(v);
+                                        ana.setHospitalizacion(new HospitalizacionJpaController(emf).findHospitalizacion(1));
+
+                                        if (actuali == false) {
+                                            new AnamnesisJpaController(emf).create(ana);
+                                        } else {
+                                            new AnamnesisJpaController(emf).edit(ana);
+                                        }
+                                        hr.mostrarMensaje("Anamnesis registrado exitosamente");
+                                        btnCancelarActionPerformed(evt);
+
+                                    } else {
+                                        hr.mostrarMensaje("Debe Rellenar campo de Frecuencia Respiratoria");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            hr.mostrarError("Se produjo un error " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void txtPesoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesoKeyTyped
+        hr.ingresaSoloNumeros(evt);
+        hr.largoMaximo(txtPeso, 4, evt);
+    }//GEN-LAST:event_txtPesoKeyTyped
+
+    private void txtTemperaturaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTemperaturaKeyTyped
+        hr.ingresaSoloNumeros(evt);
+        hr.largoMaximo(txtTemperatura, 2, evt);
+    }//GEN-LAST:event_txtTemperaturaKeyTyped
+
+    private void cmbMascotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbMascotaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbMascotaActionPerformed
+
+    private void cmbMascotaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbMascotaItemStateChanged
+        if (cmbMascota.getItemCount() != 0) {
+            m = new MascotaJpaController(emf).findMascota(Integer.parseInt(hr.contenido(cmbMascota).split(":")[0]));
+            ana = new AnamnesisJpaController(emf).buscarPorMascota(m);
+
+            if (ana != null) {
+                dateChooserFecha.setDate(ana.getFechaAnamnesis());
+                txtPeso.setText(ana.getPeso() + "");
+                txtTemperatura.setText(ana.getTemperatura() + "");
+                textAreaActitud.setText(ana.getActitud());
+                textAreaAuscultasion.setText(ana.getAuscultacion());
+                textAreaEstadoDeConciencia.setText(ana.getEstadoConciencia());
+                textAreaEstadoDeHidratacion.setText(ana.getGradoHidratacion());
+                textAreaEstadoDeNutricion.setText(ana.getEstadoNutricion());
+                textAreaInspeccionVisual.setText(ana.getInspeccionVisual());
+                textAreaNivelDeMovilidad.setText(ana.getNivelMovilidad());
+                textAreaOlfaccion.setText(ana.getOlfaccion());
+                textAreaPalpacion.setText(ana.getPalpacion());
+                textAreaPercucion.setText(ana.getPercusion());
+                textAreaFrecuenciaCardiaca.setText(ana.getFrecuenciaCardiaca());
+                textAreaFrecuenciaRespiratoria.setText(ana.getFrecuenciaRespiratoria());
+            }
+        }
+    }//GEN-LAST:event_cmbMascotaItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -799,20 +923,21 @@ public class Anamnesis extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Anamnesis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaAnamnesis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Anamnesis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaAnamnesis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Anamnesis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaAnamnesis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Anamnesis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VistaAnamnesis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Anamnesis().setVisible(true);
+                new VistaAnamnesis().setVisible(true);
             }
         });
     }
@@ -841,6 +966,7 @@ public class Anamnesis extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
